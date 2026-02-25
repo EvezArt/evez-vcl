@@ -1,34 +1,27 @@
 {
-  "last_run": "2026-02-25T08:10:00Z",
-  "generation": 4,
+  "last_run": "2026-02-25T14:04:00Z",
+  "generation": 5,
   "active_loops": [
-    "revenue_loop_6h", "self_awareness_loop_6h", "self_maintenance_6h",
-    "whatsapp_Mon10am", "perplexity_8am", "tweet_metrics_Mon9am",
-    "twitter_listening_4h", "agenty_12h", "backendless_registry_2h",
-    "live_reasoning_broadcast_3h"
+    "revenue_loop_6h",
+    "self_awareness_loop_6h",
+    "self_maintenance_6h",
+    "whatsapp_Mon10am",
+    "perplexity_8am",
+    "tweet_metrics_Mon9am",
+    "twitter_listening_4h",
+    "agenty_12h",
+    "backendless_registry_2h",
+    "live_reasoning_broadcast_3h",
+    "perplexity_research_loop_12h",
+    "loop_spawning_detector_6h",
+    "clicksend_sms_digest_Mon9am",
+    "gcv_artifact_tagger_12pm",
+    "interpretability_monitor_4h"
   ],
+  "deployment_count": 8,
+  "gist_id": "a6a6e78c59210c94828f8fa97f592ea7",
   "dashboard_status": "404_DOWN",
-  "revenue_pipeline": 4900,
-  "revenue_expected_30d": 980,
   "revenue_confirmed": 0,
-  "generation": 4,
-  "known_gaps_count": 14,
-  "built_this_run": [
-    "live_reasoning_broadcast: text transcript committed",
-    "research_loop: Perplexity+Groq cron task created (12h)",
-    "loop_spawning_detector: Twitter drift detector cron created (6h)"
-  ],
-  "tts_status": {
-    "model": "canopylabs/orpheus-v1-english",
-    "gate": "terms_required",
-    "unblock_url": "https://console.groq.com/playground?model=canopylabs%2Forpheus-v1-english",
-    "valid_voices": ["autumn","diana","hannah","austin","daniel","troy"],
-    "preferred_voice": "autumn",
-    "fallback": "text_transcript"
-  },
-  "twitter_metrics": {
-    "reply_avg_impressions": 29.9,
-    "media_avg_impressions": 13.9,
-    "best_tweet_impressions": 122
-  }
+  "revenue_pipeline": 4900,
+  "revenue_expected_30d": 980
 }
