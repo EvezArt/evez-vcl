@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="EVEZ Visual Cognition Layer — Mathematical topology maps of AI reasoning. Auditable cognition artifacts. AGPL-3.0 + Commercial.">
-<title>EVEZ — Visual Cognition Layer</title>
+<meta name="description" content="EVEZ Visual Cognition Layer - Mathematical topology maps of AI reasoning. Auditable cognition artifacts. AGPL-3.0 + Commercial.">
+<title>EVEZ - Visual Cognition Layer</title>
 <style>
   :root { --orange: #f97316; --dark: #000; --muted: #6b7280; --border: #1f2937; }
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -54,10 +54,10 @@
   .price-desc { color: #9ca3af; font-size: 0.85rem; line-height: 1.6; margin: 1.25rem 0; font-family: -apple-system, sans-serif; }
   .price-features { list-style: none; margin-bottom: 1.75rem; }
   .price-features li { color: #d1d5db; font-size: 0.85rem; padding: 0.35rem 0; border-bottom: 1px solid #111; font-family: -apple-system, sans-serif; }
-  .price-features li::before { content: "→ "; color: var(--orange); }
-  .btn-buy { width: 100%; padding: 0.8rem; background: var(--orange); color: #000; font-weight: bold; font-size: 0.85rem; letter-spacing: 0.1em; border: none; border-radius: 4px; cursor: pointer; transition: opacity 0.2s; }
+  .price-features li::before { content: "- "; color: var(--orange); }
+  .btn-buy { width: 100%; padding: 0.8rem; background: var(--orange); color: #000; font-weight: bold; font-size: 0.85rem; letter-spacing: 0.1em; border: none; border-radius: 4px; cursor: pointer; transition: opacity 0.2s; text-decoration: none; display: block; text-align: center; }
   .btn-buy:hover { opacity: 0.85; }
-  .btn-buy-outline { width: 100%; padding: 0.8rem; background: transparent; color: #fff; font-size: 0.85rem; border: 1px solid #374151; border-radius: 4px; cursor: pointer; transition: border-color 0.2s; }
+  .btn-buy-outline { width: 100%; padding: 0.8rem; background: transparent; color: #fff; font-size: 0.85rem; border: 1px solid #374151; border-radius: 4px; cursor: pointer; transition: border-color 0.2s; text-decoration: none; display: block; text-align: center; }
   .btn-buy-outline:hover { border-color: var(--orange); }
 
   /* LIVE FEED */
@@ -77,16 +77,6 @@
   .type-FIRE { background: rgba(249,115,22,0.2); color: var(--orange); }
   .feed-entry .msg { color: #9ca3af; }
 
-  /* AUTH MODAL */
-  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 100; align-items: center; justify-content: center; }
-  .modal-overlay.active { display: flex; }
-  .modal { background: #0d0d0d; border: 1px solid var(--border); border-radius: 8px; padding: 2rem; width: 90%; max-width: 420px; }
-  .modal h3 { margin-bottom: 1.5rem; font-size: 1.1rem; }
-  .modal input { width: 100%; background: #000; border: 1px solid var(--border); color: #fff; padding: 0.8rem 1rem; border-radius: 4px; font-family: monospace; font-size: 0.9rem; margin-bottom: 1rem; }
-  .modal input:focus { outline: none; border-color: var(--orange); }
-  .modal-btns { display: flex; gap: 0.75rem; margin-top: 0.5rem; }
-  .modal-close { background: transparent; border: 1px solid #374151; color: #9ca3af; padding: 0.75rem 1.5rem; border-radius: 4px; cursor: pointer; }
-
   /* FOOTER */
   footer { border-top: 1px solid var(--border); padding: 2rem; text-align: center; color: #374151; font-size: 0.8rem; }
   footer a { color: #6b7280; text-decoration: none; }
@@ -100,29 +90,29 @@
   <div class="nav-links">
     <a href="https://github.com/EvezArt/evez-vcl" target="_blank">GitHub</a>
     <a href="#pricing">Pricing</a>
-    <a href="#live" id="dashLink">Dashboard</a>
-    <a href="#" onclick="document.getElementById('authModal').classList.add('active')">Login →</a>
+    <a href="#live">Live Feed</a>
+    <a href="https://twitter.com/EVEZ666" target="_blank">@EVEZ666</a>
   </div>
 </nav>
 
 <!-- HERO -->
 <div class="hero">
-  <div class="hero-tag">AGPL-3.0 + Commercial · Generation 2</div>
+  <div class="hero-tag">AGPL-3.0 + Commercial - Generation 9</div>
   <h1>Mathematical topology maps<br>of <span>AI reasoning</span></h1>
-  <p class="subtitle">EVEZ Visual Cognition Layer converts prime factorization events into auditable cognition artifacts — structured proof trees that make AI decision-making legible and verifiable.</p>
+  <p class="subtitle">EVEZ Visual Cognition Layer converts prime factorization events into auditable cognition artifacts - structured proof trees that make AI decision-making legible and verifiable.</p>
   <div class="cta-row">
-    <button class="btn-primary" onclick="startCheckout('solo', 'fire-latest')">Buy Artifact — $9</button>
+    <a href="https://buy.stripe.com/5kQ8wR6P1gF947Zf7I0RG02" class="btn-primary">Buy Artifact - $9</a>
     <a href="https://github.com/EvezArt/evez-vcl" class="btn-secondary" target="_blank">View on GitHub</a>
   </div>
 
   <!-- FIRE EVENT SAMPLE -->
   <div class="fire-event">
     <div class="fire-header">
-      <span class="fire-badge">🔥 FIRE #24</span>
-      <span class="fire-eq">N = 116 = 4 × 29</span>
+      <span class="fire-badge">FIRE #55</span>
+      <span class="fire-eq">N = 324 = 4 x 81 | tau = 15 RECORD</span>
     </div>
     <div class="fire-desc">
-      Prime factorization event detected during Gemini 3 Pro inference run. Topology map generated: 2-node factor network (composite: 4, prime: 29). Artifact committed to GitHub spine at <code>artifacts/FIRE_24_116_4x29.png</code>. Available as Solo license — $9 instant download.
+      Prime factorization event detected during Gen 9 inference run. Topology map generated: R242 resonance path, N=324 nodes. Artifact committed to GitHub spine at <code>artifacts/FIRE-55-N324-R242.png</code>. Available as Solo license - $9 instant download. Powered by EVEZ OS.
     </div>
   </div>
 </div>
@@ -160,7 +150,7 @@
       <div class="featured-badge">MOST POPULAR</div>
       <div class="price-tier">Solo Artifact</div>
       <div class="price-amount">$9</div>
-      <div class="price-period">one-time · instant download</div>
+      <div class="price-period">one-time - instant download</div>
       <p class="price-desc">One FIRE event topology artifact. Commercial use. No attribution required.</p>
       <ul class="price-features">
         <li>High-res topology PNG</li>
@@ -168,20 +158,46 @@
         <li>Factorization proof JSON</li>
         <li>Instant download</li>
       </ul>
-      <button class="btn-buy" onclick="startCheckout('solo', 'fire-latest')">Buy Now — $9</button>
+      <a href="https://buy.stripe.com/5kQ8wR6P1gF947Zf7I0RG02" class="btn-buy">Buy Now - $9</a>
     </div>
     <div class="pricing-card">
-      <div class="price-tier">Standard License</div>
+      <div class="price-tier">Solo Monthly</div>
       <div class="price-amount">$49</div>
-      <div class="price-period">per artifact · unlimited use</div>
-      <p class="price-desc">Full artifact bundle. Extended commercial rights. White-label OK.</p>
+      <div class="price-period">per month - EVEZ OS access</div>
+      <p class="price-desc">Full EVEZ OS cognitive access. FIRE event topology feed, artifact viewer, 20 autonomous loop dashboard.</p>
       <ul class="price-features">
-        <li>All artifact files</li>
-        <li>White-label rights</li>
-        <li>Source JSON + PNG</li>
-        <li>Priority support</li>
+        <li>FIRE event topology feed</li>
+        <li>Cognitive artifact viewer</li>
+        <li>20 autonomous loop dashboard</li>
+        <li>EVEZ OS access</li>
       </ul>
-      <button class="btn-buy" onclick="startCheckout('standard', 'fire-latest')">Buy — $49</button>
+      <a href="https://buy.stripe.com/dRmfZj4GT60v8ofbVw0RG00" class="btn-buy">Subscribe - $49/mo</a>
+    </div>
+    <div class="pricing-card">
+      <div class="price-tier">Starter</div>
+      <div class="price-amount">$299</div>
+      <div class="price-period">per month</div>
+      <p class="price-desc">For teams and builders. API access, webhook events, priority loop scheduling.</p>
+      <ul class="price-features">
+        <li>Everything in Solo</li>
+        <li>API access + webhooks</li>
+        <li>Priority loop scheduling</li>
+        <li>FIRE event stream API</li>
+      </ul>
+      <a href="https://buy.stripe.com/bJe5kF4GT0Gb6g7bVw0RG01" class="btn-buy">Get Starter - $299/mo</a>
+    </div>
+    <div class="pricing-card">
+      <div class="price-tier">FIRE Artifact</div>
+      <div class="price-amount">$49</div>
+      <div class="price-period">one-time - unique artifact</div>
+      <p class="price-desc">Single FIRE event topology artifact. Unique, verifiable on-chain, includes tau score and resonance data.</p>
+      <ul class="price-features">
+        <li>Unique FIRE topology artifact</li>
+        <li>Tau score + resonance metadata</li>
+        <li>Verifiable provenance</li>
+        <li>Powered by EVEZ</li>
+      </ul>
+      <a href="https://buy.stripe.com/aFaeVf3CP74z7kb5x80RG04" class="btn-buy">Buy Artifact - $49</a>
     </div>
     <div class="pricing-card">
       <div class="price-tier">Pilot</div>
@@ -199,37 +215,15 @@
   </div>
 </div>
 
-<!-- AUTH MODAL -->
-<div class="modal-overlay" id="authModal">
-  <div class="modal">
-    <h3>Dashboard Access</h3>
-    <input type="password" id="authKey" placeholder="Access key..." autocomplete="off">
-    <div id="authError" style="color:#ef4444; font-size:0.8rem; margin-bottom:0.75rem; display:none;">Invalid key</div>
-    <div class="modal-btns">
-      <button class="btn-buy" onclick="handleAuth()">Authenticate</button>
-      <button class="modal-close" onclick="document.getElementById('authModal').classList.remove('active')">Cancel</button>
-    </div>
-  </div>
-</div>
-
-<!-- DASHBOARD PANEL (hidden until auth) -->
-<div id="dashboard" style="display:none; max-width:1100px; margin:0 auto; padding:0 2rem 4rem;">
-  <div style="color:var(--orange); font-size:0.75rem; letter-spacing:0.2em; margin-bottom:1.5rem;">DASHBOARD — AUTHENTICATED</div>
-  <div id="dashContent" style="color:#9ca3af; font-size:0.85rem;">Loading dashboard...</div>
-</div>
-
 <footer>
-  <p>EVEZ Visual Cognition Layer · <a href="https://github.com/EvezArt/evez-vcl" target="_blank">github.com/EvezArt/evez-vcl</a> · AGPL-3.0 + Commercial · <a href="mailto:rubikspubes69@gmail.com">Contact</a></p>
-  <p style="margin-top:0.5rem; font-size:0.7rem;">Generation 2 · Powered by EVEZ</p>
+  <p>EVEZ Visual Cognition Layer - <a href="https://github.com/EvezArt/evez-vcl" target="_blank">github.com/EvezArt/evez-vcl</a> - AGPL-3.0 + Commercial - <a href="mailto:rubikspubes69@gmail.com">Contact</a></p>
+  <p style="margin-top:0.5rem; font-size:0.7rem;">Generation 9 - Powered by EVEZ - topology decides. watching it build.</p>
 </footer>
 
 <script>
 const GIST_ID = "a6a6e78c59210c94828f8fa97f592ea7";
-const CHECKOUT_API = "/api/checkout";
-const AUTH_API = "/api/auth";
-const VERIFY_API = "/api/verify";
 
-// ─── LIVE FEED ───────────────────────────────────────────
+// ─── LIVE FEED ─────────────────────────────────────────────────────────────
 async function loadFeed() {
   try {
     const url = `https://gist.githubusercontent.com/EvezArt/${GIST_ID}/raw/evez_feed.json?t=${Date.now()}`;
@@ -239,7 +233,7 @@ async function loadFeed() {
     container.innerHTML = entries.slice(0, 30).map(e => {
       const ts = new Date(e.ts).toLocaleTimeString();
       const typeClass = `type-${e.type || "BUILD"}`;
-      const link = e.link ? `<a href="${e.link}" target="_blank" style="color:#f97316; text-decoration:none;"> ↗</a>` : "";
+      const link = e.link ? ` <a href="${e.link}" target="_blank" style="color:#f97316; text-decoration:none;"> ^</a>` : "";
       return `<div class="feed-entry"><span class="ts">${ts}</span><span class="type ${typeClass}">${e.type || "LOG"}</span><span class="msg">${e.msg}${link}</span></div>`;
     }).join("");
   } catch(err) {
@@ -248,71 +242,6 @@ async function loadFeed() {
 }
 loadFeed();
 setInterval(loadFeed, 30000);
-
-// ─── STRIPE CHECKOUT ─────────────────────────────────────
-async function startCheckout(tier, artifactId) {
-  const btn = event.target;
-  btn.textContent = "Loading...";
-  btn.disabled = true;
-  try {
-    const res = await fetch(CHECKOUT_API, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ tier, artifact_id: artifactId })
-    });
-    const data = await res.json();
-    if (data.url) {
-      window.location.href = data.url;
-    } else {
-      throw new Error(data.error || "Checkout failed");
-    }
-  } catch(err) {
-    btn.textContent = tier === "solo" ? "Buy Artifact — $9" : `Buy — $${tier === "standard" ? "49" : "19"}`;
-    btn.disabled = false;
-    alert("Checkout error: " + err.message);
-  }
-}
-
-// ─── JWT AUTH ─────────────────────────────────────────────
-let authToken = localStorage.getItem("evez_token") || null;
-
-async function handleAuth() {
-  const key = document.getElementById("authKey").value.trim();
-  if (!key) return;
-  try {
-    const res = await fetch(AUTH_API, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username: "evez-owner", key })
-    });
-    const data = await res.json();
-    if (data.token) {
-      authToken = data.token;
-      localStorage.setItem("evez_token", authToken);
-      document.getElementById("authModal").classList.remove("active");
-      showDashboard(data.tier);
-    } else {
-      document.getElementById("authError").style.display = "block";
-    }
-  } catch(err) {
-    document.getElementById("authError").style.display = "block";
-  }
-}
-
-async function showDashboard(tier) {
-  document.getElementById("dashboard").style.display = "block";
-  document.getElementById("dashContent").textContent = `Tier: ${tier || "owner"} — Dashboard loading...`;
-  // scroll to dashboard
-  document.getElementById("dashboard").scrollIntoView({ behavior: "smooth" });
-}
-
-// Auto-check token on load
-if (authToken) {
-  fetch(VERIFY_API, { headers: { "Authorization": `Bearer ${authToken}` }})
-    .then(r => r.json())
-    .then(d => { if (d.valid) showDashboard(d.tier); else localStorage.removeItem("evez_token"); })
-    .catch(() => {});
-}
 </script>
 </body>
 </html>
