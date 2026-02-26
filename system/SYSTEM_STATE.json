@@ -1,6 +1,6 @@
 {
-  "last_run": "2026-02-26T08:22:00Z",
-  "generation": 7,
+  "last_run": "2026-02-26T14:27:00Z",
+  "generation": 8,
   "active_loops": [
     "revenue_loop_6h",
     "self_awareness_loop_6h",
@@ -16,20 +16,20 @@
     "loop_spawning_detector_6h",
     "clicksend_sms_digest_Mon9am",
     "gcv_artifact_tagger_12pm",
+    "gcv_output_router_12h",
     "interpretability_monitor_4h",
     "self_funding_agents_12h",
     "onchain_agent_economy_8h",
     "verifiable_ai_environments_12h"
   ],
-  "loop_count": 18,
-  "gist_entries": 115,
+  "loop_count": 19,
+  "dashboard_status": "404_DOWN",
   "revenue_confirmed": 0,
   "revenue_pipeline": 4900,
-  "dashboard_status": "404_DOWN",
-  "twitter_metrics": {
-    "scanned_at": "2026-02-26T08:22:00Z",
-    "best_tweet_gen7": "576 imp reply @GENIC0N",
-    "reply_avg": "290 imp"
-  },
-  "broadcast_latest": "R225, V=8.520494, FIRE #47 at R224"
+  "revenue_expected_30d": 1470,
+  "gist_entries": 130,
+  "gist_id": "a6a6e78c59210c94828f8fa97f592ea7",
+  "broadcast_runs": 2,
+  "tts_consecutive_failures": 2,
+  "backup_ts": "2026-02-26T14:44:00Z"
 }
