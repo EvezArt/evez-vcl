@@ -1,0 +1,18 @@
+{
+  "loop_id": "541692eb-2433-492d-925d-e093b7378139",
+  "title": "Onchain Agent Economy Monitor — AION/ERC-8004/AI-pays-AI cluster",
+  "spawned_at": "2026-02-26T00:08:00Z",
+  "spawned_by": "loop_spawning_detector_6h",
+  "spawn_reason": "Semantic drift detected: onchain_agent_economy cluster (AION Solana, ERC-8004, Lexispawn, AI-pays-AI). 20 tweets in window, engagement signals: 828 likes (Lukasz Olejnik AWS outage), 241 likes (Silencio), 236 likes (Mr Ash Windows 12). Topic absent from previous run terms.",
+  "drift_topics": ["AION_Solana", "ERC-8004", "onchain_agent_economy", "agent_as_operator", "AI_pays_AI", "Lexispawn_Base", "NFA_non_fungible_agent", "MCP_skill_discovery"],
+  "trigger": {"type": "cron", "config": {"expression": "0 */8 * * *", "timezone": "America/Los_Angeles"}},
+  "executor": "ai",
+  "primary_query": "AION Solana agent economy OR ERC-8004 autonomous agent -is:retweet",
+  "fallback_query": "AI agent onchain economy OR autonomous agent wallet -is:retweet",
+  "evez_positioning": "EVEZ is non-crypto self-funding OS: compute-revenue loop via cognitive artifacts, not token trading",
+  "workspace_refs": [
+    "/cells/5db74b0c-f588-48f0-8e58-c4ed3893ada2/workspace/SYSTEM_STATE.json",
+    "/cells/5db74b0c-f588-48f0-8e58-c4ed3893ada2/workspace/OUTREACH_QUEUE.md",
+    "/cells/5db74b0c-f588-48f0-8e58-c4ed3893ada2/workspace/COMPETITIVE_INTEL.md"
+  ]
+}
