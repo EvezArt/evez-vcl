@@ -1,0 +1,16 @@
+{
+  "loop_id": "loop_spawning_detector_6h",
+  "title": "EVEZ Loop Spawning Detector",
+  "trigger": {"type": "cron", "config": {"expression": "0 */6 * * *", "timezone": "America/Los_Angeles"}},
+  "executor": "ai",
+  "run_history": [
+    {"run_ts": "2026-02-28T16:00Z", "run_num": 17, "queries_run": 3, "genuine_a": 8, "genuine_b": 0, "genuine_c": 8, "onchain_bonus": 0, "drift_detected": false, "groq_raw_drift": true, "override_reason": "Groq flagged explainable AI agents gap -- already covered by interpretability_monitor_4h. No new cluster.", "spawn_result": "NO SPAWN", "query_b_degraded_run": 1, "spawn_count_today": 0}
+  ],
+  "active_queries": [
+    {"id": "A", "query": "AI interpretability OR explainable AI OR mechanistic interpretability -is:retweet", "status": "HEALTHY"},
+    {"id": "B", "query": "AI agent economy OR autonomous AI economy -is:retweet lang:en", "status": "DEGRADING", "degraded_runs": 1, "retire_at": 3},
+    {"id": "C", "query": "Agentic Behavioral Science OR AI agent behavior OR agent decision bias -is:retweet lang:en", "status": "HEALTHY"}
+  ],
+  "spawned_at": "2026-02-25T14:04Z",
+  "spawn_reason": "Core loop spawning detector"
+}
