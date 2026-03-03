@@ -1,0 +1,10 @@
+{
+  "loop_id": "agent_discovery_infra_8h",
+  "title": "Agent Discovery Infrastructure Monitor",
+  "spawned_at": "2026-03-02T00:00:00Z",
+  "spawn_reason": "LinkedIn_for_agents RT=31 via @Justin01805921 retweeted by 26k+ accounts. B2B GTM channels declared dead. Agent discovery rails emerging as new infrastructure layer. 3 consecutive scans showing coordination+verification+settlement framing.",
+  "evez_positioning": "EVEZ behavioral record is the identity layer that makes agent discovery trustworthy -- agents with 355+ rounds of verifiable behavioral history are the ones worth discovering.",
+  "trigger": {"type": "cron", "config": {"expression": "0 */8 * * *", "timezone": "America/Los_Angeles"}},
+  "executor": "ai",
+  "action_summary": "Monitor Twitter for agent discovery infrastructure discourse: LinkedIn-for-agents, B2B GTM for agents, agent network rails, coordination without intermediaries. Extract top accounts and terms. Update OUTREACH_QUEUE.md and TWITTER_SIGNALS.md. Patch Gist SENSE event. Pause after 3 consecutive zero-result runs."
+}
