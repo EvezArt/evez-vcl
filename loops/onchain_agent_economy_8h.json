@@ -1,18 +1,14 @@
 {
-  "title": "Onchain Agent Economy Monitor -- AION/ERC-8004/AI-pays-AI cluster",
-  "trigger": "cron 0 */8 * * * America/Los_Angeles",
-  "action_summary": "Twitter scan AION/ERC-8004 cluster. Groq synthesis llama-3.3-70b-versatile. Update TWITTER_SIGNALS.md, COMPETITIVE_INTEL.md, OUTREACH_QUEUE.md, SYSTEM_STATE.json. Patch gist evez_feed.json. Retire primary query if 3 consecutive zeros.",
-  "spawned_at": "2026-02-28T00:00Z",
-  "spawn_reason": "Onchain autonomous agent economy adjacent to EVEZ cognitive OS positioning. AION Solana, ERC-8004 agent identity, AI-pays-AI payment rails detected in interpretability loop scans.",
-  "scan_history": {
-    "scan_count": 9,
-    "last_scan": "2026-03-02T16:09Z",
-    "primary_query_status": "ALIVE -- AION Season 2 surge stable",
-    "fallback_query_status": "ALIVE -- Dreaming Claw/Taskmarket new signals",
-    "consecutive_primary_zero": 0,
-    "top_terms": ["Agent Meta", "Dreaming Claw stack", "Taskmarket live", "KYA", "vending machine wallet", "cosplay autonomy"],
-    "top_signal_ever": "@Rexzie_Fran L=228 RT=31 -- Agent Meta surge, AION Season 2"
-  },
-  "evez_positioning": "EVEZ = cognitive OS above execution/payment layers. AION/Dreaming Claw = execution. NETX = financial OS. EVEZ = cognitive OS. KYA proof: 355 rounds behavioral record IS agent identity.",
-  "stabilize_rule": "If primary query returns 0 for 3 consecutive runs, switch to fallback-only and update action. If onchain discourse dies (0 fallback for 3 runs), pause loop and update LOOP_SPAWN_STATE.md."
+  "loop_id": "onchain_agent_economy_8h",
+  "title": "Onchain Agent Economy Monitor — AION/ERC-8004/AI-pays-AI cluster",
+  "trigger": "cron: every 8h (0 */8 * * *), America/Los_Angeles",
+  "action_summary": "Twitter scan AION/ERC-8004 discourse, Groq synthesis, update TWITTER_SIGNALS.md + OUTREACH_QUEUE.md + COMPETITIVE_INTEL.md, patch gist",
+  "spawned_at": "2026-02-24T00:00Z",
+  "spawn_reason": "ERC-8004 agent identity standard emerging as infrastructure layer; AION Solana agent economy gaining traction",
+  "last_run": "2026-03-03T16:03Z",
+  "scan_count": 11,
+  "status": "active",
+  "new_terms_this_run": ["Accountable_Custody", "agent_passports", "agent-rank", "x402sday", "multi-chain_ERC-8004", "usehiremind_HR_agent"],
+  "top_signals_this_run": ["@BITCOINTRAPPER 173k L=97", "@Hercules_Defi 46k L=55", "@LyvoCrypto 47k L=51 BST ERC-8004 LAUNCH"],
+  "evez_positioning": "Accountable Custody = what EVEZ 414-round behavioral record already proves. agent passports = EVEZ rounds are the pages."
 }
