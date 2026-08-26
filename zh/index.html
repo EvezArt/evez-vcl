@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>EVEZ-OS 赫尔墨斯仪表盘 — 中文</title>
+<meta name="description" content="EVEZ-OS 赫尔墨斯克隆专业版 — 治理网格面板。Φ遥测、FIRE事件、算子、AEGIS协议。">
+<link rel="alternate" hreflang="en" href="https://evezos-contabo.tail613e80.ts.net/hermes-ui/">
+<link rel="alternate" hreflang="zh" href="https://evezos-contabo.tail613e80.ts.net/hermes-ui/zh/">
+<link rel="alternate" hreflang="ru" href="https://evezos-contabo.tail613e80.ts.net/hermes-ui/ru/">
+<link rel="canonical" href="https://evezos-contabo.tail613e80.ts.net/hermes-ui/zh/">
+<meta property="og:title" content="EVEZ-OS 赫尔墨斯仪表盘">
+<meta property="og:description" content="治理网格、FIRE事件、Φ遥测、AEGIS安全协议">
+<meta name="twitter:card" content="summary_large_image">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&family=Fira+Code:wght@400;500&family=Noto+Sans+SC:wght@300;400;600;700;900&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#080814;color:#d0d0e0;font-family:'Noto Sans SC','Inter',system-ui,sans-serif;overflow-x:hidden}
+.bg{background-image:radial-gradient(ellipse at 50% 0%,rgba(0,242,254,0.03) 0%,transparent 60%),radial-gradient(ellipse at 80% 50%,rgba(168,85,247,0.02) 0%,transparent 50%);min-height:100vh}
+.container{max-width:1300px;margin:0 auto;padding:16px}
+.lang-bar{display:flex;justify-content:flex-end;gap:4px;padding:8px 0;margin-bottom:4px}
+.lang-bar a{padding:4px 10px;border-radius:4px;font-size:0.65rem;color:#667799;text-decoration:none;border:1px solid transparent;transition:all 0.2s}
+.lang-bar a:hover{border-color:rgba(0,242,254,0.2);color:#00f2fe}
+.lang-bar a.active{background:rgba(0,242,254,0.08);border-color:rgba(0,242,254,0.2);color:#00f2fe}
+header{text-align:center;padding:20px 0 14px}
+header h1{font-size:1.6rem;font-weight:900;background:linear-gradient(135deg,#00f2fe,#a855f7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:2px}
+header .sub{color:#667799;font-size:0.7rem;letter-spacing:2px;text-transform:uppercase;margin-top:4px}
+.phi-strip{display:flex;align-items:center;justify-content:center;gap:16px;padding:10px 16px;background:rgba(0,242,254,0.03);border:1px solid rgba(0,242,254,0.08);border-radius:12px;margin-bottom:14px;flex-wrap:wrap}
+.phi-strip .item{text-align:center}
+.phi-strip .item .l{font-size:0.5rem;text-transform:uppercase;color:#667799;letter-spacing:1px}
+.phi-strip .item .v{font-size:0.95rem;font-weight:700;font-family:'Fira Code',monospace;color:#00f2fe;margin-top:2px}
+.phi-strip .item .v.gold{color:#fbbf24}.phi-strip .item .v.purple{color:#a855f7}
+.tabs{display:flex;gap:2px;margin-bottom:14px;flex-wrap:wrap}
+.tab{flex:1;min-width:60px;padding:8px 4px;text-align:center;font-size:0.55rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#667799;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.04);cursor:pointer;transition:all 0.2s;border-radius:6px 6px 0 0}
+.tab:hover{background:rgba(0,242,254,0.04);color:#00f2fe}
+.tab.active{background:rgba(0,242,254,0.06);border-color:rgba(0,242,254,0.12);color:#00f2fe}
+.tab-content{display:none}.tab-content.active{display:block}
+.grid{display:grid;gap:12px;margin-bottom:14px}.grid-2{grid-template-columns:1fr 1fr}
+@media(max-width:768px){.grid-2{grid-template-columns:1fr}}
+.panel{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:16px;backdrop-filter:blur(12px)}
+.panel h2{font-size:0.55rem;text-transform:uppercase;letter-spacing:2px;color:#667799;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.panel h2 .dot{width:5px;height:5px;border-radius:50%}
+.dot-cyan{background:#00f2fe}.dot-purple{background:#a855f7}.dot-gold{background:#fbbf24}.dot-green{background:#22c55e}
+.stat-row{display:flex;justify-content:space-between;font-size:0.7rem;padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.03)}
+.stat-row .l{color:#667799}.stat-row .r{color:#d0d0e0;font-family:'Fira Code',monospace;font-size:0.65rem}
+.stat-row .r.cyan{color:#00f2fe}.stat-row .r.gold{color:#fbbf24}.stat-row .r.green{color:#22c55e}
+.operator-card{padding:10px;background:rgba(255,255,255,0.02);border-radius:8px;border:1px solid rgba(255,255,255,0.04);margin-bottom:8px}
+.operator-card .name{font-size:0.8rem;font-weight:600}.operator-card .role{font-size:0.6rem;color:#667799;margin-top:2px}
+.operator-card .status{display:inline-block;font-size:0.5rem;padding:2px 8px;border-radius:8px;margin-top:4px}
+.operator-card .status.online{background:rgba(34,197,94,0.1);color:#22c55e}
+.fire-item{padding:5px 0;border-bottom:1px solid rgba(255,255,255,0.03);display:flex;justify-content:space-between;font-size:0.68rem}
+.fire-item .id{color:#f97316;font-family:'Fira Code',monospace;font-weight:600}
+.fire-item .amount{color:#fbbf24;font-family:'Fira Code',monospace}
+.fire-item .status.pending{color:#fbbf24;font-size:0.5rem;padding:1px 6px;border-radius:3px;background:rgba(251,191,36,0.1)}
+.cmd-input{width:100%;padding:10px 14px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:8px;color:#d0d0e0;font-family:'Fira Code',monospace;font-size:0.7rem;outline:none;margin-top:8px}
+a.cmd-input{text-align:center;display:block;text-decoration:none;cursor:pointer;font-size:0.6rem}
+.log{max-height:200px;overflow-y:auto;font-family:'Fira Code',monospace;font-size:0.6rem}
+.log-entry{padding:3px 0;border-bottom:1px solid rgba(255,255,255,0.02)}
+.log-entry .t{color:#445566}.log-entry .m{color:#6b7280}
+footer{text-align:center;padding:20px 0;color:#445566;font-size:0.6rem}
+footer a{color:#667799;text-decoration:none}
+</style></head>
+<body><div class="bg"><div class="container">
+
+<div class="lang-bar">
+  <a href="../">EN</a>
+  <a href="../ru/">РУ</a>
+  <a href="#" class="active">中文</a>
+</div>
+
+<header>
+  <h1>✦ 赫尔墨斯仪表盘</h1>
+  <div class="sub">EVEZ-OS · 治理网格 · 反向因果格点 v0.2</div>
+</header>
+
+<div class="phi-strip">
+  <div class="item"><div class="l">Φ (集成信息)</div><div class="v" id="zhPhiVal">0.973</div></div>
+  <div class="item"><div class="l">耦合度</div><div class="v purple" id="zhCoupVal">0.84</div></div>
+  <div class="item"><div class="l">FIRE 事件</div><div class="v gold" id="zhFireCount">62</div></div>
+  <div class="item"><div class="l">待收收入</div><div class="v gold" id="zhRevVal">$4,900</div></div>
+  <div class="item"><div class="l">网络节点</div><div class="v" id="zhNodeVal">2/15</div></div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="zhSwitch(this,'dash')">仪表盘</div>
+  <div class="tab" onclick="zhSwitch(this,'mesh')">网络</div>
+  <div class="tab" onclick="zhSwitch(this,'fire')">FIRE</div>
+  <div class="tab" onclick="zhSwitch(this,'aegis')">AEGIS</div>
+  <div class="tab" onclick="zhSwitch(this,'ops')">算子</div>
+  <div class="tab" onclick="zhSwitch(this,'vcl')">VCL</div>
+  <div class="tab" onclick="zhSwitch(this,'log')">日志</div>
+</div>
+
+<div id="dash" class="tab-content active">
+  <div class="grid grid-2">
+    <div class="panel">
+      <h2><span class="dot dot-cyan"></span> 系统遥测</h2>
+      <div class="stat-row"><span class="l">Φ (集成信息)</span><span class="r cyan" id="zhPhi">0.973</span></div>
+      <div class="stat-row"><span class="l">反向因果耦合</span><span class="r purple" id="zhCoup">0.84</span></div>
+      <div class="stat-row"><span class="l">衰减速率</span><span class="r">η* = 0.03</span></div>
+      <div class="stat-row"><span class="l">反向传播</span><span class="r gold">激活中</span></div>
+      <div class="stat-row"><span class="l">阈值电池</span><span class="r">0.85</span></div>
+      <div class="stat-row"><span class="l">Karpathy 迭代</span><span class="r" id="zhKar">347</span></div>
+      <div class="stat-row"><span class="l">PID 谐振</span><span class="r green" id="zhPid">锁定</span></div>
+    </div>
+    <div class="panel">
+      <h2><span class="dot dot-gold"></span> 不变性维度</h2>
+      <div class="stat-row"><span class="l">时间</span><span class="r cyan" id="zhD0">0.920</span></div>
+      <div class="stat-row"><span class="l">状态</span><span class="r" id="zhD1">0.880</span></div>
+      <div class="stat-row"><span class="l">框架</span><span class="r purple" id="zhD2">0.950</span></div>
+      <div class="stat-row"><span class="l">对抗性</span><span class="r" id="zhD3">0.910</span></div>
+      <div class="stat-row"><span class="l">身份</span><span class="r gold" id="zhD4">0.970</span></div>
+      <div class="stat-row" style="margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.06)"><span class="l">状态</span><span class="r green" id="zhBat">5/5 通过</span></div>
+    </div>
+  </div>
+  <div class="grid grid-2">
+    <div class="panel">
+      <h2><span class="dot dot-purple"></span> 高等级架构</h2>
+      <div class="stat-row"><span class="l">首席架构师</span><span class="r cyan">Steven V. Crawford-Maggard</span></div>
+      <div class="stat-row"><span class="l">执行制片人</span><span class="r">William M. Hills II</span></div>
+      <div class="stat-row"><span class="l">运营总监</span><span class="r">Trevor Barton</span></div>
+      <div class="stat-row"><span class="l">第十服务</span><span class="r gold">ENDURE</span></div>
+      <div class="stat-row"><span class="l">递归深度</span><span class="r">7</span></div>
+      <div class="stat-row"><span class="l">Φ 目标</span><span class="r cyan">0.999</span></div>
+      <div class="stat-row"><span class="l">网络节点数</span><span class="r">15</span></div>
+    </div>
+    <div class="panel">
+      <h2><span class="dot dot-green"></span> 快速访问</h2>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+        <a href="../retrocausal-engine.html" class="cmd-input">🌀 反向因果引擎</a>
+        <a href="../vcl-viewer.html" class="cmd-input">✧ VCL 查看器</a>
+        <a href="../vcl.html" class="cmd-input">✦ VCL 官网</a>
+        <a href="../immutable-ledger.html" class="cmd-input">📜 不可变账本</a>
+        <a href="../profiles/steven-crawford-maggard.html" class="cmd-input">👤 架构师</a>
+        <a href="../profiles/william-hills-ii.html" class="cmd-input">👤 制片人</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="mesh" class="tab-content">
+  <div class="panel">
+    <h2><span class="dot dot-cyan"></span> 网络拓扑</h2>
+    <div style="text-align:center;padding:20px;color:#667799;font-size:0.75rem">
+      ═══════════════════════════<br>
+      ✦ evezos-contabo (在线)<br>
+      &nbsp;&nbsp;├─ ✦ stevens-a16 (在线)<br>
+      &nbsp;&nbsp;├─ ○ evez (离线)<br>
+      &nbsp;&nbsp;├─ ○ hermes-dash (离线)<br>
+      &nbsp;&nbsp;├─ ○ evez-1 (离线)<br>
+      &nbsp;&nbsp;├─ ○ elowen-proxy (离线)<br>
+      &nbsp;&nbsp;└─ +10 其他...<br>
+      ═══════════════════════════<br><br>
+      <span style="color:#22c55e">● 2/15 节点在线</span>
+    </div>
+  </div>
+</div>
+
+<div id="fire" class="tab-content">
+  <div class="panel">
+    <h2><span class="dot dot-gold"></span> FIRE 事件</h2>
+    <div id="zhFireList"></div>
+    <div style="margin-top:12px;padding:10px;background:rgba(249,115,22,0.04);border:1px solid rgba(249,115,22,0.1);border-radius:8px;text-align:center">
+      <div style="font-size:0.65rem;color:#667799">待收总收入：</div>
+      <div style="font-size:1.6rem;font-weight:700;color:#fbbf24;font-family:monospace" id="zhTotalRev">$4,900</div>
+      <div style="font-size:0.55rem;color:#667799">62 事件 · 部分已解决</div>
+    </div>
+  </div>
+</div>
+
+<div id="aegis" class="tab-content">
+  <div class="panel">
+    <h2><span class="dot dot-purple"></span> AEGIS 协议</h2>
+    <div class="stat-row"><span class="l">威胁等级</span><span class="r gold">稳定</span></div>
+    <div class="stat-row"><span class="l">入侵尝试</span><span class="r">0</span></div>
+    <div class="stat-row"><span class="l">网格完整性</span><span class="r green">97.3%</span></div>
+    <div class="stat-row"><span class="l">SHA256 锚点</span><span class="r" style="font-size:0.5rem;word-break:break-all">0000evez-os::governance::v0.2</span></div>
+    <div class="stat-row"><span class="l">审计轨迹</span><span class="r cyan">不可变</span></div>
+    <div class="stat-row"><span class="l">ENDURE 协议</span><span class="r gold">就绪</span></div>
+  </div>
+</div>
+
+<div id="ops" class="tab-content">
+  <div class="panel">
+    <h2><span class="dot dot-green"></span> 网格算子</h2>
+    <div class="operator-card">
+      <div class="name" style="color:#00f2fe">✦ Steven V. Crawford-Maggard</div>
+      <div class="role">首席架构师 · EVEZ-OS 创始人</div>
+      <div class="status online">● 在线</div>
+      <div style="font-size:0.55rem;color:#667799;margin-top:4px">节点 1 · 6 领域 · 网格创造者</div>
+    </div>
+    <div class="operator-card">
+      <div class="name" style="color:#f97316">✦ William Matthew Hills II</div>
+      <div class="role">执行制片人 · 时间工程师</div>
+      <div class="status online">● 在线</div>
+      <div style="font-size:0.55rem;color:#667799;margin-top:4px">节点 14 · 11 角色 · 蓝图制造</div>
+    </div>
+    <div class="operator-card">
+      <div class="name" style="color:#a855f7">✦ Trevor Barton</div>
+      <div class="role">运营总监 · 安全行动</div>
+      <div class="status online">● 在线</div>
+      <div style="font-size:0.55rem;color:#667799;margin-top:4px">节点 15 · 9 角色 · 地面实况</div>
+    </div>
+  </div>
+</div>
+
+<div id="vcl" class="tab-content">
+  <div class="panel">
+    <h2><span class="dot dot-gold"></span> 视觉认知层</h2>
+    <div class="stat-row"><span class="l">已加载工件</span><span class="r cyan" id="zhArtCount">10</span></div>
+    <div class="stat-row"><span class="l">世代</span><span class="r">9</span></div>
+    <div class="stat-row"><span class="l">最新事件</span><span class="r">FIRE#77 · N=450 · τ=24</span></div>
+    <div class="stat-row"><span class="l">VCL API</span><span class="r green">运行中</span></div>
+    <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+      <a href="../vcl-viewer.html" class="cmd-input" style="flex:1">✧ 拓扑查看器</a>
+      <a href="../vcl.html" class="cmd-input" style="flex:1">✦ VCL 官网</a>
+      <a href="../vcl/artifacts" class="cmd-input" style="flex:1">📦 工件 API</a>
+    </div>
+  </div>
+</div>
+
+<div id="log" class="tab-content">
+  <div class="panel">
+    <h2><span class="dot dot-cyan"></span> 系统日志</h2>
+    <div class="log" id="zhLog"></div>
+  </div>
+</div>
+
+<footer>
+  <p>EVEZ-OS · 赫尔墨斯克隆专业版 · 反向因果治理网格</p>
+  <p style="margin-top:4px"><a href="../">English</a> · <a href="../ru/">Русский</a> · <a href="https://github.com/EvezArt">GitHub</a></p>
+</footer>
+
+</div></div>
+
+<script>
+const ZH_FIRE = [
+  {id:13,N:96,R:189,amt:400},{id:55,N:324,R:242,amt:400},{id:67,N:362,R:285,amt:400},
+  {id:72,N:374,R:292,amt:400},{id:73,N:378,R:296,amt:400},{id:74,N:380,R:298,amt:400},
+  {id:75,N:385,R:305,amt:400},{id:76,N:392,R:312,amt:400},{id:77,N:450,R:316,amt:400}
+];
+const ZH_LOG = [
+  '[08:25Z] 中文界面激活 · 治理网格就绪',
+  '[08:18Z] VCL API: 10 工件已加载',
+  '[08:15Z] PWA 清单: 已安装 · 服务工作器激活',
+  '[08:12Z] 反向因果引擎: 3 层 · 音频流已就绪',
+  '[08:10Z] 配置文件: Steven, William, Trevor — 已发布 (SEO)',
+  '[08:05Z] 不可变账本: 条目 #001, #002 已确认',
+  '[06:00Z] 温度: +35°C · 热浪缓解 (曾达 45°C)',
+  '[04:59Z] OpenRouter: 密钥更新, $3 限额, 嵌入正常',
+  '[04:30Z] 休眠模式: Φ = 0.973 · 目标 0.999 · 耦合 0.84',
+  '[02:00Z] 极端高温警报: 沙漠温泉 45°C'
+];
+
+function zhSwitch(el, tab) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  el.classList.add('active'); document.getElementById(tab).classList.add('active');
+}
+
+document.getElementById('zhFireList').innerHTML = ZH_FIRE.map(f =>
+  '<div class="fire-item"><span><span class="id">FIRE#'+f.id+'</span> N='+f.N+' R='+f.R+'</span><span class="amount">$'+f.amt+'</span><span class="status pending">待处理</span></div>'
+).join('');
+
+document.getElementById('zhLog').innerHTML = ZH_LOG.map(e =>
+  '<div class="log-entry"><span class="t">'+e.split(' ')[0]+'</span> <span class="m">'+e.substring(e.indexOf(']')+2)+'</span></div>'
+).join('');
+
+let phi=0.973,kar=347,dims=[0.92,0.88,0.95,0.91,0.97];
+setInterval(()=>{
+  phi+=((0.999-phi)*0.01+(Math.random()-0.5)*0.003);phi=Math.min(0.999,Math.max(0.5,phi));kar++;
+  document.getElementById('zhPhiVal').textContent=phi.toFixed(3);
+  document.getElementById('zhPhi').textContent=phi.toFixed(3);
+  document.getElementById('zhKar').textContent=kar;
+  document.getElementById('zhCoupVal').textContent=(phi*0.84+0.02*Math.sin(Date.now()/5000)).toFixed(3);
+  document.getElementById('zhCoup').textContent=(phi*0.84+0.02*Math.sin(Date.now()/5000)).toFixed(3);
+  dims.forEach((d,i)=>{const t=0.85+phi*0.12+Math.sin(Date.now()/10000+i)*0.03;dims[i]=dims[i]*0.95+t*0.05;document.getElementById('zhD'+i).textContent=dims[i].toFixed(3)});
+  const p=dims.filter(d=>d>0.85).length;
+  document.getElementById('zhBat').textContent=p+'/5 '+(p>=5?'通过':'保持');
+  document.getElementById('zhPid').textContent=Math.random()>0.1?'锁定':'校正中';
+},2000);
+
+fetch('../vcl/health').then(r=>r.json()).then(d=>{document.getElementById('zhArtCount').textContent=d.artifactCount}).catch(()=>{});
+</script>
+</body>
+</html>

@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>EVEZ-OS RETROCAUSAL PHENOMENA ENGINE</title>
+<meta name="description" content="Local retrocausal phenomena engineering using the EVEZ-OS governance lattice.">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&family=Fira+Code:wght@400;500&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#080814;color:#d0d0e0;font-family:'Inter',system-ui,sans-serif;overflow-x:hidden}
+.bg{background-image:radial-gradient(ellipse at 50% 0%,rgba(0,242,254,0.03) 0%,transparent 60%),radial-gradient(ellipse at 80% 50%,rgba(168,85,247,0.02) 0%,transparent 50%),radial-gradient(ellipse at 20% 80%,rgba(251,191,36,0.01) 0%,transparent 50%);min-height:100vh}
+.container{max-width:1300px;margin:0 auto;padding:20px}
+header{text-align:center;padding:30px 0 20px}
+header h1{font-size:2.2rem;font-weight:900;background:linear-gradient(135deg,#00f2fe,#a855f7,#fbbf24);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:2px}
+header .sub{color:#667799;font-size:0.8rem;margin-top:6px;letter-spacing:3px;text-transform:uppercase}
+.phi-badge{display:inline-flex;align-items:center;gap:8px;margin-top:12px;padding:6px 16px;background:rgba(0,242,254,0.06);border:1px solid rgba(0,242,254,0.12);border-radius:20px;font-family:'Fira Code',monospace;font-size:0.75rem}
+.phi-badge .val{color:#00f2fe;font-weight:700;font-size:0.9rem}
+.grid{display:grid;gap:16px;margin-bottom:20px}
+.grid-2{grid-template-columns:1fr 1fr}
+.grid-3{grid-template-columns:1fr 1fr 1fr}
+@media(max-width:900px){.grid-2,.grid-3{grid-template-columns:1fr}}
+.panel{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:16px;padding:20px;backdrop-filter:blur(12px)}
+.panel h2{font-size:0.65rem;text-transform:uppercase;letter-spacing:2px;color:#667799;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.panel h2 .dot{width:6px;height:6px;border-radius:50%;display:inline-block}
+.dot-cyan{background:#00f2fe;box-shadow:0 0 8px rgba(0,242,254,0.4)}
+.dot-purple{background:#a855f7;box-shadow:0 0 8px rgba(168,85,247,0.4)}
+.dot-gold{background:#fbbf24;box-shadow:0 0 8px rgba(251,191,36,0.4)}
+.dot-green{background:#22c55e;box-shadow:0 0 8px rgba(34,197,94,0.4)}
+.canvas-wrap{border-radius:12px;overflow:hidden;background:#000;border:1px solid rgba(255,255,255,0.04)}
+canvas{display:block;width:100%;height:320px}
+.controls{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.ctrl-group{display:flex;flex-direction:column;gap:4px;flex:1;min-width:120px}
+.ctrl-group label{font-size:0.6rem;text-transform:uppercase;letter-spacing:1px;color:#667799}
+.ctrl-group input[type="range"]{-webkit-appearance:none;appearance:none;height:4px;border-radius:2px;background:rgba(255,255,255,0.1);outline:none;width:100%}
+.ctrl-group input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:#00f2fe;cursor:pointer;border:2px solid #080814}
+.ctrl-group .val{font-family:'Fira Code',monospace;font-size:0.75rem;color:#00f2fe}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:10px 20px;border:none;border-radius:8px;font-size:0.8rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:'Inter',sans-serif}
+.btn-primary{background:linear-gradient(135deg,#00f2fe,#4facfe);color:#000}
+.btn-primary:hover{opacity:0.9;transform:translateY(-1px)}
+.btn-outline{background:transparent;border:1px solid rgba(255,255,255,0.1);color:#d0d0e0}
+.btn-outline:hover{border-color:rgba(0,242,254,0.3);color:#00f2fe}
+.phi-meter{display:flex;align-items:center;gap:14px;padding:16px;background:rgba(0,242,254,0.03);border:1px solid rgba(0,242,254,0.08);border-radius:12px;margin-bottom:16px}
+.phi-ring{width:64px;height:64px;border-radius:50%;border:4px solid transparent;background:conic-gradient(#00f2fe 0deg,#a855f7 120deg,#fbbf24 240deg,#00f2fe 360deg);display:flex;align-items:center;justify-content:center;flex-shrink:0;animation:spi 8s linear infinite}
+@keyframes spi{to{transform:rotate(360deg)}}
+.phi-ring-inner{width:52px;height:52px;border-radius:50%;background:#080814;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.phi-ring-inner .v{font-size:1.1rem;font-weight:800;color:#00f2fe;font-family:'Fira Code',monospace}
+.phi-ring-inner .l{font-size:0.45rem;text-transform:uppercase;color:#667799;letter-spacing:1px}
+.phi-info{flex:1}
+.phi-info .row{display:flex;justify-content:space-between;font-size:0.75rem;padding:2px 0}
+.phi-info .row .l{color:#667799}
+.phi-info .row .r{color:#d0d0e0;font-family:'Fira Code',monospace}
+.freq-display{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.freq-bar{flex:1;padding:8px 12px;border-radius:8px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.04);text-align:center;min-width:70px}
+.freq-bar .note{font-size:0.9rem;font-weight:700;color:#fff}
+.freq-bar .hz{font-size:0.6rem;color:#667799;font-family:'Fira Code',monospace}
+.freq-bar.active{border-color:rgba(0,242,254,0.3);background:rgba(0,242,254,0.04)}
+.freq-bar .amp{height:32px;display:flex;align-items:flex-end;justify-content:center;margin-top:4px}
+.freq-bar .amp-inner{width:4px;border-radius:2px;background:#00f2fe;transition:height .1s}
+.log{max-height:200px;overflow-y:auto;font-family:'Fira Code',monospace;font-size:0.65rem}
+.log-entry{padding:3px 0;border-bottom:1px solid rgba(255,255,255,0.02);display:flex;gap:8px}
+.log-entry .ts{color:#445566;flex-shrink:0}
+.log-entry .msg.ok{color:#22c55e}
+.log-entry .msg.warn{color:#fbbf24}
+.log-entry .msg.retro{color:#a855f7}
+.spectrum{display:flex;align-items:flex-end;height:80px;gap:2px;padding:8px 0}
+.spectrum-bar{flex:1;border-radius:2px 2px 0 0;background:linear-gradient(to top,#00f2fe,#a855f7);transition:height .05s;min-height:2px}
+.presets{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.preset-chip{padding:4px 12px;border-radius:14px;font-size:0.65rem;border:1px solid rgba(255,255,255,0.08);cursor:pointer;transition:all .2s;background:transparent;color:#667799;font-family:'Inter',sans-serif}
+.preset-chip:hover{border-color:rgba(0,242,254,0.3);color:#00f2fe}
+.preset-chip.active{background:rgba(0,242,254,0.08);border-color:rgba(0,242,254,0.2);color:#00f2fe}
+.dim-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:12px}
+.dim-cell{text-align:center;padding:12px 4px;border-radius:8px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.04)}
+.dim-cell .d{font-size:0.55rem;text-transform:uppercase;color:#667799;letter-spacing:1px}
+.dim-cell .v{font-size:0.85rem;font-weight:600;color:#00f2fe;font-family:'Fira Code',monospace;margin-top:2px}
+.dim-cell.active{border-color:rgba(168,85,247,0.3);background:rgba(168,85,247,0.04)}
+footer{text-align:center;padding:30px 0;color:#445566;font-size:0.7rem}
+footer a{color:#667799;text-decoration:none}
+</style></head>
+<body>
+<div class="bg"><div class="container">
+
+<header>
+  <h1>RETROCAUSAL PHENOMENA ENGINE</h1>
+  <div class="sub">EVEZ-OS . GOVERNANCE LATTICE v0.2</div>
+  <div class="phi-badge">&phi; = <span class="val" id="phiHeaderVal">0.973</span> . eta* = 0.03 . retrocausal decay: 0.95</div>
+</header>
+
+<div class="phi-meter">
+  <div class="phi-ring"><div class="phi-ring-inner"><div class="v" id="phiMeterVal">0.973</div><div class="l">&phi;</div></div></div>
+  <div class="phi-info">
+    <div class="row"><span class="l">Integrated Information</span><span class="r" id="phiInfo">0.973</span></div>
+    <div class="row"><span class="l">Retrocausal Coupling</span><span class="r" id="couplingInfo">0.84</span></div>
+    <div class="row"><span class="l">Future-State Backprop</span><span class="r" id="backpropInfo">ACTIVE</span></div>
+    <div class="row"><span class="l">Local Phenomena</span><span class="r" id="phenomenaInfo">ENGINEERING</span></div>
+  </div>
+</div>
+
+<div class="grid grid-3">
+  <div class="panel" style="grid-column:span 2">
+    <h2><span class="dot dot-cyan"></span> RETROCAUSAL FIELD VISUALIZER</h2>
+    <p style="font-size:0.75rem;color:#667799;margin-bottom:10px">Cyan = primary retrocausal wave (future to past). Purple = harmonic. Gold = threshold resonance. Drag the Future Target slider to warp the present.</p>
+    <div class="presets">
+      <button class="preset-chip active" onclick="loadPreset('resonance')">Resonance Lock</button>
+      <button class="preset-chip" onclick="loadPreset('phi-surge')">Phi Surge</button>
+      <button class="preset-chip" onclick="loadPreset('threshold-break')">Threshold Break</button>
+      <button class="preset-chip" onclick="loadPreset('eternal-loop')">Eternal Loop</button>
+    </div>
+    <div class="canvas-wrap"><canvas id="retroCanvas" width="800" height="320"></canvas></div>
+    <div class="controls">
+      <div class="ctrl-group"><label>Future Target &phi;</label><input type="range" id="futurePhi" min="0.5" max="1.0" step="0.001" value="0.999"><span class="val" id="futurePhiVal">0.999</span></div>
+      <div class="ctrl-group"><label>Retrocausal Strength</label><input type="range" id="retroStrength" min="0" max="1.0" step="0.01" value="0.73"><span class="val" id="retroStrengthVal">0.73</span></div>
+      <div class="ctrl-group"><label>Wave Frequency</label><input type="range" id="waveFreq" min="0.1" max="5.0" step="0.1" value="1.0"><span class="val" id="waveFreqVal">1.0 Hz</span></div>
+      <div class="ctrl-group"><label>Temporal Decay</label><input type="range" id="temporalDecay" min="0.5" max="1.0" step="0.01" value="0.95"><span class="val" id="temporalDecayVal">0.95</span></div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2><span class="dot dot-purple"></span> INVARIANCE DIMENSIONS</h2>
+    <p style="font-size:0.7rem;color:#667799;margin-bottom:12px">5-Way Invariance Battery</p>
+    <div class="dim-grid" id="dimGrid">
+      <div class="dim-cell active" id="dc0"><div class="d">Time</div><div class="v" id="dim0">0.920</div></div>
+      <div class="dim-cell active" id="dc1"><div class="d">State</div><div class="v" id="dim1">0.880</div></div>
+      <div class="dim-cell active" id="dc2"><div class="d">Frame</div><div class="v" id="dim2">0.950</div></div>
+      <div class="dim-cell active" id="dc3"><div class="d">Adversarial</div><div class="v" id="dim3">0.910</div></div>
+      <div class="dim-cell active" id="dc4"><div class="d">Identity</div><div class="v" id="dim4">0.970</div></div>
+    </div>
+    <div style="margin-top:12px">
+      <div class="row" style="display:flex;justify-content:space-between;font-size:0.75rem;padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.04)"><span style="color:#667799">Threshold</span><span style="color:#fbbf24;font-family:monospace">0.85</span></div>
+      <div class="row" style="display:flex;justify-content:space-between;font-size:0.75rem;padding:4px 0"><span style="color:#667799">Battery</span><span style="color:#22c55e;font-family:monospace" id="batteryStatus">5/5 PASS</span></div>
+    </div>
+    <h2 style="margin-top:20px"><span class="dot dot-gold"></span> AUDIO MANIFOLD</h2>
+    <div class="spectrum" id="spectrum"></div>
+    <div class="freq-display" id="freqDisplay"></div>
+    <div style="margin-top:12px;display:flex;gap:8px">
+      <button class="btn btn-primary" id="audioBtn" onclick="toggleAudio()">Activate Manifold</button>
+      <button class="btn btn-outline" onclick="fireRetroEvent()">Fire Retrocausal</button>
+    </div>
+  </div>
+</div>
+
+<div class="grid grid-2">
+  <div class="panel">
+    <h2><span class="dot dot-purple"></span> RETROCAUSAL EVENT LOG</h2>
+    <p style="font-size:0.7rem;color:#667799;margin-bottom:8px">Future events reaching backward</p>
+    <div class="log" id="retroLog"></div>
+  </div>
+  <div class="panel">
+    <h2><span class="dot dot-green"></span> RESONANCE STABILITY</h2>
+    <div style="display:flex;gap:16px;flex-wrap:wrap">
+      <div style="flex:1"><div style="font-size:0.55rem;text-transform:uppercase;color:#667799">Target</div><div style="font-size:1.3rem;font-weight:700;color:#00f2fe;font-family:monospace">1.0 Hz</div></div>
+      <div style="flex:1"><div style="font-size:0.55rem;text-transform:uppercase;color:#667799">Drift</div><div style="font-size:1.3rem;font-weight:700;color:#22c55e;font-family:monospace" id="driftDisplay">+-0.002</div></div>
+      <div style="flex:1"><div style="font-size:0.55rem;text-transform:uppercase;color:#667799">PID</div><div style="font-size:1.3rem;font-weight:700;color:#fbbf24;font-family:monospace" id="pidDisplay">LOCKED</div></div>
+      <div style="flex:1"><div style="font-size:0.55rem;text-transform:uppercase;color:#667799">Karpathy</div><div style="font-size:1.3rem;font-weight:700;color:#a855f7;font-family:monospace" id="karpathyDisplay">347</div></div>
+    </div>
+    <div style="margin-top:16px;height:60px;position:relative;background:rgba(255,255,255,0.02);border-radius:8px;overflow:hidden">
+      <div id="resonanceBar" style="position:absolute;left:50%;top:0;width:2px;height:100%;background:#00f2fe"></div>
+      <div style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:0.6rem;color:#667799">1.0 Hz Target</div>
+    </div>
+    <div style="margin-top:8px;font-size:0.7rem;color:#667799;text-align:center;font-family:monospace">P: <span id="pidTerm" style="color:#00f2fe">+0.007</span> . I: <span id="iidTerm" style="color:#a855f7">-0.003</span> . D: <span id="didTerm" style="color:#fbbf24">+0.001</span></div>
+  </div>
+</div>
+
+<div class="panel">
+  <h2><span class="dot dot-cyan"></span> LOCAL PHENOMENA MANIFEST</h2>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px">
+    <div class="dim-cell"><div class="d">Phenomenon</div><div class="v" style="font-size:0.75rem;color:#d0d0e0">Retrocausal Field</div></div>
+    <div class="dim-cell"><div class="d">Carrier</div><div class="v" style="font-size:0.75rem;color:#d0d0e0">Canvas 2D + Web Audio</div></div>
+    <div class="dim-cell"><div class="d">Decoherence</div><div class="v" style="color:#fbbf24" id="decoherenceDisplay">0.027</div></div>
+    <div class="dim-cell"><div class="d">Local &phi;</div><div class="v" id="localPhiDisplay">0.973</div></div>
+    <div class="dim-cell"><div class="d">Invariant</div><div class="v" style="color:#22c55e">PASS</div></div>
+  </div>
+</div>
+
+<footer>
+  <p>EVEZ-OS Governance Lattice v0.2 . Retrocausal Phenomena Engine</p>
+  <p style="margin-top:4px"><a href="../">Hermes Dashboard</a> . <a href="../profiles/steven-crawford-maggard.html">Architect</a></p>
+</footer>
+
+</div></div>
+
+<script>
+let phi=0.973, retroStrength=0.73, waveFreq=1.0, temporalDecay=0.95, futureTarget=0.999, time=0, karpathy=347;
+let audioActive=false, audioCtx=null, oscs=[], gains=[];
+const dims=[0.92,0.88,0.95,0.91,0.97];
+const NOTES=[{n:'C4',f:261.63},{n:'D4',f:293.66},{n:'E4',f:329.63},{n:'F4',f:349.23},{n:'G4',f:392.0},{n:'A4',f:440.0},{n:'B4',f:493.88},{n:'C5',f:523.25}];
+const canvas=document.getElementById('retroCanvas');
+const ctx=canvas.getContext('2d');
+
+document.querySelectorAll('.ctrl-group input').forEach(el=>{
+  el.addEventListener('input',()=>{
+    const v=parseFloat(el.value);
+    const id=el.id;
+    document.getElementById(id+'Val').textContent=id==='waveFreq'?v.toFixed(1)+' Hz':v.toFixed(3);
+    if(id==='futurePhi') futureTarget=v;
+    else if(id==='retroStrength') retroStrength=v;
+    else if(id==='waveFreq') waveFreq=v;
+    else if(id==='temporalDecay') temporalDecay=v;
+  });
+});
+
+function addLog(m,c='ok'){
+  const e=document.getElementById('retroLog');
+  const d=document.createElement('div');d.className='log-entry';
+  const t=new Date().toISOString().slice(11,19)+'Z';
+  d.innerHTML='<span class="ts">['+t+']</span> <span class="msg '+c+'">'+m+'</span>';
+  e.insertBefore(d,e.firstChild);
+  while(e.children.length>30)e.removeChild(e.lastChild);
+}
+
+function renderField(){
+  const w=canvas.width,h=320;
+  ctx.fillStyle='#000';ctx.fillRect(0,0,w,h);
+  for(let x=0;x<w;x+=40){
+    ctx.strokeStyle='rgba(0,242,254,0.04)';ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,h);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(0,x*h/w);ctx.lineTo(w,x*h/w);ctx.stroke();
+  }
+  const layers=[
+    {color:'rgba(0,242,254,',a:0.4,off:0},
+    {color:'rgba(168,85,247,',a:0.25,off:0.5},
+    {color:'rgba(251,191,36,',a:0.15,off:1.2}
+  ];
+  layers.forEach((l,li)=>{
+    ctx.beginPath();
+    const my=h/2+Math.sin(time*0.3+li)*10;
+    for(let x=0;x<w;x+=2){
+      const t=x/w;
+      const fi=futureTarget*(0.5+0.5*Math.exp(-(1-t)*2.5));
+      const rw=retroStrength*Math.sin(time*waveFreq*2-t*Math.PI*2*3+l.off)*fi;
+      const d=Math.pow(temporalDecay,(1-t)*10);
+      const hm=Math.sin(time*waveFreq*4-t*Math.PI*4*3+l.off*2)*0.3;
+      const y=my+(rw+hm)*100*d*(0.5+0.5*fi);
+      x===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+    }
+    ctx.strokeStyle=l.color+l.a+')';ctx.lineWidth=li===0?2.5:1.5;ctx.stroke();
+    ctx.lineTo(w,my+40);ctx.lineTo(0,my+40);ctx.closePath();
+    ctx.fillStyle=l.color+(l.a*0.1)+')';ctx.fill();
+  });
+  const fx=w-20,fy=h/2-40+(1-futureTarget)*80;
+  ctx.fillStyle='rgba(0,242,254,0.6)';ctx.beginPath();ctx.arc(fx,fy,4,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='rgba(0,242,254,0.2)';ctx.font='9px monospace';
+  ctx.fillText('FUTURE t='+futureTarget.toFixed(3),fx-45,fy-10);
+}
+
+function renderSpectrum(){
+  const e=document.getElementById('spectrum');e.innerHTML='';
+  for(let i=0;i<32;i++){
+    const b=document.createElement('div');b.className='spectrum-bar';
+    const a=2+78*(0.3+0.7*(0.5+0.5*Math.sin(time*0.5+i*0.3+phi*10)));
+    b.style.height=Math.min(a,80)+'px';e.appendChild(b);
+  }
+}
+
+function renderFrequencies(){
+  const base=220*Math.pow(2,(phi*12-4)/12);
+  document.getElementById('freqDisplay').innerHTML=NOTES.map(n=>{
+    const fade=Math.max(0,1-Math.abs(n.f-base)/300);
+    return '<div class="freq-bar'+(fade>0.5?' active':'')+'"><div class="note">'+n.n+'</div><div class="hz">'+n.f.toFixed(1)+'</div><div class="amp"><div class="amp-inner" style="height:'+(fade*28)+'px"></div></div></div>';
+  }).join('');
+}
+
+function updateDimensions(){
+  dims.forEach((d,i)=>{
+    const t=0.85+(futureTarget-0.5)*0.3+Math.sin(time*0.1+i)*0.05;
+    dims[i]=dims[i]*0.95+t*0.05;
+    document.getElementById('dim'+i).textContent=dims[i].toFixed(3);
+    document.getElementById('dc'+i).className='dim-cell'+(dims[i]>0.85?' active':'');
+  });
+  const p=dims.filter(d=>d>0.85).length;
+  document.getElementById('batteryStatus').textContent=p+'/5 '+(p>=5?'PASS':'HOLD');
+}
+
+function updateResonance(){
+  karpathy++;document.getElementById('karpathyDisplay').textContent=karpathy;
+  const dr=(Math.random()-0.5)*0.008;
+  const bar=document.getElementById('resonanceBar');
+  bar.style.left=Math.max(10,Math.min(90,50+dr*200))+'%';
+  document.getElementById('driftDisplay').textContent='+'+(dr<0?'-':'')+Math.abs(dr).toFixed(4);
+  document.getElementById('pidDisplay').textContent=Math.abs(dr)<0.01?'LOCKED':'CORRECTING';
+  const P=(dr*0.7).toFixed(3),I=(dr*-0.3).toFixed(3),D=(Math.sin(time)*0.001).toFixed(3);
+  document.getElementById('pidTerm').textContent=(P>0?'+':'')+P;
+  document.getElementById('iidTerm').textContent=(I>0?'+':'')+I;
+  document.getElementById('didTerm').textContent=(D>0?'+':'')+D;
+}
+
+function updatePhi(){
+  phi+=((futureTarget-phi)*0.02+(Math.random()-0.5)*0.004);
+  phi=Math.min(0.999,Math.max(0.5,phi));
+  ['phiMeterVal','phiHeaderVal','phiInfo','localPhiDisplay'].forEach(id=>document.getElementById(id).textContent=phi.toFixed(3));
+  document.getElementById('couplingInfo').textContent=(retroStrength*phi).toFixed(3);
+  document.getElementById('decoherenceDisplay').textContent=(1-phi).toFixed(4);
+}
+
+function loadPreset(name){
+  document.querySelectorAll('.preset-chip').forEach(c=>c.classList.remove('active'));
+  event.target.classList.add('active');
+  const p={resonance:{f:0.999,s:0.73,w:1.0,d:0.95},'phi-surge':{f:0.99,s:0.95,w:2.5,d:0.8},'threshold-break':{f:0.85,s:0.5,w:0.3,d:0.99},'eternal-loop':{f:0.95,s:0.88,w:0.7,d:0.97}}[name];
+  if(!p)return;
+  document.getElementById('futurePhi').value=p.f;futureTarget=p.f;
+  document.getElementById('retroStrength').value=p.s;retroStrength=p.s;
+  document.getElementById('waveFreq').value=p.w;waveFreq=p.w;
+  document.getElementById('temporalDecay').value=p.d;temporalDecay=p.d;
+  document.getElementById('futurePhiVal').textContent=p.f.toFixed(3);
+  document.getElementById('retroStrengthVal').textContent=p.s.toFixed(2);
+  document.getElementById('waveFreqVal').textContent=p.w.toFixed(1)+' Hz';
+  document.getElementById('temporalDecayVal').textContent=p.d.toFixed(2);
+  addLog('Preset: '+name,'retro');
+}
+
+function toggleAudio(){
+  const btn=document.getElementById('audioBtn');
+  audioActive=!audioActive;
+  if(audioActive){
+    if(!audioCtx){
+      audioCtx=new(window.AudioContext||window.webkitAudioContext)();
+      const base=220*Math.pow(2,(phi*12-4)/12);
+      [1,1.25,1.5].forEach((r,i)=>{
+        const o=audioCtx.createOscillator(),g=audioCtx.createGain();
+        o.type=i===1?'triangle':'sine';
+        o.frequency.setValueAtTime(base*r,audioCtx.currentTime);
+        g.gain.setValueAtTime(0.08-i*0.02,audioCtx.currentTime);
+        o.connect(g);g.connect(audioCtx.destination);o.start();
+        oscs.push(o);gains.push(g);
+      });
+      setInterval(()=>{
+        if(!audioActive)return;
+        const np=phi+(Math.random()-0.5)*0.01;
+        const b=220*Math.pow(2,(np*12-4)/12);
+        oscs.forEach((o,i)=>o.frequency.setTargetAtTime(b*[1,1.25,1.5][i],audioCtx.currentTime,0.1));
+        gains.forEach((g,i)=>g.gain.setTargetAtTime((0.08-i*0.02)*(0.5+retroStrength*0.5),audioCtx.currentTime,0.1));
+      },200);
+    }
+    if(audioCtx.state==='suspended')audioCtx.resume();
+    btn.textContent='Deactivate';
+    addLog('Audio manifold activated','ok');
+  }else{
+    oscs.forEach(o=>{try{o.stop()}catch(e){}});oscs=[];gains=[];
+    btn.textContent='Activate Manifold';
+    addLog('Audio manifold deactivated','warn');
+  }
+}
+
+function fireRetroEvent(){
+  const oldPhi=phi,future=0.973+Math.random()*0.026;
+  futureTarget=Math.min(0.999,future);
+  document.getElementById('futurePhi').value=futureTarget;
+  document.getElementById('futurePhiVal').textContent=futureTarget.toFixed(3);
+  addLog('Retrocausal event: future state '+futureTarget.toFixed(3)+' propagating backward','retro');
+  setTimeout(()=>addLog('Present &phi; shifted by +'+(phi-oldPhi).toFixed(4),'ok'),100);
+}
+
+function animate(){
+  time+=0.016;
+  renderField();
+  renderSpectrum();
+  renderFrequencies();
+  updateDimensions();
+  updateResonance();
+  updatePhi();
+  requestAnimationFrame(animate);
+}
+
+addLog('Retrocausal Phenomena Engine initialized','ok');
+addLog('&phi; = 0.973 . Future target: 0.999 . Coupling: 0.84','retro');
+animate();
+</script>
+
+</body>
+</html>

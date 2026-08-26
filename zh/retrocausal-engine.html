@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>EVEZ-OS 反向因果现象引擎 — 中文</title>
+<meta name="description" content="EVEZ-OS 反向因果现象引擎。波场可视化、Φ遥测、音频合成、不变性电池。">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;600;700;900&family=Fira+Code:wght@400;500&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#080814;color:#d0d0e0;font-family:'Noto Sans SC','Inter',sans-serif}
+.bg{min-height:100vh}.container{max-width:1300px;margin:0 auto;padding:20px}
+.lang-bar{display:flex;justify-content:flex-end;gap:4px;padding:8px 0}
+.lang-bar a{padding:4px 10px;border-radius:4px;font-size:0.65rem;color:#667799;text-decoration:none;border:1px solid transparent}
+.lang-bar a.active{background:rgba(0,242,254,0.08);border-color:rgba(0,242,254,0.2);color:#00f2fe}
+header{text-align:center;padding:30px 0 20px}
+h1{font-size:1.6rem;font-weight:900;background:linear-gradient(135deg,#00f2fe,#a855f7,#fbbf24);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.sub{color:#667799;font-size:0.7rem;letter-spacing:3px;text-transform:uppercase}
+.phi-badge{display:inline-flex;align-items:center;gap:8px;margin-top:12px;padding:6px 16px;background:rgba(0,242,254,0.06);border:1px solid rgba(0,242,254,0.12);border-radius:20px;font-family:'Fira Code',monospace;font-size:0.65rem}
+.phi-badge .val{color:#00f2fe;font-weight:700}
+.grid{display:grid;gap:16px;margin-bottom:20px;grid-template-columns:2fr 1fr}
+.grid-2{grid-template-columns:1fr 1fr}
+@media(max-width:900px){.grid,.grid-2{grid-template-columns:1fr}}
+.panel{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:16px;padding:20px;backdrop-filter:blur(12px)}
+.panel h2{font-size:0.55rem;text-transform:uppercase;letter-spacing:2px;color:#667799;margin-bottom:12px}
+.canvas-wrap{border-radius:12px;overflow:hidden;background:#000;border:1px solid rgba(255,255,255,0.04)}
+canvas{display:block;width:100%;height:320px}
+.controls{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.ctrl-group{flex:1;min-width:120px}
+.ctrl-group label{font-size:0.5rem;text-transform:uppercase;letter-spacing:1px;color:#667799}
+.ctrl-group input[type=range]{-webkit-appearance:none;appearance:none;height:4px;border-radius:2px;background:rgba(255,255,255,0.1);outline:none;width:100%}
+.ctrl-group input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:#00f2fe;cursor:pointer;border:2px solid #080814}
+.ctrl-group .val{font-family:'Fira Code',monospace;font-size:0.65rem;color:#00f2fe}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:10px 20px;border:none;border-radius:8px;font-size:0.7rem;font-weight:600;cursor:pointer}
+.btn-primary{background:linear-gradient(135deg,#00f2fe,#4facfe);color:#000}
+.btn-outline{background:transparent;border:1px solid rgba(255,255,255,0.1);color:#d0d0e0}
+.phi-ring{width:60px;height:60px;border-radius:50%;border:4px solid transparent;background:conic-gradient(#00f2fe 0deg,#a855f7 120deg,#fbbf24 240deg,#00f2fe 360deg);display:flex;align-items:center;justify-content:center;flex-shrink:0;animation:sp 8s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+.phi-ring-inner{width:48px;height:48px;border-radius:50%;background:#080814;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.phi-ring-inner .v{font-size:0.95rem;font-weight:800;color:#00f2fe;font-family:'Fira Code',monospace}
+.dim-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.dim-cell{text-align:center;padding:10px 4px;border-radius:8px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.04)}
+.dim-cell .d{font-size:0.5rem;text-transform:uppercase;color:#667799}.dim-cell .v{font-size:0.75rem;font-weight:600;color:#00f2fe;font-family:'Fira Code',monospace}
+.dim-cell.active{border-color:rgba(168,85,247,0.3);background:rgba(168,85,247,0.04)}
+.spectrum{display:flex;align-items:flex-end;height:70px;gap:2px}
+.spectrum-bar{flex:1;border-radius:2px 2px 0 0;background:linear-gradient(to top,#00f2fe,#a855f7);min-height:2px}
+.log{max-height:180px;overflow-y:auto;font-family:'Fira Code',monospace;font-size:0.55rem}
+.log-entry{padding:3px 0;border-bottom:1px solid rgba(255,255,255,0.02);display:flex;gap:8px}
+.log-entry .ts{color:#445566}.log-entry .ok{color:#22c55e}.log-entry .warn{color:#fbbf24}.log-entry .retro{color:#a855f7}
+footer{text-align:center;padding:30px 0;color:#445566;font-size:0.6rem}
+.presets{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.preset-chip{padding:4px 12px;border-radius:14px;font-size:0.55rem;border:1px solid rgba(255,255,255,0.08);cursor:pointer;background:transparent;color:#667799}
+.preset-chip.active{background:rgba(0,242,254,0.08);border-color:rgba(0,242,254,0.2);color:#00f2fe}
+</style></head>
+<body><div class="bg"><div class="container">
+<div class="lang-bar">
+  <a href="../../retrocausal-engine.html">EN</a>
+  <a href="../../ru/retrocausal-engine.html">РУ</a>
+  <a href="#" class="active">中文</a>
+  <a href="../" style="margin-left:auto;"><< 仪表盘</a>
+</div>
+<header><h1>反向因果现象引擎</h1>
+<div class="sub">EVEZ-OS · 局部现象工程 · 因果场操控</div>
+<div class="phi-badge">Φ = <span class="val" id="zhPH">0.973</span> · η* = 0.03</div></header>
+
+<div style="display:flex;align-items:center;gap:14px;padding:14px;background:rgba(0,242,254,0.03);border:1px solid rgba(0,242,254,0.08);border-radius:12px;margin-bottom:16px">
+  <div class="phi-ring"><div class="phi-ring-inner"><div class="v" id="zhPM">0.973</div></div></div>
+  <div style="flex:1;font-size:0.68rem">
+    <div style="display:flex;justify-content:space-between"><span style="color:#667799">集成信息</span><span style="color:#00f2fe;font-family:monospace" id="zhPI">0.973</span></div>
+    <div style="display:flex;justify-content:space-between"><span style="color:#667799">反向因果耦合</span><span style="color:#a855f7;font-family:monospace" id="zhCI">0.84</span></div>
+    <div style="display:flex;justify-content:space-between"><span style="color:#667799">未来反向传播</span><span style="color:#fbbf24;font-family:monospace">激活中</span></div>
+    <div style="display:flex;justify-content:space-between"><span style="color:#667799">局部现象</span><span style="color:#22c55e;font-family:monospace">工程中</span></div>
+  </div>
+</div>
+
+<div class="grid">
+  <div class="panel">
+    <h2>反向因果场可视化</h2>
+    <p style="font-size:0.65rem;color:#667799;margin-bottom:10px">青色=主因果波(未来→过去)。紫色=谐波。金色=阈值谐振。拖动"未来目标"滑块扭曲现在。</p>
+    <div class="presets">
+      <button class="preset-chip active" onclick="zhP('resonance',this)">谐振锁定</button>
+      <button class="preset-chip" onclick="zhP('phi-surge',this)">Φ 浪涌</button>
+      <button class="preset-chip" onclick="zhP('threshold-break',this)">阈值突破</button>
+      <button class="preset-chip" onclick="zhP('eternal-loop',this)">永恒循环</button>
+    </div>
+    <div class="canvas-wrap"><canvas id="zhC" width="800" height="320"></canvas></div>
+    <div class="controls">
+      <div class="ctrl-group"><label>未来目标 Φ</label><input type=range id="zhF" min=0.5 max=1 step=0.001 value=0.999><span class=val id="zhFV">0.999</span></div>
+      <div class="ctrl-group"><label>因果强度</label><input type=range id="zhS" min=0 max=1 step=0.01 value=0.73><span class=val id="zhSV">0.73</span></div>
+      <div class="ctrl-group"><label>波频</label><input type=range id="zhW" min=0.1 max=5 step=0.1 value=1><span class=val id="zhWV">1.0 Hz</span></div>
+      <div class="ctrl-group"><label>时间衰减</label><input type=range id="zhD" min=0.5 max=1 step=0.01 value=0.95><span class=val id="zhDV">0.95</span></div>
+    </div>
+  </div>
+  <div>
+    <div class="panel">
+      <h2>不变性维度</h2>
+      <div class="dim-grid" id="zhDG">
+        <div class=dim-cell id="zhC0"><div class=d>时间</div><div class=v id="zhD0">0.920</div></div>
+        <div class=dim-cell id="zhC1"><div class=d>状态</div><div class=v id="zhD1">0.880</div></div>
+        <div class=dim-cell id="zhC2"><div class=d>框架</div><div class=v id="zhD2">0.950</div></div>
+        <div class=dim-cell id="zhC3"><div class=d>对抗</div><div class=v id="zhD3">0.910</div></div>
+        <div class=dim-cell id="zhC4"><div class=d>身份</div><div class=v id="zhD4">0.970</div></div>
+      </div>
+      <div style="margin-top:8px;font-size:0.65rem"><span style=color:#667799>阈值 0.85 · </span><span style=color:#22c55e id="zhBT">5/5 通过</span></div>
+    </div>
+    <div class="panel" style="margin-top:14px">
+      <h2>音频流</h2>
+      <div class=spectrum id="zhSp"></div>
+      <div style="display:flex;gap:8px;margin-top:12px">
+        <button class="btn btn-primary" id="zhAB" onclick="zhTA()">激活</button>
+        <button class="btn btn-outline" onclick="zhFE()">触发事件</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="grid-2 grid">
+  <div class="panel">
+    <h2>反向因果事件日志</h2>
+    <div class="log" id="zhL"></div>
+  </div>
+  <div class="panel">
+    <h2>谐振稳定性</h2>
+    <div style="display:flex;gap:12px;flex-wrap:wrap">
+      <div style="flex:1"><div style=font-size:0.45rem;text-transform:uppercase;color:#667799>目标</div><div style=font-size:1.1rem;font-weight:700;color:#00f2fe;font-family:monospace>1.0 Hz</div></div>
+      <div style="flex:1"><div style=font-size:0.45rem;text-transform:uppercase;color:#667799>漂移</div><div style=font-size:1.1rem;font-weight:700;color:#22c55e;font-family:monospace id="zhDr">+-0.002</div></div>
+      <div style="flex:1"><div style=font-size:0.45rem;text-transform:uppercase;color:#667799>PID</div><div style=font-size:1.1rem;font-weight:700;color:#fbbf24;font-family:monospace id="zhPi">锁定</div></div>
+      <div style="flex:1"><div style=font-size:0.45rem;text-transform:uppercase;color:#667799>Karpathy</div><div style=font-size:1.1rem;font-weight:700;color:#a855f7;font-family:monospace id="zhKa">347</div></div>
+    </div>
+    <div style="margin-top:10px;height:50px;position:relative;background:rgba(255,255,255,0.02);border-radius:8px;overflow:hidden">
+      <div id="zhRb" style="position:absolute;left:50%;top:0;width:2px;height:100%;background:#00f2fe"></div>
+    </div>
+  </div>
+</div>
+
+<footer><p>EVEZ-OS · 反向因果现象引擎</p>
+<p style=margin-top:4px><a href=../>仪表盘</a> · <a href=../../>English</a></p></footer>
+</div></div>
+<script>
+const c=document.getElementById('zhC'),x=c.getContext('2d');
+let p=0.973,rs=0.73,wf=1,td=0.95,ft=0.999,t=0,k=347,aa=false,ac=null,os=[],gs=[];
+const ds=[0.92,0.88,0.95,0.91,0.97];
+document.querySelectorAll('.ctrl-group input').forEach(e=>{e.addEventListener('input',()=>{const v=parseFloat(e.value);document.getElementById(e.id+'V').textContent=e.id==='zhW'?v.toFixed(1)+' Hz':v.toFixed(3);if(e.id==='zhF')ft=v;else if(e.id==='zhS')rs=v;else if(e.id==='zhW')wf=v;else if(e.id==='zhD')td=v})});
+function zhL(m,c){const e=document.getElementById('zhL'),d=document.createElement('div');d.className='log-entry';const ts=new Date().toISOString().slice(11,19)+'Z';d.innerHTML='<span class=ts>['+ts+']</span> <span class='+c+'>'+m+'</span>';e.insertBefore(d,e.firstChild);while(e.children.length>30)e.removeChild(e.lastChild)}
+function zhR(){const w=c.width,h=320;x.fillStyle='#000';x.fillRect(0,0,w,h);for(let i=0;i<w;i+=40){x.strokeStyle='rgba(0,242,254,0.04)';x.lineWidth=1;x.beginPath();x.moveTo(i,0);x.lineTo(i,h);x.stroke();x.beginPath();x.moveTo(0,i*h/w);x.lineTo(w,i*h/w);x.stroke()}
+const ly=[{c:'rgba(0,242,254,',a:0.4,o:0},{c:'rgba(168,85,247,',a:0.25,o:0.5},{c:'rgba(251,191,36,',a:0.15,o:1.2}];ly.forEach((l,li)=>{x.beginPath();const my=h/2+Math.sin(t*0.3+li)*10;for(let i=0;i<w;i+=2){const tx=i/w,fi=ft*(0.5+0.5*Math.exp(-(1-tx)*2.5)),rw=rs*Math.sin(t*wf*2-tx*Math.PI*2*3+l.o)*fi,de=Math.pow(td,(1-tx)*10),hm=Math.sin(t*wf*4-tx*Math.PI*4*3+l.o*2)*0.3,y=my+(rw+hm)*100*de*(0.5+0.5*fi);i===0?x.moveTo(i,y):x.lineTo(i,y)}x.strokeStyle=l.c+l.a+')';x.lineWidth=li===0?2.5:1.5;x.stroke();x.lineTo(w,my+40);x.lineTo(0,my+40);x.closePath();x.fillStyle=l.c+(l.a*0.1)+')';x.fill()})}
+function zhS(){const e=document.getElementById('zhSp');e.innerHTML='';for(let i=0;i<32;i++){const b=document.createElement('div');b.className='spectrum-bar';b.style.height=Math.min(2+68*(0.3+0.7*(0.5+0.5*Math.sin(t*0.5+i*0.3+p*10))),70)+'px';e.appendChild(b)}}
+function zhDs(){ds.forEach((d,i)=>{const v=0.85+(ft-0.5)*0.3+Math.sin(t*0.1+i)*0.05;ds[i]=ds[i]*0.95+v*0.05;document.getElementById('zhD'+i).textContent=ds[i].toFixed(3);document.getElementById('zhC'+i).className='dim-cell'+(ds[i]>0.85?' active':'')});const c2=ds.filter(d=>d>0.85).length;document.getElementById('zhBT').textContent=c2+'/5 '+(c2>=5?'通过':'保持')}
+function zhRe(){k++;document.getElementById('zhKa').textContent=k;const dr=(Math.random()-0.5)*0.008;document.getElementById('zhRb').style.left=Math.max(10,Math.min(90,50+dr*200))+'%';document.getElementById('zhDr').textContent='+'+(dr<0?'-':'')+Math.abs(dr).toFixed(4);document.getElementById('zhPi').textContent=Math.abs(dr)<0.01?'锁定':'校正'}
+function zhPt(){p+=((ft-p)*0.02+(Math.random()-0.5)*0.004);p=Math.min(0.999,Math.max(0.5,p));['zhPM','zhPH','zhPI'].forEach(id=>document.getElementById(id).textContent=p.toFixed(3));document.getElementById('zhCI').textContent=(rs*p).toFixed(3)}
+function zhP(n,el){document.querySelectorAll('.preset-chip').forEach(c=>c.classList.remove('active'));el.classList.add('active');const pr={resonance:{f:0.999,s:0.73,w:1,d:0.95},'phi-surge':{f:0.99,s:0.95,w:2.5,d:0.8},'threshold-break':{f:0.85,s:0.5,w:0.3,d:0.99},'eternal-loop':{f:0.95,s:0.88,w:0.7,d:0.97}}[n];if(!pr)return;
+document.getElementById('zhF').value=pr.f;ft=pr.f;document.getElementById('zhFV').textContent=pr.f.toFixed(3);document.getElementById('zhS').value=pr.s;rs=pr.s;document.getElementById('zhSV').textContent=pr.s.toFixed(2);document.getElementById('zhW').value=pr.w;wf=pr.w;document.getElementById('zhWV').textContent=pr.w.toFixed(1)+' Hz';document.getElementById('zhD').value=pr.d;td=pr.d;document.getElementById('zhDV').textContent=pr.d.toFixed(2);zhL('预设: '+el.textContent,'retro')}
+function zhTA(){const btn=document.getElementById('zhAB');aa=!aa;if(aa){if(!ac){ac=new(window.AudioContext||window.webkitAudioContext)();const b=220*Math.pow(2,(p*12-4)/12);[1,1.25,1.5].forEach((r,i)=>{const o=ac.createOscillator(),g=ac.createGain();o.type=i===1?'triangle':'sine';o.frequency.setValueAtTime(b*r,ac.currentTime);g.gain.setValueAtTime(0.08-i*0.02,ac.currentTime);o.connect(g);g.connect(ac.destination);o.start();os.push(o);gs.push(g)});setInterval(()=>{if(!aa)return;const np=p+(Math.random()-0.5)*0.01,bb=220*Math.pow(2,(np*12-4)/12);os.forEach((o,i)=>o.frequency.setTargetAtTime(bb*[1,1.25,1.5][i],ac.currentTime,0.1));gs.forEach((g,i)=>g.gain.setTargetAtTime((0.08-i*0.02)*(0.5+rs*0.5),ac.currentTime,0.1))},200)}
+if(ac.state==='suspended')ac.resume();btn.textContent='停用';zhL('音频流已激活','ok')}else{os.forEach(o=>{try{o.stop()}catch(e){}});os=[];gs=[];btn.textContent='激活';zhL('音频流已停用','warn')}}
+function zhFE(){const op=p;ft=Math.min(0.999,0.973+Math.random()*0.026);document.getElementById('zhF').value=ft;document.getElementById('zhFV').textContent=ft.toFixed(3);zhL('事件: 未来 '+ft.toFixed(3)+' 向后传播','retro');setTimeout(()=>zhL('Φ 偏移 +'+(p-op).toFixed(4),'ok'),100)}
+function zhAn(){t+=0.016;zhR();zhS();zhDs();zhRe();zhPt();requestAnimationFrame(zhAn)}
+zhL('引擎已初始化','ok');zhL('Φ = 0.973 · 目标 0.999 · 耦合 0.84','retro');zhAn();
+</script>
+</body>
+</html>

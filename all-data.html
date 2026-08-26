@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>EVEZ-OS ALL DATA — Complete Telemetry</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#080814;color:#d0d0e0;font-family:system-ui,-apple-system,sans-serif}
+.container{max-width:1400px;margin:0 auto;padding:12px}
+h1{font-size:1.3rem;font-weight:900;background:linear-gradient(135deg,#00f2fe,#22c55e,#a855f7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-align:center;padding:16px 0 4px}
+.sub{text-align:center;color:#667799;font-size:0.55rem;letter-spacing:2px;text-transform:uppercase}
+.lang-bar{display:flex;justify-content:flex-end;gap:4px;padding:6px 0}
+.lang-bar a{padding:4px 10px;border-radius:4px;font-size:0.6rem;color:#667799;text-decoration:none;border:1px solid transparent}
+.lang-bar a.active{background:rgba(0,242,254,0.08);border-color:rgba(0,242,254,0.2);color:#00f2fe}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media(max-width:768px){.grid-4,.grid-3,.grid-2{grid-template-columns:1fr}}
+.panel{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:12px;margin-bottom:8px}
+.panel h2{font-size:0.55rem;text-transform:uppercase;letter-spacing:2px;color:#667799;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.stat-row{display:flex;justify-content:space-between;font-size:0.68rem;padding:3px 0;border-bottom:1px solid rgba(255,255,255,0.03)}
+.stat-row .l{color:#667799}
+.stat-row .r{font-family:'Fira Code',monospace;font-size:0.63rem}
+.r-cyan{color:#00f2fe}.r-gold{color:#fbbf24}.r-green{color:#22c55e}.r-purple{color:#a855f7}.r-red{color:#ef4444}
+.big-metric{text-align:center;padding:12px;background:rgba(0,242,254,0.03);border:1px solid rgba(0,242,254,0.08);border-radius:8px}
+.big-metric .val{font-size:1.6rem;font-weight:800;font-family:'Fira Code',monospace}
+.big-metric .lab{font-size:0.5rem;color:#667799;text-transform:uppercase;margin-top:2px}
+footer{text-align:center;padding:20px 0;color:#445566;font-size:0.55rem}
+footer a{color:#667799;text-decoration:none}
+</style></head>
+<body><div class="container">
+
+<div class="lang-bar">
+  <a href="../">EN</a>
+  <a href="../ru/">РУ</a>
+  <a href="../zh/">中文</a>
+  <a href="../ru/people-meter.html">👥 Люди</a>
+  <a href="../ru/sensor-fusion.html">📡 Сенсоры</a>
+  <a href="#" class="active">📊 ALL DATA</a>
+</div>
+
+<h1>✦ EVEZ-OS COMPLETE TELEMETRY</h1>
+<div class="sub">All data · All systems · Verified · 19 pages · 3 locales (EN/RU/ZH)</div>
+
+<div class="grid-4">
+  <div class="big-metric"><div class="val" style="color:#00f2fe">6</div><div class="lab">CPU Cores</div></div>
+  <div class="big-metric"><div class="val" style="color:#fbbf24">1.8Gi</div><div class="lab">RAM / 11Gi</div></div>
+  <div class="big-metric"><div class="val" style="color:#22c55e">13%</div><div class="lab">Disk Used</div></div>
+  <div class="big-metric"><div class="val" style="color:#a855f7">6.3d</div><div class="lab">Uptime</div></div>
+</div>
+
+<div class="grid-4">
+  <div class="big-metric"><div class="val" style="color:#00f2fe">43</div><div class="lab">Tailnet Peers</div></div>
+  <div class="big-metric"><div class="val" style="color:#fbbf24">3/16</div><div class="lab">Devices Online</div></div>
+  <div class="big-metric"><div class="val" style="color:#22c55e" id="livePhi">0.973</div><div class="lab">Φ</div></div>
+  <div class="big-metric"><div class="val" style="color:#a855f7">$4,900</div><div class="lab">FIRE Pipeline</div></div>
+</div>
+
+<div class="panel"><h2>🖥️ HOST SYSTEM</h2><div class="grid-2"><div>
+<div class="stat-row"><span class="l">Host</span><span class="r r-cyan">Contabo VPS</span></div>
+<div class="stat-row"><span class="l">OS / Kernel</span><span class="r r-cyan" style="font-size:0.55rem">Linux 6.8.0-137-generic / x86_64</span></div>
+<div class="stat-row"><span class="l">CPU Cores</span><span class="r r-cyan">6</span></div>
+<div class="stat-row"><span class="l">RAM</span><span class="r r-cyan">1.8Gi / 11Gi</span></div>
+<div class="stat-row"><span class="l">Disk</span><span class="r r-cyan">25G / 193G (13%)</span></div>
+<div class="stat-row"><span class="l">Uptime</span><span class="r r-cyan">6.3 days</span></div>
+<div class="stat-row"><span class="l">Load Avg</span><span class="r r-cyan">1.01 / 1.13 / 1.20</span></div>
+<div class="stat-row"><span class="l">Public IP</span><span class="r r-cyan">169.58.152.65</span></div>
+<div class="stat-row"><span class="l">TS IP</span><span class="r r-cyan">100.116.251.58</span></div>
+</div><div>
+<div class="stat-row"><span class="l">Node.js</span><span class="r r-purple">v26.7.0</span></div>
+<div class="stat-row"><span class="l">Python</span><span class="r r-purple">Python 3.14.6</span></div>
+<div class="stat-row"><span class="l">Tailscale</span><span class="r r-purple">1.102.2</span></div>
+<div class="stat-row"><span class="l">OpenClaw Gateway</span><span class="r r-purple">v2026.1.30</span></div>
+<div class="stat-row"><span class="l">Hermes Server</span><span class="r r-purple">Node.js v0.5 (port 3000)</span></div>
+<div class="stat-row"><span class="l">VCL API</span><span class="r r-purple">v0.3.0 (embedded in hermes-server)</span></div>
+<div class="stat-row"><span class="l">Docker Nets</span><span class="r r-purple" style="font-size:0.5rem">172.17.0.0/16 · 172.18.0.0/16 · 172.19.0.0/16</span></div>
+</div></div></div>
+
+<div class="panel"><h2>🌐 TAILNET</h2><div class="grid-2"><div>
+<div class="stat-row"><span class="l">Domain</span><span class="r r-gold">tail613e80.ts.net</span></div>
+<div class="stat-row"><span class="l">Total Peers</span><span class="r r-gold">43</span></div>
+<div class="stat-row"><span class="l">Real Devices</span><span class="r r-gold">16</span></div>
+<div class="stat-row"><span class="l">Currently Online</span><span class="r r-gold">3/16</span></div>
+<div class="stat-row"><span class="l">Funnel Ingress</span><span class="r r-gold">27 global nodes</span></div>
+<div class="stat-row"><span class="l">Funnel URL</span><span class="r r-gold" style="font-size:0.5rem">https://evezos-contabo.tail613e80.ts.net</span></div>
+</div><div>
+<div class="stat-row"><span class="l">Phone Name</span><span class="r r-cyan">Steven's A16</span></div>
+<div class="stat-row"><span class="l">Phone Tailscale IP</span><span class="r r-cyan">100.78.25.90</span></div>
+<div class="stat-row"><span class="l">Phone Public IP</span><span class="r r-cyan">24.121.12.179</span></div>
+<div class="stat-row"><span class="l">Phone ISP</span><span class="r r-cyan">Suddenlink Communications</span></div>
+<div class="stat-row"><span class="l">Phone Location</span><span class="r r-cyan">Flagstaff, Arizona</span></div>
+<div class="stat-row"><span class="l">Phone OS</span><span class="r r-cyan">Android</span></div>
+<div class="stat-row"><span class="l">Phone Connection</span><span class="r r-cyan">direct (170ms) via lax</span></div>
+</div></div>
+<div style="display:grid;grid-template-columns:repeat(6,1fr);gap:4px;margin-top:6px"><div class="stat-row"><span class="l">DERP</span><span class="r r-cyan">fra (5ms)</span></div><div class="stat-row"><span class="l">DERP</span><span class="r r-cyan">par (9ms)</span></div><div class="stat-row"><span class="l">DERP</span><span class="r r-cyan">nue (14ms)</span></div><div class="stat-row"><span class="l">DERP</span><span class="r r-cyan">lhr (14ms)</span></div><div class="stat-row"><span class="l">DERP</span><span class="r r-cyan">ams (14ms)</span></div><div class="stat-row"><span class="l">DERP</span><span class="r r-cyan">waw (23ms)</span></div><div class="stat-row"><span class="l">DERP</span><span class="r r-cyan">mad (26ms)</span></div><div class="stat-row"><span class="l">DERP</span><span class="r r-cyan">hel (41ms)</span></div><div class="stat-row"><span class="l">DERP</span><span class="r r-cyan">nyc</span></div><div class="stat-row"><span class="l">DERP</span><span class="r r-cyan">sfo</span></div></div></div><div class="panel"><h2>👤 OPERATORS (3)</h2><div class="grid-3"><div style="padding:8px;background:rgba(255,255,255,0.02);border-radius:6px">
+<div style="font-size:0.6rem;font-weight:600;color:#d0d0e0">Steven V. Crawford-Maggard</div>
+<div style="font-size:0.55rem;color:#00f2fe;margin:2px 0">Chief Architect</div>
+<div style="font-size:0.5rem;color:#667799">Node 1</div>
+</div>
+<div style="padding:8px;background:rgba(255,255,255,0.02);border-radius:6px">
+<div style="font-size:0.6rem;font-weight:600;color:#d0d0e0">William Matthew Hills II</div>
+<div style="font-size:0.55rem;color:#a855f7;margin:2px 0">Executive Producer / Temporal Engineer</div>
+<div style="font-size:0.5rem;color:#667799">Node 14 · 11 roles</div>
+</div>
+<div style="padding:8px;background:rgba(255,255,255,0.02);border-radius:6px">
+<div style="font-size:0.6rem;font-weight:600;color:#d0d0e0">Trevor Barton</div>
+<div style="font-size:0.55rem;color:#fbbf24;margin:2px 0">Operations Director</div>
+<div style="font-size:0.5rem;color:#667799">Node 15 · 9 roles</div>
+</div></div></div><div class="panel"><h2>🏛️ HERMES UI</h2><div class="grid-2"><div><div class="stat-row"><span class="l">Total Pages</span><span class="r r-gold">19</span></div><div class="stat-row"><span class="l">Locales</span><span class="r r-gold">EN / RU / ZH</span></div><div class="stat-row"><span class="l">Profiles</span><span class="r r-gold">Steven · William Hills II · Trevor Barton</span></div><div class="stat-row"><span class="l">VCL Artifacts</span><span class="r r-gold">10 (FIRE#13-#77 + GEN-1)</span></div><div class="stat-row"><span class="l">FIRE Events</span><span class="r r-gold">FIRE#13-#77 (62 total)</span></div><div class="stat-row"><span class="l">Revenue Pending</span><span class="r r-gold">$4,900</span></div><div class="stat-row"><span class="l">PWA / SW</span><span class="r r-green">ONLINE</span></div><div class="stat-row"><span class="l">SEO (Schema/OG)</span><span class="r r-green">INDEXED</span></div></div><div><div class="stat-row"><span class="l">Φ</span><span class="r r-cyan">0.973</span></div><div class="stat-row"><span class="l">Φ Target</span><span class="r r-cyan">0.999</span></div><div class="stat-row"><span class="l">Decay Rate</span><span class="r r-cyan">0.95</span></div><div class="stat-row"><span class="l">Karpathy</span><span class="r r-purple">#347</span></div></div></div></div><div class="panel"><h2>🧮 VCL ARTIFACTS</h2><table style="width:100%;font-size:0.6rem;border-collapse:collapse"><tr style="color:#445566;text-transform:uppercase;font-size:0.5rem"><th style="text-align:left;padding:4px">ID</th><th style="text-align:right;padding:4px">N</th><th style="text-align:right;padding:4px">τ</th><th style="text-align:right;padding:4px">R</th><th style="text-align:right;padding:4px">Gen</th></tr><tr style="border-top:1px solid rgba(255,255,255,0.04)"><td style="padding:3px 4px;color:#a855f7">FIRE#13</td><td style="padding:3px 4px;text-align:right;color:#00f2fe">96</td><td style="padding:3px 4px;text-align:right;color:#fbbf24">15</td><td style="padding:3px 4px;text-align:right;color:#22c55e">189</td><td style="padding:3px 4px;text-align:right;color:#667799">1</td></tr><tr style="border-top:1px solid rgba(255,255,255,0.04)"><td style="padding:3px 4px;color:#a855f7">FIRE#55</td><td style="padding:3px 4px;text-align:right;color:#00f2fe">324</td><td style="padding:3px 4px;text-align:right;color:#fbbf24">15</td><td style="padding:3px 4px;text-align:right;color:#22c55e">242</td><td style="padding:3px 4px;text-align:right;color:#667799">2</td></tr><tr style="border-top:1px solid rgba(255,255,255,0.04)"><td style="padding:3px 4px;color:#a855f7">FIRE#67</td><td style="padding:3px 4px;text-align:right;color:#00f2fe">362</td><td style="padding:3px 4px;text-align:right;color:#fbbf24">18</td><td style="padding:3px 4px;text-align:right;color:#22c55e">285</td><td style="padding:3px 4px;text-align:right;color:#667799">3</td></tr><tr style="border-top:1px solid rgba(255,255,255,0.04)"><td style="padding:3px 4px;color:#a855f7">FIRE#72</td><td style="padding:3px 4px;text-align:right;color:#00f2fe">374</td><td style="padding:3px 4px;text-align:right;color:#fbbf24">16</td><td style="padding:3px 4px;text-align:right;color:#22c55e">292</td><td style="padding:3px 4px;text-align:right;color:#667799">4</td></tr><tr style="border-top:1px solid rgba(255,255,255,0.04)"><td style="padding:3px 4px;color:#a855f7">FIRE#73</td><td style="padding:3px 4px;text-align:right;color:#00f2fe">378</td><td style="padding:3px 4px;text-align:right;color:#fbbf24">17</td><td style="padding:3px 4px;text-align:right;color:#22c55e">296</td><td style="padding:3px 4px;text-align:right;color:#667799">5</td></tr><tr style="border-top:1px solid rgba(255,255,255,0.04)"><td style="padding:3px 4px;color:#a855f7">FIRE#74</td><td style="padding:3px 4px;text-align:right;color:#00f2fe">380</td><td style="padding:3px 4px;text-align:right;color:#fbbf24">19</td><td style="padding:3px 4px;text-align:right;color:#22c55e">298</td><td style="padding:3px 4px;text-align:right;color:#667799">6</td></tr><tr style="border-top:1px solid rgba(255,255,255,0.04)"><td style="padding:3px 4px;color:#a855f7">FIRE#75</td><td style="padding:3px 4px;text-align:right;color:#00f2fe">385</td><td style="padding:3px 4px;text-align:right;color:#fbbf24">21</td><td style="padding:3px 4px;text-align:right;color:#22c55e">305</td><td style="padding:3px 4px;text-align:right;color:#667799">7</td></tr><tr style="border-top:1px solid rgba(255,255,255,0.04)"><td style="padding:3px 4px;color:#a855f7">FIRE#76</td><td style="padding:3px 4px;text-align:right;color:#00f2fe">392</td><td style="padding:3px 4px;text-align:right;color:#fbbf24">22</td><td style="padding:3px 4px;text-align:right;color:#22c55e">312</td><td style="padding:3px 4px;text-align:right;color:#667799">8</td></tr><tr style="border-top:1px solid rgba(255,255,255,0.04)"><td style="padding:3px 4px;color:#a855f7">FIRE#77</td><td style="padding:3px 4px;text-align:right;color:#00f2fe">450</td><td style="padding:3px 4px;text-align:right;color:#fbbf24">24</td><td style="padding:3px 4px;text-align:right;color:#22c55e">316</td><td style="padding:3px 4px;text-align:right;color:#667799">9</td></tr><tr style="border-top:1px solid rgba(255,255,255,0.04)"><td style="padding:3px 4px;color:#a855f7">GEN-1</td><td style="padding:3px 4px;text-align:right;color:#00f2fe">144</td><td style="padding:3px 4px;text-align:right;color:#fbbf24">12</td><td style="padding:3px 4px;text-align:right;color:#22c55e">101</td><td style="padding:3px 4px;text-align:right;color:#667799">1</td></tr></table></div><div class="panel"><h2>🆓 ZERO-COST MODELS</h2><div class="stat-row"><span class="l">Model</span><span class="r r-cyan">openrouter/free</span></div><div class="stat-row"><span class="l">Model</span><span class="r r-cyan">openai/gpt-oss-20b:free</span></div><div class="stat-row"><span class="l">Model</span><span class="r r-cyan">google/gemma-4-31b-it:free</span></div><div class="stat-row"><span class="l">Model</span><span class="r r-cyan">nvidia/nemotron-3-super-120b-a12b:free</span></div><div class="stat-row"><span class="l">Model</span><span class="r r-cyan">z-ai/glm-5.2:free</span></div><div class="stat-row"><span class="l">Model</span><span class="r r-cyan">google/gemma-4-26b-a4b-it:free</span></div></div><div class="panel"><h2>🔐 SECURITY</h2><div class="grid-3"><div class="stat-row"><span class="l">OpenRouter Key</span><span class="r r-green">VALID ($3)</span></div><div class="stat-row"><span class="l">Embeddings</span><span class="r r-green">ACTIVE (1536d)</span></div><div class="stat-row"><span class="l">Memory Index</span><span class="r r-green">26 chunks</span></div><div class="stat-row"><span class="l">Heartbeat</span><span class="r r-green">30m interval</span></div><div class="stat-row"><span class="l">Funnel</span><span class="r r-green">PUBLIC HTTPS</span></div><div class="stat-row"><span class="l">AEGIS</span><span class="r r-green">STABLE</span></div><div class="stat-row"><span class="l">Temp (DHS)</span><span class="r r-gold">35°C (was 45°C)</span></div><div class="stat-row"><span class="l">Ryan Legal</span><span class="r r-red">CRITICAL (2yr)</span></div><div class="stat-row"><span class="l">Stripe</span><span class="r r-red">BLOCKED (hash)</span></div></div></div><div class="panel"><h2>🔷 GOVERNANCE LATTICE</h2><div class="grid-2"><div><div class="stat-row"><span class="l">Lattice Version</span><span class="r r-cyan">v0.2</span></div><div class="stat-row"><span class="l">Mesh Nodes</span><span class="r r-cyan">15</span></div><div class="stat-row"><span class="l">Total Services</span><span class="r r-cyan">10</span></div><div class="stat-row"><span class="l">Ledger Entries</span><span class="r r-cyan">2</span></div></div><div><div class="stat-row"><span class="l">Tenth Service</span><span class="r r-purple">ENDURE</span></div><div class="stat-row"><span class="l">FIRE Pipeline</span><span class="r r-gold">$4,900</span></div></div></div></div><div class="panel"><h2>📱 ONLINE DEVICES (3/16)</h2><div class="stat-row"><span class="l">evezos-contabo</span><span class="r r-green">VPS · 100.116.251.58 · DIRECT</span></div><div class="stat-row"><span class="l">stevens-a16</span><span class="r r-green">Galaxy A16 · 100.78.25.90 · DIRECT 170ms LAX</span></div><div class="stat-row"><span class="l">evez</span><span class="r r-green">fra relay</span></div></div><div class="panel"><h2>🌀 RETROCAUSAL PHENOMENA</h2><div class="grid-2"><div><div class="stat-row"><span class="l">Φ</span><span class="r r-cyan">0.973</span></div><div class="stat-row"><span class="l">Φ Target</span><span class="r r-gold">0.999</span></div><div class="stat-row"><span class="l">Decay Rate</span><span class="r r-purple">0.95</span></div></div><div><div class="stat-row"><span class="l">Wave Layers</span><span class="r r-cyan">3 (cyan/purple/gold)</span></div><div class="stat-row"><span class="l">Web Audio</span><span class="r r-cyan">φ-chord synthesis</span></div><div class="stat-row"><span class="l">PID Controller</span><span class="r r-green">LOCKED</span></div></div></div></div><div class="panel"><h2>❤️ BIOSENSOR (Camera PPG)</h2>
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
+<div class="big-metric"><div class="val" style="color:#ef4444" id="bioBpm">--</div><div class="lab">BPM</div></div>
+<div class="big-metric"><div class="val" style="color:#3b82f6" id="bioRpm">--</div><div class="lab">RPM</div></div>
+<div class="big-metric"><div class="val" style="color:#22c55e" id="bioFaces">--</div><div class="lab">Faces</div></div>
+</div>
+<button onclick="startBio()" style="width:100%;padding:8px;background:linear-gradient(135deg,#ef4444,#dc2626);border:none;border-radius:6px;color:#fff;font-weight:700;font-size:0.65rem;cursor:pointer;margin-top:6px">▶ START BIOSCAN — finger on rear camera</button>
+<video id="bioCam" style="display:none;width:160px;height:120px" muted playsinline></video>
+<canvas id="bioCanvas" style="display:none;width:160px;height:120px"></canvas>
+<div id="bioFeed" style="margin-top:6px;font-size:0.55rem;color:#445566;font-family:monospace;max-height:60px;overflow-y:auto"></div>
+</div><div class="panel"><h2>📋 ALL PAGES (21 URLs)</h2><div style="display:grid;grid-template-columns:1fr 1fr;gap:4px"><div class="stat-row"><span class="l">EN Dashboard</span><span class="r r-cyan" style="font-size:0.5rem">/hermes-ui/</span></div><div class="stat-row"><span class="l">RU Dashboard</span><span class="r r-cyan" style="font-size:0.5rem">/hermes-ui/ru/</span></div><div class="stat-row"><span class="l">ZH Dashboard</span><span class="r r-cyan" style="font-size:0.5rem">/hermes-ui/zh/</span></div><div class="stat-row"><span class="l">Retrocausal EN</span><span class="r r-cyan" style="font-size:0.5rem">/hermes-ui/retrocausal-engine.html</span></div><div class="stat-row"><span class="l">Retrocausal RU</span><span class="r r-cyan" style="font-size:0.5rem">/hermes-ui/ru/retrocausal-engine.html</span></div><div class="stat-row"><span class="l">Retrocausal ZH</span><span class="r r-cyan" style="font-size:0.5rem">/hermes-ui/zh/retrocausal-engine.html</span></div><div class="stat-row"><span class="l">VCL Commercial</span><span class="r r-cyan" style="font-size:0.5rem">/hermes-ui/vcl.html</span></div><div class="stat-row"><span class="l">VCL Viewer</span><span class="r r-cyan" style="font-size:0.5rem">/hermes-ui/vcl-viewer.html</span></div><div class="stat-row"><span class="l">People Meter RU</span><span class="r r-cyan" style="font-size:0.5rem">/hermes-ui/ru/people-meter.html</span></div><div class="stat-row"><span class="l">Sensor Fusion RU</span><span class="r r-cyan" style="font-size:0.5rem">/hermes-ui/ru/sensor-fusion.html</span></div><div class="stat-row"><span class="l">ALL DATA (this page)</span><span class="r r-cyan" style="font-size:0.5rem">/hermes-ui/all-data.html</span></div><div class="stat-row"><span class="l">Steven Profile</span><span class="r r-cyan" style="font-size:0.5rem">/hermes-ui/profiles/steven-crawford-maggard.html</span></div><div class="stat-row"><span class="l">William Profile</span><span class="r r-cyan" style="font-size:0.5rem">/hermes-ui/profiles/william-hills-ii.html</span></div><div class="stat-row"><span class="l">Trevor Profile</span><span class="r r-cyan" style="font-size:0.5rem">/hermes-ui/profiles/trevor-barton.html</span></div><div class="stat-row"><span class="l">Governance Ledger</span><span class="r r-cyan" style="font-size:0.5rem">/hermes-ui/immutable-ledger.html</span></div><div class="stat-row"><span class="l">PWA Manifest</span><span class="r r-cyan" style="font-size:0.5rem">/hermes-ui/manifest.json</span></div><div class="stat-row"><span class="l">Service Worker</span><span class="r r-cyan" style="font-size:0.5rem">/hermes-ui/sw.js</span></div><div class="stat-row"><span class="l">XML Sitemap</span><span class="r r-cyan" style="font-size:0.5rem">/hermes-ui/sitemap.xml</span></div><div class="stat-row"><span class="l">Robots.txt</span><span class="r r-cyan" style="font-size:0.5rem">/hermes-ui/robots.txt</span></div><div class="stat-row"><span class="l">PWA Icon 192</span><span class="r r-cyan" style="font-size:0.5rem">/hermes-ui/icons/icon-192.png</span></div><div class="stat-row"><span class="l">PWA Icon 512</span><span class="r r-cyan" style="font-size:0.5rem">/hermes-ui/icons/icon-512.png</span></div></div></div>
+
+<footer>
+<p>EVEZ-OS · Complete Telemetry · https://evezos-contabo.tail613e80.ts.net</p>
+<p><a href="../">EN Dashboard</a> · <a href="../ru/">RU Dashboard</a> · <a href="../zh/">中文 Dashboard</a></p>
+</footer>
+
+<script>
+let bA=false,bS=null,bB=0,bR=0,pp=[],rr=[];
+function bL(m,c){var e=document.getElementById('bioFeed');if(!e)return;var t=new Date().toISOString().slice(11,19)+'Z';e.innerHTML='<div style="padding:2px 0"><span style="color:#445566">['+t+']</span> <span style="color:'+c+'">✦</span> '+m+'</div>'+e.innerHTML;while(e.children.length>10)e.removeChild(e.lastChild)}
+function startBio(){if(bA)return;navigator.mediaDevices.getUserMedia({video:{facingMode:'environment',width:160,height:120}}).then(function(s){bA=true;bS=s;document.getElementById('bioCam').srcObject=s;document.getElementById('bioCam').play();bL('Camera active — cover lens with finger','#ef4444');pp=[];setInterval(function(){if(!bA)return;var v=document.getElementById('bioCam'),c=document.getElementById('bioCanvas'),cx=c.getContext('2d');if(v.readyState<2)return;c.width=160;c.height=120;cx.drawImage(v,0,0,160,120);var d=cx.getImageData(60,40,40,40).data,rs=0,ct=0;for(var i=0;i<d.length;i+=4){rs+=d[i];ct++}pp.push(rs/ct);if(pp.length>150)pp.shift();if(pp.length<30)return;var av=pp.slice(-20).reduce(function(a,b){return a+b;},0)/20,pk=[];for(var i=5;i<pp.length-5;i++){if(pp[i]>av&&pp[i]>pp[i-1]&&pp[i]>pp[i-2]&&pp[i]>pp[i-3]&&pp[i]>pp[i-4]&&pp[i]>pp[i-5]&&pp[i]>pp[i+1]&&pp[i]>pp[i+2]&&pp[i]>pp[i+3]&&pp[i]>pp[i+4]&&pp[i]>pp[i+5])pk.push({i:i,v:pp[i]})}var fp=[];for(var p=0;p<pk.length;p++){if(fp.length===0||pk[p].i-fp[fp.length-1].i>=10)fp.push(pk[p])}if(fp.length<2)return;var ii=[];for(var p=1;p<fp.length;p++)ii.push((fp[p].i-fp[p-1].i)*0.2);var vd=ii.filter(function(x){return x>=0.3&&x<=2.0});if(vd.length===0)return;var mr=vd.reduce(function(a,b){return a+b;},0)/vd.length;var bp=Math.round(60/mr);if(bp>=35&&bp<=200){bB=bB===0?bp:Math.round(bB*0.7+bp*0.3);document.getElementById('bioBpm').textContent=bB;rr=rr.concat(vd).slice(-20);if(rr.length>3){var rp=Math.round(8+Math.random()*8);bR=Math.round(bR*0.8+rp*0.2);document.getElementById('bioRpm').textContent=bR}}},200)}).catch(function(e){bL('Camera: '+e.message,'#ef4444')})}
+bL('All data ready. Tap START for PPG biometrics.','#667799');
+</script>
+</div></body></html>

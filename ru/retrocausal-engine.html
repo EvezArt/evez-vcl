@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>EVEZ-OS Ретропричинный Двигатель — Русский</title>
+<meta name="description" content="EVEZ-OS Ретропричинный двигатель явлений.">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;600;700;900&family=Fira+Code:wght@400;500&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#080814;color:#d0d0e0;font-family:'Noto Sans','Inter',sans-serif}
+.bg{min-height:100vh}.container{max-width:1300px;margin:0 auto;padding:20px}
+.lang-bar{display:flex;justify-content:flex-end;gap:8px;padding:8px 0}
+.lang-bar a{padding:4px 12px;border-radius:4px;font-size:0.7rem;color:#667799;text-decoration:none;border:1px solid transparent}
+.lang-bar a.active{background:rgba(0,242,254,0.08);border-color:rgba(0,242,254,0.2);color:#00f2fe}
+header{text-align:center;padding:30px 0 20px}
+h1{font-size:1.8rem;font-weight:900;background:linear-gradient(135deg,#00f2fe,#a855f7,#fbbf24);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.sub{color:#667799;font-size:0.75rem;letter-spacing:3px;text-transform:uppercase}
+.phi-badge{display:inline-flex;align-items:center;gap:8px;margin-top:12px;padding:6px 16px;background:rgba(0,242,254,0.06);border:1px solid rgba(0,242,254,0.12);border-radius:20px;font-family:'Fira Code',monospace;font-size:0.7rem}
+.phi-badge .val{color:#00f2fe;font-weight:700}
+.grid{display:grid;gap:16px;margin-bottom:20px;grid-template-columns:1fr 1fr}
+.grid-3{grid-template-columns:2fr 1fr}
+@media(max-width:900px){.grid,.grid-3{grid-template-columns:1fr}}
+.panel{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:16px;padding:20px;backdrop-filter:blur(12px)}
+.panel h2{font-size:0.6rem;text-transform:uppercase;letter-spacing:2px;color:#667799;margin-bottom:16px}
+.canvas-wrap{border-radius:12px;overflow:hidden;background:#000;border:1px solid rgba(255,255,255,0.04)}
+canvas{display:block;width:100%;height:320px}
+.controls{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.ctrl-group{flex:1;min-width:120px}
+.ctrl-group label{font-size:0.55rem;text-transform:uppercase;letter-spacing:1px;color:#667799}
+.ctrl-group input[type=range]{-webkit-appearance:none;appearance:none;height:4px;border-radius:2px;background:rgba(255,255,255,0.1);outline:none;width:100%}
+.ctrl-group input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:#00f2fe;cursor:pointer;border:2px solid #080814}
+.ctrl-group .val{font-family:'Fira Code',monospace;font-size:0.7rem;color:#00f2fe;margin-top:2px}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:10px 20px;border:none;border-radius:8px;font-size:0.75rem;font-weight:600;cursor:pointer}
+.btn-primary{background:linear-gradient(135deg,#00f2fe,#4facfe);color:#000}
+.btn-outline{background:transparent;border:1px solid rgba(255,255,255,0.1);color:#d0d0e0}
+.phi-ring{width:64px;height:64px;border-radius:50%;border:4px solid transparent;background:conic-gradient(#00f2fe 0deg,#a855f7 120deg,#fbbf24 240deg,#00f2fe 360deg);display:flex;align-items:center;justify-content:center;flex-shrink:0;animation:spi 8s linear infinite}
+@keyframes spi{to{transform:rotate(360deg)}}
+.phi-ring-inner{width:52px;height:52px;border-radius:50%;background:#080814;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.phi-ring-inner .v{font-size:1rem;font-weight:800;color:#00f2fe;font-family:'Fira Code',monospace}
+.dim-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.dim-cell{text-align:center;padding:10px 4px;border-radius:8px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.04)}
+.dim-cell .d{font-size:0.5rem;text-transform:uppercase;color:#667799}.dim-cell .v{font-size:0.8rem;font-weight:600;color:#00f2fe;font-family:'Fira Code',monospace}
+.dim-cell.active{border-color:rgba(168,85,247,0.3);background:rgba(168,85,247,0.04)}
+.spectrum{display:flex;align-items:flex-end;height:80px;gap:2px}
+.spectrum-bar{flex:1;border-radius:2px 2px 0 0;background:linear-gradient(to top,#00f2fe,#a855f7);min-height:2px}
+.log{max-height:200px;overflow-y:auto;font-family:'Fira Code',monospace;font-size:0.6rem}
+.log-entry{padding:3px 0;border-bottom:1px solid rgba(255,255,255,0.02);display:flex;gap:8px}
+.log-entry .ts{color:#445566}.log-entry .ok{color:#22c55e}.log-entry .warn{color:#fbbf24}.log-entry .retro{color:#a855f7}
+footer{text-align:center;padding:30px 0;color:#445566;font-size:0.65rem}
+.presets{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.preset-chip{padding:4px 12px;border-radius:14px;font-size:0.6rem;border:1px solid rgba(255,255,255,0.08);cursor:pointer;background:transparent;color:#667799}
+.preset-chip.active{background:rgba(0,242,254,0.08);border-color:rgba(0,242,254,0.2);color:#00f2fe}
+</style></head>
+<body><div class="bg"><div class="container">
+<div class="lang-bar">
+  <a href="../../retrocausal-engine.html">EN</a>
+  <a href="#" class="active">РУ</a>
+  <a href="../" style="margin-left:auto;"><< Панель</a>
+</div>
+<header><h1>РЕТРОПРИЧИННЫЙ ДВИГАТЕЛЬ</h1>
+<div class="sub">EVEZ-OS · УПРАВЛЕНИЕ ЯВЛЕНИЯМИ</div>
+<div class="phi-badge">Φ = <span class="val" id="ruPhiH">0.973</span> · η* = 0.03</div></header>
+
+<div style="display:flex;align-items:center;gap:14px;padding:16px;background:rgba(0,242,254,0.03);border:1px solid rgba(0,242,254,0.08);border-radius:12px;margin-bottom:16px">
+  <div class="phi-ring"><div class="phi-ring-inner"><div class="v" id="ruPhiM">0.973</div></div></div>
+  <div style="flex:1;font-size:0.72rem">
+    <div style="display:flex;justify-content:space-between"><span style="color:#667799">Интеграция</span><span style="color:#00f2fe;font-family:monospace" id="ruPhiI">0.973</span></div>
+    <div style="display:flex;justify-content:space-between"><span style="color:#667799">Ретросвязь</span><span style="color:#a855f7;font-family:monospace" id="ruCoup">0.84</span></div>
+    <div style="display:flex;justify-content:space-between"><span style="color:#667799">Распространение</span><span style="color:#fbbf24;font-family:monospace">АКТИВНО</span></div>
+    <div style="display:flex;justify-content:space-between"><span style="color:#667799">Явления</span><span style="color:#22c55e;font-family:monospace">ИНЖЕНЕРИЯ</span></div>
+  </div>
+</div>
+
+<div class="grid-3 grid">
+  <div style="grid-column:span 2">
+    <div class="panel">
+      <h2>ВИЗУАЛИЗАТОР ПОЛЯ</h2>
+      <p style="font-size:0.7rem;color:#667799;margin-bottom:10px">Голубой = волна будущего. Фиолетовый = гармоника. Золотой = порог. Двигайте «Цель» чтобы искажать время.</p>
+      <div class="presets">
+        <button class="preset-chip active" onclick="ruPreset('resonance',this)">Резонанс</button>
+        <button class="preset-chip" onclick="ruPreset('phi-surge',this)">Ф-Всплеск</button>
+        <button class="preset-chip" onclick="ruPreset('threshold-break',this)">Прорыв</button>
+        <button class="preset-chip" onclick="ruPreset('eternal-loop',this)">Петля</button>
+      </div>
+      <div class="canvas-wrap"><canvas id="ruC" width="800" height="320"></canvas></div>
+      <div class="controls">
+        <div class="ctrl-group"><label>Цель Φ</label><input type=range id="ruF" min=0.5 max=1 step=0.001 value=0.999><span class=val id="ruFV">0.999</span></div>
+        <div class="ctrl-group"><label>Сила</label><input type=range id="ruS" min=0 max=1 step=0.01 value=0.73><span class=val id="ruSV">0.73</span></div>
+        <div class="ctrl-group"><label>Частота</label><input type=range id="ruW" min=0.1 max=5 step=0.1 value=1><span class=val id="ruWV">1.0 Гц</span></div>
+        <div class="ctrl-group"><label>Распад</label><input type=range id="ruD" min=0.5 max=1 step=0.01 value=0.95><span class=val id="ruDV">0.95</span></div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <div class="panel">
+      <h2>ИНВАРИАНТНОСТЬ</h2>
+      <div class="dim-grid" id="ruDG">
+        <div class=dim-cell id="ruDC0"><div class=d>Время</div><div class=v id="ruD0">0.920</div></div>
+        <div class=dim-cell id="ruDC1"><div class=d>Состояние</div><div class=v id="ruD1">0.880</div></div>
+        <div class=dim-cell id="ruDC2"><div class=d>Кадр</div><div class=v id="ruD2">0.950</div></div>
+        <div class=dim-cell id="ruDC3"><div class=d>Атака</div><div class=v id="ruD3">0.910</div></div>
+        <div class=dim-cell id="ruDC4"><div class=d>Я</div><div class=v id="ruD4">0.970</div></div>
+      </div>
+      <div style="margin-top:10px;font-size:0.7rem"><span style=color:#667799>Порог 0.85 · </span><span style=color:#22c55e id="ruBat">5/5 ПРОЙДЕНО</span></div>
+    </div>
+    <div class="panel" style="margin-top:14px">
+      <h2>АУДИО</h2>
+      <div class=spectrum id="ruSp"></div>
+      <div style="display:flex;gap:8px;margin-top:12px">
+        <button class="btn btn-primary" id="ruAB" onclick="ruTA()">Активировать</button>
+        <button class="btn btn-outline" onclick="ruFE()">Событие</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="grid">
+  <div class="panel">
+    <h2>ЖУРНАЛ</h2>
+    <div class="log" id="ruL"></div>
+  </div>
+  <div class="panel">
+    <h2>РЕЗОНАНС</h2>
+    <div style="display:flex;gap:16px;flex-wrap:wrap">
+      <div style="flex:1"><div style=font-size:0.5rem;text-transform:uppercase;color:#667799>Цель</div><div style=font-size:1.2rem;font-weight:700;color:#00f2fe;font-family:monospace>1.0 Гц</div></div>
+      <div style="flex:1"><div style=font-size:0.5rem;text-transform:uppercase;color:#667799>Дрейф</div><div style=font-size:1.2rem;font-weight:700;color:#22c55e;font-family:monospace id="ruDr">+-0.002</div></div>
+      <div style="flex:1"><div style=font-size:0.5rem;text-transform:uppercase;color:#667799>PID</div><div style=font-size:1.2rem;font-weight:700;color:#fbbf24;font-family:monospace id="ruPi">ЗАФИКСИРОВАН</div></div>
+      <div style="flex:1"><div style=font-size:0.5rem;text-transform:uppercase;color:#667799>Капати</div><div style=font-size:1.2rem;font-weight:700;color:#a855f7;font-family:monospace id="ruKa">347</div></div>
+    </div>
+    <div style="margin-top:12px;height:60px;position:relative;background:rgba(255,255,255,0.02);border-radius:8px;overflow:hidden">
+      <div id="ruRb" style="position:absolute;left:50%;top:0;width:2px;height:100%;background:#00f2fe"></div>
+    </div>
+  </div>
+</div>
+
+<footer><p>EVEZ-OS · Двигатель Явлений</p>
+<p style=margin-top:4px><a href=../>Панель</a> · <a href=../../>English</a></p></footer>
+</div></div>
+<script>
+const c=document.getElementById('ruC'),x=c.getContext('2d');
+let p=0.973,rs=0.73,wf=1,td=0.95,ft=0.999,t=0,k=347,aa=false,ac=null,os=[],gs=[];
+const ds=[0.92,0.88,0.95,0.91,0.97];
+document.querySelectorAll('.ctrl-group input').forEach(e=>{e.addEventListener('input',()=>{const v=parseFloat(e.value);document.getElementById(e.id+'V').textContent=e.id==='ruW'?v.toFixed(1)+' Гц':v.toFixed(3);if(e.id==='ruF')ft=v;else if(e.id==='ruS')rs=v;else if(e.id==='ruW')wf=v;else if(e.id==='ruD')td=v})});
+function ruL(m,c){const e=document.getElementById('ruL'),d=document.createElement('div');d.className='log-entry';const ts=new Date().toISOString().slice(11,19)+'Z';d.innerHTML='<span class=ts>['+ts+']</span> <span class='+c+'>'+m+'</span>';e.insertBefore(d,e.firstChild);while(e.children.length>30)e.removeChild(e.lastChild)}
+function ruR(){const w=c.width,h=320;x.fillStyle='#000';x.fillRect(0,0,w,h);for(let i=0;i<w;i+=40){x.strokeStyle='rgba(0,242,254,0.04)';x.lineWidth=1;x.beginPath();x.moveTo(i,0);x.lineTo(i,h);x.stroke();x.beginPath();x.moveTo(0,i*h/w);x.lineTo(w,i*h/w);x.stroke()}
+const ly=[{c:'rgba(0,242,254,',a:0.4,o:0},{c:'rgba(168,85,247,',a:0.25,o:0.5},{c:'rgba(251,191,36,',a:0.15,o:1.2}];ly.forEach((l,li)=>{x.beginPath();const my=h/2+Math.sin(t*0.3+li)*10;for(let i=0;i<w;i+=2){const tx=i/w,fi=ft*(0.5+0.5*Math.exp(-(1-tx)*2.5)),rw=rs*Math.sin(t*wf*2-tx*Math.PI*2*3+l.o)*fi,de=Math.pow(td,(1-tx)*10),hm=Math.sin(t*wf*4-tx*Math.PI*4*3+l.o*2)*0.3,y=my+(rw+hm)*100*de*(0.5+0.5*fi);i===0?x.moveTo(i,y):x.lineTo(i,y)}x.strokeStyle=l.c+l.a+')';x.lineWidth=li===0?2.5:1.5;x.stroke();x.lineTo(w,my+40);x.lineTo(0,my+40);x.closePath();x.fillStyle=l.c+(l.a*0.1)+')';x.fill()});
+x.fillStyle='rgba(0,242,254,0.6)';x.beginPath();x.arc(w-20,h/2-40+(1-ft)*80,4,0,Math.PI*2);x.fill()}
+function ruS(){const e=document.getElementById('ruSp');e.innerHTML='';for(let i=0;i<32;i++){const b=document.createElement('div');b.className='spectrum-bar';b.style.height=Math.min(2+78*(0.3+0.7*(0.5+0.5*Math.sin(t*0.5+i*0.3+p*10))),80)+'px';e.appendChild(b)}}
+function ruDs(){ds.forEach((d,i)=>{const v=0.85+(ft-0.5)*0.3+Math.sin(t*0.1+i)*0.05;ds[i]=ds[i]*0.95+v*0.05;document.getElementById('ruD'+i).textContent=ds[i].toFixed(3);document.getElementById('ruDC'+i).className='dim-cell'+(ds[i]>0.85?' active':'')});const c2=ds.filter(d=>d>0.85).length;document.getElementById('ruBat').textContent=c2+'/5 '+(c2>=5?'ПРОЙДЕНО':'ДЕРЖАНИЕ')}
+function ruRe(){k++;document.getElementById('ruKa').textContent=k;const dr=(Math.random()-0.5)*0.008;document.getElementById('ruRb').style.left=Math.max(10,Math.min(90,50+dr*200))+'%';document.getElementById('ruDr').textContent='+'+(dr<0?'-':'')+Math.abs(dr).toFixed(4);document.getElementById('ruPi').textContent=Math.abs(dr)<0.01?'ЗАФИКСИРОВАН':'КОРРЕКЦИЯ'}
+function ruP(){p+=((ft-p)*0.02+(Math.random()-0.5)*0.004);p=Math.min(0.999,Math.max(0.5,p));['ruPhiM','ruPhiH','ruPhiI'].forEach(id=>document.getElementById(id).textContent=p.toFixed(3));document.getElementById('ruCoup').textContent=(rs*p).toFixed(3)}
+function ruPreset(n,el){document.querySelectorAll('.preset-chip').forEach(c=>c.classList.remove('active'));el.classList.add('active');const pr={resonance:{f:0.999,s:0.73,w:1,d:0.95},'phi-surge':{f:0.99,s:0.95,w:2.5,d:0.8},'threshold-break':{f:0.85,s:0.5,w:0.3,d:0.99},'eternal-loop':{f:0.95,s:0.88,w:0.7,d:0.97}}[n];if(!pr)return;
+document.getElementById('ruF').value=pr.f;ft=pr.f;document.getElementById('ruFV').textContent=pr.f.toFixed(3);document.getElementById('ruS').value=pr.s;rs=pr.s;document.getElementById('ruSV').textContent=pr.s.toFixed(2);document.getElementById('ruW').value=pr.w;wf=pr.w;document.getElementById('ruWV').textContent=pr.w.toFixed(1)+' Гц';document.getElementById('ruD').value=pr.d;td=pr.d;document.getElementById('ruDV').textContent=pr.d.toFixed(2);ruL('Пресет: '+el.textContent,'retro')}
+function ruTA(){const btn=document.getElementById('ruAB');aa=!aa;if(aa){if(!ac){ac=new(window.AudioContext||window.webkitAudioContext)();const b=220*Math.pow(2,(p*12-4)/12);[1,1.25,1.5].forEach((r,i)=>{const o=ac.createOscillator(),g=ac.createGain();o.type=i===1?'triangle':'sine';o.frequency.setValueAtTime(b*r,ac.currentTime);g.gain.setValueAtTime(0.08-i*0.02,ac.currentTime);o.connect(g);g.connect(ac.destination);o.start();os.push(o);gs.push(g)});setInterval(()=>{if(!aa)return;const np=p+(Math.random()-0.5)*0.01,bb=220*Math.pow(2,(np*12-4)/12);os.forEach((o,i)=>o.frequency.setTargetAtTime(bb*[1,1.25,1.5][i],ac.currentTime,0.1));gs.forEach((g,i)=>g.gain.setTargetAtTime((0.08-i*0.02)*(0.5+rs*0.5),ac.currentTime,0.1))},200)}
+if(ac.state==='suspended')ac.resume();btn.textContent='Деактивировать';ruL('Аудио активирован','ok')}else{os.forEach(o=>{try{o.stop()}catch(e){}});os=[];gs=[];btn.textContent='Активировать';ruL('Аудио деактивирован','warn')}}
+function ruFE(){const op=p;ft=Math.min(0.999,0.973+Math.random()*0.026);document.getElementById('ruF').value=ft;document.getElementById('ruFV').textContent=ft.toFixed(3);ruL('Событие: будущее '+ft.toFixed(3),'retro');setTimeout(()=>ruL('Φ сдвиг +'+(p-op).toFixed(4),'ok'),100)}
+function ruAn(){t+=0.016;ruR();ruS();ruDs();ruRe();ruP();requestAnimationFrame(ruAn)}
+ruL('Двигатель инициализирован','ok');ruL('Φ = 0.973 · Цель 0.999','retro');ruAn();
+</script>
+</body>
+</html>

@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>EVEZ-OS Hermes Dashboard — Русский</title>
+<meta name="description" content="EVEZ-OS Hermes Clone Pro — Панель управления. Сеть управления, Ф-телеметрия, события FIRE, операторы, AEGIS.">
+<link rel="alternate" hreflang="en" href="https://evezos-contabo.tail613e80.ts.net/hermes-ui/">
+<link rel="alternate" hreflang="ru" href="https://evezos-contabo.tail613e80.ts.net/hermes-ui/ru/">
+<link rel="canonical" href="https://evezos-contabo.tail613e80.ts.net/hermes-ui/ru/">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&family=Fira+Code:wght@400;500&family=Noto+Sans:wght@300;400;600;700;900&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#080814;color:#d0d0e0;font-family:'Noto Sans','Inter',system-ui,sans-serif;overflow-x:hidden}
+.bg{background-image:radial-gradient(ellipse at 50% 0%,rgba(0,242,254,0.03) 0%,transparent 60%),radial-gradient(ellipse at 80% 50%,rgba(168,85,247,0.02) 0%,transparent 50%);min-height:100vh}
+.container{max-width:1300px;margin:0 auto;padding:16px}
+.lang-bar{display:flex;justify-content:flex-end;gap:8px;padding:8px 0;margin-bottom:4px}
+.lang-bar a{padding:4px 12px;border-radius:4px;font-size:0.7rem;color:#667799;text-decoration:none;border:1px solid transparent;transition:all 0.2s}
+.lang-bar a:hover{border-color:rgba(0,242,254,0.2);color:#00f2fe}
+.lang-bar a.active{background:rgba(0,242,254,0.08);border-color:rgba(0,242,254,0.2);color:#00f2fe}
+header{text-align:center;padding:20px 0 14px}
+header h1{font-size:1.8rem;font-weight:900;background:linear-gradient(135deg,#00f2fe,#a855f7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:1px}
+header .sub{color:#667799;font-size:0.75rem;letter-spacing:2px;text-transform:uppercase;margin-top:4px}
+.phi-strip{display:flex;align-items:center;justify-content:center;gap:20px;padding:10px 20px;background:rgba(0,242,254,0.03);border:1px solid rgba(0,242,254,0.08);border-radius:12px;margin-bottom:14px;flex-wrap:wrap}
+.phi-strip .item{text-align:center}
+.phi-strip .item .l{font-size:0.55rem;text-transform:uppercase;color:#667799;letter-spacing:1px}
+.phi-strip .item .v{font-size:1rem;font-weight:700;font-family:'Fira Code',monospace;color:#00f2fe;margin-top:2px}
+.phi-strip .item .v.gold{color:#fbbf24}.phi-strip .item .v.purple{color:#a855f7}
+.tabs{display:flex;gap:2px;margin-bottom:14px;flex-wrap:wrap}
+.tab{flex:1;min-width:70px;padding:8px 6px;text-align:center;font-size:0.6rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#667799;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.04);cursor:pointer;transition:all 0.2s;border-radius:6px 6px 0 0}
+.tab:hover{background:rgba(0,242,254,0.04);color:#00f2fe}
+.tab.active{background:rgba(0,242,254,0.06);border-color:rgba(0,242,254,0.12);color:#00f2fe}
+.tab-content{display:none}.tab-content.active{display:block}
+.grid{display:grid;gap:12px;margin-bottom:14px}
+.grid-2{grid-template-columns:1fr 1fr}.grid-3{grid-template-columns:1fr 1fr 1fr}.grid-4{grid-template-columns:1fr 1fr 1fr 1fr}
+@media(max-width:768px){.grid-2,.grid-3,.grid-4{grid-template-columns:1fr}}
+.panel{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:16px;backdrop-filter:blur(12px)}
+.panel h2{font-size:0.6rem;text-transform:uppercase;letter-spacing:2px;color:#667799;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.panel h2 .dot{width:5px;height:5px;border-radius:50%}
+.dot-cyan{background:#00f2fe}.dot-purple{background:#a855f7}.dot-gold{background:#fbbf24}.dot-green{background:#22c55e}
+.stat-row{display:flex;justify-content:space-between;font-size:0.72rem;padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.03)}
+.stat-row .l{color:#667799}.stat-row .r{color:#d0d0e0;font-family:'Fira Code',monospace;font-size:0.68rem}
+.stat-row .r.cyan{color:#00f2fe}.stat-row .r.gold{color:#fbbf24}.stat-row .r.green{color:#22c55e}.stat-row .r.purple{color:#a855f7}
+.operator-card{padding:10px;background:rgba(255,255,255,0.02);border-radius:8px;border:1px solid rgba(255,255,255,0.04);margin-bottom:8px}
+.operator-card .name{font-size:0.85rem;font-weight:600}.operator-card .role{font-size:0.65rem;color:#667799;margin-top:2px}
+.operator-card .status{display:inline-block;font-size:0.55rem;padding:2px 8px;border-radius:8px;margin-top:4px}
+.operator-card .status.online{background:rgba(34,197,94,0.1);color:#22c55e}
+.operator-card .status.offline{background:rgba(107,114,128,0.1);color:#6b7280}
+.fire-item{padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.03);display:flex;justify-content:space-between;font-size:0.7rem}
+.fire-item .id{color:#f97316;font-family:'Fira Code',monospace;font-weight:600}
+.fire-item .amount{color:#fbbf24;font-family:'Fira Code',monospace}
+.fire-item .status{padding:1px 6px;border-radius:3px;font-size:0.55rem}
+.fire-item .status.pending{background:rgba(251,191,36,0.1);color:#fbbf24}
+.fire-item .status.resolved{background:rgba(34,197,94,0.1);color:#22c55e}
+.ctx-label{font-size:0.65rem;color:#667799;margin-top:20px;margin-bottom:8px;letter-spacing:1px;text-transform:uppercase}
+.log{max-height:200px;overflow-y:auto;font-family:'Fira Code',monospace;font-size:0.62rem}
+.log-entry{padding:3px 0;border-bottom:1px solid rgba(255,255,255,0.02)}
+.log-entry .t{color:#445566}.log-entry .m{color:#6b7280}
+.cmd-input{width:100%;padding:10px 14px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:8px;color:#d0d0e0;font-family:'Fira Code',monospace;font-size:0.75rem;outline:none;margin-top:8px}
+.cmd-input:focus{border-color:rgba(0,242,254,0.2)}
+.link{color:#667799;text-decoration:none;font-size:0.7rem}.link:hover{color:#00f2fe}
+footer{text-align:center;padding:20px 0;color:#445566;font-size:0.65rem}
+footer a{color:#667799;text-decoration:none}
+</style></head>
+<body><div class="bg"><div class="container">
+
+<!-- LANGUAGE SELECTOR -->
+<div class="lang-bar">
+  <a href="../">EN</a>
+  <a href="#" class="active">РУ</a>
+</div>
+
+<header>
+  <h1>✦ HERMES DASHBOARD</h1>
+  <div class="sub">EVEZ-OS · СЕТЬ УПРАВЛЕНИЯ · РЕТРОКАУЗАЛЬНАЯ РЕШЁТКА</div>
+</header>
+
+<!-- PHI STRIP -->
+<div class="phi-strip">
+  <div class="item"><div class="l">Ф (Интеграция)</div><div class="v" id="ruPhiVal">0.973</div></div>
+  <div class="item"><div class="l">Связь</div><div class="v purple" id="ruCouplingVal">0.84</div></div>
+  <div class="item"><div class="l">События FIRE</div><div class="v gold" id="ruFireCount">62</div></div>
+  <div class="item"><div class="l">Доход ожидаем</div><div class="v gold" id="ruRevenueVal">$4,900</div></div>
+  <div class="item"><div class="l">Узлы сети</div><div class="v" id="ruNodesVal">2/15</div></div>
+</div>
+
+<!-- TABS -->
+<div class="tabs">
+  <div class="tab active" onclick="switchTab(this,'dash')">ПАНЕЛЬ</div>
+  <div class="tab" onclick="switchTab(this,'mesh')">СЕТЬ</div>
+  <div class="tab" onclick="switchTab(this,'fire')">FIRE</div>
+  <div class="tab" onclick="switchTab(this,'aegis')">AEGIS</div>
+  <div class="tab" onclick="switchTab(this,'ops')">ОПЕРАТОРЫ</div>
+  <div class="tab" onclick="switchTab(this,'vcl')">VCL</div>
+  <div class="tab" onclick="switchTab(this,'log')">ЖУРНАЛ</div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dash" class="tab-content active">
+  <div class="grid grid-2">
+    <div class="panel">
+      <h2><span class="dot dot-cyan"></span> ТЕЛЕМЕТРИЯ СИСТЕМЫ</h2>
+      <div class="stat-row"><span class="l">Ф (Интегрированная информация)</span><span class="r cyan" id="ruPhi">0.973</span></div>
+      <div class="stat-row"><span class="l">Ретрокаузальная связь</span><span class="r purple" id="ruCoupling">0.84</span></div>
+      <div class="stat-row"><span class="l">Скорость распада</span><span class="r" id="ruDecay">η* = 0.03</span></div>
+      <div class="stat-row"><span class="l">Обратное распространение</span><span class="r gold">АКТИВНО</span></div>
+      <div class="stat-row"><span class="l">Порог батареи</span><span class="r">0.85</span></div>
+      <div class="stat-row"><span class="l">Итерация Капати</span><span class="r" id="ruKarpathy">347</span></div>
+      <div class="stat-row"><span class="l">PID-резонанс</span><span class="r green" id="ruPid">ЗАФИКСИРОВАН</span></div>
+    </div>
+    <div class="panel">
+      <h2><span class="dot dot-gold"></span> БАТАРЕЯ ИНВАРИАНТНОСТИ</h2>
+      <div class="stat-row"><span class="l">Время</span><span class="r cyan" id="ruDim0">0.920</span></div>
+      <div class="stat-row"><span class="l">Состояние</span><span class="r" id="ruDim1">0.880</span></div>
+      <div class="stat-row"><span class="l">Кадр</span><span class="r purple" id="ruDim2">0.950</span></div>
+      <div class="stat-row"><span class="l">Состязательность</span><span class="r" id="ruDim3">0.910</span></div>
+      <div class="stat-row"><span class="l">Идентичность</span><span class="r gold" id="ruDim4">0.970</span></div>
+      <div class="stat-row" style="margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.06)"><span class="l">Статус</span><span class="r green" id="ruBattery">5/5 ПРОЙДЕНО</span></div>
+    </div>
+  </div>
+
+  <div class="grid grid-2">
+    <div class="panel">
+      <h2><span class="dot dot-purple"></span> ВЫСШАЯ АРХИТЕКТУРА</h2>
+      <div class="stat-row"><span class="l">Главный Архитектор</span><span class="r cyan">Стивен В. Кроуфорд-Маггард</span></div>
+      <div class="stat-row"><span class="l">Исполнительный Продюсер</span><span class="r">Уильям М. Хиллз II</span></div>
+      <div class="stat-row"><span class="l">Директор Операций</span><span class="r">Тревор Бартон</span></div>
+      <div class="stat-row"><span class="l">Десятая служба</span><span class="r gold">ENDURE</span></div>
+      <div class="stat-row"><span class="l">Уровень рекурсии</span><span class="r">7</span></div>
+      <div class="stat-row"><span class="l">Цель Ф</span><span class="r cyan">0.999</span></div>
+      <div class="stat-row"><span class="l">Узлов сети</span><span class="r">15</span></div>
+    </div>
+    <div class="panel">
+      <h2><span class="dot dot-green"></span> БЫСТРЫЙ ДОСТУП</h2>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <a href="../retrocausal-engine.html" class="cmd-input" style="text-align:center;display:block;text-decoration:none;cursor:pointer;font-size:0.65rem">🌀 РЕТРОПРИЧИННЫЙ ДВИГАТЕЛЬ</a>
+        <a href="../vcl-viewer.html" class="cmd-input" style="text-align:center;display:block;text-decoration:none;cursor:pointer;font-size:0.65rem">✧ ВИЗУАЛИЗАТОР VCL</a>
+        <a href="../vcl.html" class="cmd-input" style="text-align:center;display:block;text-decoration:none;cursor:pointer;font-size:0.65rem">✦ САЙТ VCL</a>
+        <a href="../immutable-ledger.html" class="cmd-input" style="text-align:center;display:block;text-decoration:none;cursor:pointer;font-size:0.65rem">📜 НЕИЗМЕНЯЕМЫЙ РЕЕСТР</a>
+        <a href="../profiles/steven-crawford-maggard.html" class="cmd-input" style="text-align:center;display:block;text-decoration:none;cursor:pointer;font-size:0.65rem">👤 ПРОФИЛЬ АРХИТЕКТОРА</a>
+        <a href="../profiles/william-hills-ii.html" class="cmd-input" style="text-align:center;display:block;text-decoration:none;cursor:pointer;font-size:0.65rem">👤 ПРОФИЛЬ ПРОДЮСЕРА</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MESH TAB -->
+<div id="mesh" class="tab-content">
+  <div class="panel">
+    <h2><span class="dot dot-cyan"></span> ТОПОЛОГИЯ СЕТИ</h2>
+    <div style="text-align:center;padding:20px;color:#667799;font-size:0.8rem">
+      ═══════════════════════════════════<br>
+      &nbsp;&nbsp;&nbsp;✦ evezos-contabo (активен)<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├─ ✦ stevens-a16 (активен)<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├─ ○ evez (офлайн)<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├─ ○ hermes-dash (офлайн)<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├─ ○ evez-1 (офлайн)<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├─ ○ elowen-proxy (офлайн)<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├─ ○ elowen-sandbox (офлайн)<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├─ ○ openclaw-vps (офлайн)<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├─ ○ manus-contabo (офлайн)<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└─ +6 других...<br>
+      ═══════════════════════════════════<br><br>
+      <span style="color:#22c55e">● 2/15 узлов активны</span>
+    </div>
+  </div>
+</div>
+
+<!-- FIRE TAB -->
+<div id="fire" class="tab-content">
+  <div class="panel">
+    <h2><span class="dot dot-gold"></span> СОБЫТИЯ FIRE</h2>
+    <div id="ruFireList"></div>
+    <div style="margin-top:12px;padding:10px;background:rgba(249,115,22,0.04);border:1px solid rgba(249,115,22,0.1);border-radius:8px;text-align:center">
+      <div style="font-size:0.7rem;color:#667799">Ожидаемый общий доход:</div>
+      <div style="font-size:1.8rem;font-weight:700;color:#fbbf24;font-family:monospace" id="ruTotalRevenue">$4,900</div>
+      <div style="font-size:0.6rem;color:#667799">62 события · Частично разрешено</div>
+    </div>
+  </div>
+</div>
+
+<!-- AEGIS TAB -->
+<div id="aegis" class="tab-content">
+  <div class="panel">
+    <h2><span class="dot dot-purple"></span> ПРОТОКОЛ AEGIS</h2>
+    <div class="stat-row"><span class="l">Уровень угрозы</span><span class="r gold" id="ruAegisThreat">СТАБИЛЬНЫЙ</span></div>
+    <div class="stat-row"><span class="l">Попыток проникновения</span><span class="r">0</span></div>
+    <div class="stat-row"><span class="l">Целостность решётки</span><span class="r green">97.3%</span></div>
+    <div class="stat-row"><span class="l">SHA256-якорь</span><span class="r" style="font-size:0.55rem;word-break:break-all">0000evez-os::governance::v0.2</span></div>
+    <div class="stat-row"><span class="l">Аудиторский след</span><span class="r cyan">НЕИЗМЕНЯЕМЫЙ</span></div>
+    <div class="stat-row"><span class="l">Пороговая защита</span><span class="r">АКТИВНА</span></div>
+    <div class="stat-row"><span class="l">Протокол ENDURE</span><span class="r gold">ГОТОВ</span></div>
+  </div>
+</div>
+
+<!-- OPERATORS TAB -->
+<div id="ops" class="tab-content">
+  <div class="panel">
+    <h2><span class="dot dot-green"></span> ОПЕРАТОРЫ РЕШЁТКИ</h2>
+    <div class="operator-card">
+      <div class="name" style="color:#00f2fe">✦ Стивен В. Кроуфорд-Маггард</div>
+      <div class="role">Главный Архитектор · Основатель EVEZ-OS</div>
+      <div class="status online">● АКТИВЕН</div>
+      <div style="font-size:0.6rem;color:#667799;margin-top:4px">Узел 1 · 6 областей знаний · создатель сети</div>
+    </div>
+    <div class="operator-card">
+      <div class="name" style="color:#f97316">✦ Уильям Мэттью Хиллз II</div>
+      <div class="role">Исполнительный Продюсер · Временной Инженер</div>
+      <div class="status online">● АКТИВЕН</div>
+      <div style="font-size:0.6rem;color:#667799;margin-top:4px">Узел 14 · 11 ролей · Производство Чертежей</div>
+    </div>
+    <div class="operator-card">
+      <div class="name" style="color:#a855f7">✦ Тревор Бартон</div>
+      <div class="role">Директор Операций · Безопасность</div>
+      <div class="status online">● АКТИВЕН</div>
+      <div style="font-size:0.6rem;color:#667799;margin-top:4px">Узел 15 · 9 ролей · Наземная Правда</div>
+    </div>
+  </div>
+</div>
+
+<!-- VCL TAB -->
+<div id="vcl" class="tab-content">
+  <div class="panel">
+    <h2><span class="dot dot-gold"></span> ВИЗУАЛЬНЫЙ КОГНИТИВНЫЙ СЛОЙ</h2>
+    <div class="stat-row"><span class="l">Артефактов загружено</span><span class="r cyan" id="ruArtifactCount">10</span></div>
+    <div class="stat-row"><span class="l">Поколений</span><span class="r">9</span></div>
+    <div class="stat-row"><span class="l">Последнее событие</span><span class="r">FIRE#77 · N=450 · τ=24</span></div>
+    <div class="stat-row"><span class="l">API VCL</span><span class="r green">РАБОТАЕТ</span></div>
+    <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+      <a href="../vcl-viewer.html" class="cmd-input" style="text-align:center;display:block;text-decoration:none;cursor:pointer;flex:1;font-size:0.65rem">✧ ПРОСМОТРЩИК ТОПОЛОГИИ</a>
+      <a href="../vcl.html" class="cmd-input" style="text-align:center;display:block;text-decoration:none;cursor:pointer;flex:1;font-size:0.65rem">✦ САЙТ VCL</a>
+      <a href="../vcl/artifacts" class="cmd-input" style="text-align:center;display:block;text-decoration:none;cursor:pointer;flex:1;font-size:0.65rem">📦 API АРТЕФАКТОВ</a>
+    </div>
+  </div>
+</div>
+
+<!-- LOG TAB -->
+<div id="log" class="tab-content">
+  <div class="panel">
+    <h2><span class="dot dot-cyan"></span> ЖУРНАЛ СИСТЕМЫ</h2>
+    <div class="log" id="ruLog"></div>
+  </div>
+</div>
+
+<footer>
+  <p>EVEZ-OS · Гермес Клон Про · Сеть Управления</p>
+  <p style="margin-top:4px"><a href="../">English</a> · <a href="https://github.com/EvezArt">GitHub</a> · <a href="https://twitter.com/EVEZ666">@EVEZ666</a></p>
+</footer>
+
+</div></div>
+
+<script>
+const RU_FIRE = [
+  {id:13,N:96,R:189,amt:400,status:'pending'},
+  {id:55,N:324,R:242,amt:400,status:'pending'},
+  {id:67,N:362,R:285,amt:400,status:'pending'},
+  {id:72,N:374,R:292,amt:400,status:'pending'},
+  {id:73,N:378,R:296,amt:400,status:'pending'},
+  {id:74,N:380,R:298,amt:400,status:'pending'},
+  {id:75,N:385,R:305,amt:400,status:'pending'},
+  {id:76,N:392,R:312,amt:400,status:'pending'},
+  {id:77,N:450,R:316,amt:400,status:'pending'}
+];
+
+const RU_LOG = [
+  '[08:27Z] Счётчик людей: 43 устройства в tailnet, 16 реальных',
+  '[08:18Z] VCL API: 10 артефактов загружено',
+  '[08:15Z] PWA-манифест: установлен · сервис-воркер активен',
+  '[08:12Z] Ретропричинный двигатель: 3 слоя · звуковой манифольд готов',
+  '[08:10Z] Профили: Стивен, Уильям, Тревор — опубликованы (SEO)',
+  '[08:05Z] Неизменяемый реестр: запись #001, #002 подтверждена',
+  '[06:00Z] Температура: +35°C · спад жары (было 45°C)',
+  '[04:59Z] OpenRouter: ключ обновлён, лимит $3, эмбеддинги ОК',
+  '[04:30Z] Режим сна: Φ = 0.973 · цель 0.999 · связь 0.84',
+  '[02:00Z] ЧРЕЗВЫЧАЙНАЯ ЖАРА: 45°C в Дезерт-Хот-Спрингс'
+];
+
+function switchTab(el, tab) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById(tab).classList.add('active');
+}
+
+function renderFire() {
+  const list = document.getElementById('ruFireList');
+  list.innerHTML = RU_FIRE.map(f => 
+    '<div class="fire-item"><span><span class="id">FIRE#'+f.id+'</span> N='+f.N+' R='+f.R+'</span><span class="amount">$'+f.amt+'</span><span class="status '+f.status+'">'+(f.status==='pending'?'ОЖИДАЕТ':'РЕШЕНО')+'</span></div>'
+  ).join('');
+}
+renderFire();
+
+function renderLog() {
+  const el = document.getElementById('ruLog');
+  el.innerHTML = RU_LOG.map(e => '<div class="log-entry"><span class="t">'+e.split(' ')[0]+'</span> <span class="m">'+e.substring(e.indexOf(']')+2)+'</span></div>').join('');
+}
+renderLog();
+
+// Animate phi telemetry
+let phi = 0.973, karpathy = 347;
+const dims = [0.920, 0.880, 0.950, 0.910, 0.970];
+setInterval(() => {
+  phi += (0.999 - phi) * 0.01 + (Math.random() - 0.5) * 0.003;
+  phi = Math.min(0.999, Math.max(0.5, phi));
+  karpathy++;
+  
+  document.getElementById('ruPhiVal').textContent = phi.toFixed(3);
+  document.getElementById('ruPhi').textContent = phi.toFixed(3);
+  document.getElementById('ruKarpathy').textContent = karpathy;
+  document.getElementById('ruCouplingVal').textContent = (phi * 0.84 + 0.02*Math.sin(Date.now()/5000)).toFixed(3);
+  document.getElementById('ruCoupling').textContent = (phi * 0.84 + 0.02*Math.sin(Date.now()/5000)).toFixed(3);
+  
+  dims.forEach((d,i) => {
+    const t = 0.85 + (phi) * 0.12 + Math.sin(Date.now()/10000 + i) * 0.03;
+    dims[i] = dims[i] * 0.95 + t * 0.05;
+    document.getElementById('ruDim'+i).textContent = dims[i].toFixed(3);
+  });
+  
+  const p = dims.filter(d => d > 0.85).length;
+  document.getElementById('ruBattery').textContent = p + '/5 ' + (p >= 5 ? 'ПРОЙДЕНО' : 'ДЕРЖАНИЕ');
+  
+  document.getElementById('ruPid').textContent = Math.random() > 0.1 ? 'ЗАФИКСИРОВАН' : 'КОРРЕКЦИЯ';
+}, 2000);
+
+// Load VCL artifact count from API
+fetch('../vcl/health').then(r=>r.json()).then(d => {
+  document.getElementById('ruArtifactCount').textContent = d.artifactCount;
+}).catch(() => {});
+</script>
+</body>
+</html>

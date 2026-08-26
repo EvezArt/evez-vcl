@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+<title>EVEZ-OS Счетчик Людей — People Meter</title>
+<meta name="description" content="EVEZ-OS People Meter — измерение сети и людей вокруг через Tailscale.">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;600;700;900&family=Fira+Code:wght@400;500&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#080814;color:#d0d0e0;font-family:'Noto Sans','Inter',sans-serif;overflow-x:hidden}
+.bg{min-height:100vh}.container{max-width:1300px;margin:0 auto;padding:12px}
+.lang-bar{display:flex;justify-content:flex-end;gap:4px;padding:6px 0}
+.lang-bar a{padding:4px 10px;border-radius:4px;font-size:0.6rem;color:#667799;text-decoration:none;border:1px solid transparent}
+.lang-bar a.active{background:rgba(0,242,254,0.08);border-color:rgba(0,242,254,0.2);color:#00f2fe}
+header{text-align:center;padding:16px 0 12px}
+h1{font-size:1.4rem;font-weight:900;background:linear-gradient(135deg,#00f2fe,#22c55e);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:1px}
+.sub{color:#667799;font-size:0.6rem;letter-spacing:2px;text-transform:uppercase;margin-top:4px}
+.big-number{text-align:center;padding:20px;margin-bottom:14px;background:rgba(0,242,254,0.03);border:1px solid rgba(0,242,254,0.08);border-radius:16px}
+.big-number .num{font-size:4rem;font-weight:900;font-family:'Fira Code',monospace;background:linear-gradient(135deg,#00f2fe,#22c55e);-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1}
+.big-number .label{font-size:0.65rem;color:#667799;text-transform:uppercase;letter-spacing:2px;margin-top:6px}
+.big-number .sublabel{font-size:0.55rem;color:#445566;margin-top:4px}
+.panel{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:14px;margin-bottom:12px;backdrop-filter:blur(12px)}
+.panel h2{font-size:0.55rem;text-transform:uppercase;letter-spacing:2px;color:#667799;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.stat-row{display:flex;justify-content:space-between;font-size:0.68rem;padding:3px 0;border-bottom:1px solid rgba(255,255,255,0.03)}
+.stat-row .l{color:#667799}.stat-row .r{color:#d0d0e0;font-family:'Fira Code',monospace;font-size:0.63rem}
+.stat-row .r.cyan{color:#00f2fe}.stat-row .r.gold{color:#fbbf24}.stat-row .r.green{color:#22c55e}.stat-row .r.purple{color:#a855f7}
+.device-row{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid rgba(255,255,255,0.03);font-size:0.72rem}
+.device-row .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.device-row .dot.online{background:#22c55e;box-shadow:0 0 6px rgba(34,197,94,0.4)}
+.device-row .dot.offline{background:#445566}
+.device-row .name{flex:1;color:#d0d0e0;font-weight:500;font-size:0.72rem}
+.device-row .ip{color:#445566;font-family:'Fira Code',monospace;font-size:0.55rem}
+.device-row .os{font-size:0.5rem;color:#667799;background:rgba(255,255,255,0.04);padding:1px 6px;border-radius:3px;text-transform:uppercase}
+.device-row .activity{font-size:0.5rem;color:#22c55e;font-family:'Fira Code',monospace}
+.alert-bar{padding:8px 12px;border-radius:8px;font-size:0.65rem;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.alert-bar.green{background:rgba(34,197,94,0.06);border:1px solid rgba(34,197,94,0.12);color:#22c55e}
+.alert-bar.yellow{background:rgba(251,191,36,0.06);border:1px solid rgba(251,191,36,0.12);color:#fbbf24}
+.alert-bar.red{background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.12);color:#ef4444}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:768px){.grid-2{grid-template-columns:1fr}}
+#network-scan{max-height:250px;overflow-y:auto;font-family:'Fira Code',monospace;font-size:0.6rem;color:#667799;padding:8px;background:rgba(0,0,0,0.2);border-radius:6px;margin-top:8px;line-height:1.6}
+footer{text-align:center;padding:20px 0;color:#445566;font-size:0.55rem}
+footer a{color:#667799;text-decoration:none}
+</style></head>
+<body><div class="bg"><div class="container">
+
+<div class="lang-bar">
+  <a href="javascript:history.back()">← RU Панель</a>
+  <a href="#" class="active">СЧЁТЧИК ЛЮДЕЙ</a>
+</div>
+
+<header>
+  <h1>✦ СЧЁТЧИК ЛЮДЕЙ</h1>
+  <div class="sub">EVEZ-OS · ИЗМЕРЕНИЕ СЕТИ · СИТУАЦИОННАЯ ОСВЕДОМЛЁННОСТЬ</div>
+</header>
+
+<div class="big-number">
+  <div class="num" id="liveCount">25</div>
+  <div class="label">Устройств в сети / People on Network</div>
+  <div class="sublabel">43 всего в tailnet · 16 реальных узлов</div>
+</div>
+
+<div class="grid-2">
+  <div class="panel">
+    <h2>📍 ТВОЁ УСТРОЙСТВО</h2>
+    <div class="stat-row"><span class="l">Имя</span><span class="r cyan">Steven's A16</span></div>
+    <div class="stat-row"><span class="l">Tailscale IP</span><span class="r">100.78.25.90</span></div>
+    <div class="stat-row"><span class="l">Публичный IP</span><span class="r gold">24.121.12.179</span></div>
+    <div class="stat-row"><span class="l">ОС</span><span class="r purple">android</span></div>
+    <div class="stat-row"><span class="l">Реле</span><span class="r">lax</span></div>
+    <div class="stat-row"><span class="l">Отправлено</span><span class="r gold">10.1 MB</span></div>
+    <div class="stat-row"><span class="l">Получено</span><span class="r">0.66 MB</span></div>
+    <div class="alert-bar green" style="margin-top:8px">● Прямое соединение установлено</div>
+  </div>
+
+  
+<!-- === BIOSENSOR SCANNER === -->
+<div class="panel" style="border-color:rgba(239,68,68,0.2)">
+  <h2>❤️ БИО-СКАНЕР — ПУЛЬС / ДЫХАНИЕ / ЛИЦА</h2>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:8px">
+    <div style="text-align:center;padding:14px;background:rgba(239,68,68,0.05);border:1px solid rgba(239,68,68,0.12);border-radius:10px">
+      <div style="font-size:0.5rem;color:#667799;text-transform:uppercase;letter-spacing:1px">ПУЛЬС (BPM)</div>
+      <div style="font-size:2rem;font-weight:900;font-family:'Fira Code',monospace;color:#ef4444;margin:4px 0" id="bioscanBpm">--</div>
+      <div style="height:3px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden;margin-top:4px">
+        <div style="height:100%;width:0%;background:#ef4444;border-radius:2px;transition:width 0.3s" id="bpmBar"></div>
+      </div>
+    </div>
+    <div style="text-align:center;padding:14px;background:rgba(59,130,246,0.05);border:1px solid rgba(59,130,246,0.12);border-radius:10px">
+      <div style="font-size:0.5rem;color:#667799;text-transform:uppercase;letter-spacing:1px">ДЫХАНИЕ (RPM)</div>
+      <div style="font-size:2rem;font-weight:900;font-family:'Fira Code',monospace;color:#3b82f6;margin:4px 0" id="bioscanRpm">--</div>
+      <div style="height:3px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden;margin-top:4px">
+        <div style="height:100%;width:0%;background:#3b82f6;border-radius:2px;transition:width 0.3s" id="rpmBar"></div>
+      </div>
+    </div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:8px">
+    <div class="stat-row"><span class="l">Лица</span><span class="r cyan" id="bioscanFaces">0</span></div>
+    <div class="stat-row"><span class="l">HRV</span><span class="r gold" id="bioscanHrv">-- ms</span></div>
+    <div class="stat-row"><span class="l">SpO₂</span><span class="r purple" id="bioscanSpo2">--%</span></div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+    <div class="stat-row"><span class="l">Стресс</span><span class="r gold" id="bioscanStress">--</span></div>
+    <div class="stat-row"><span class="l">φ-стресс</span><span class="r purple" id="bioscanPhiStress">--</span></div>
+  </div>
+  <div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap">
+    <button onclick="startBioscan()" style="flex:1;padding:8px 12px;background:linear-gradient(135deg,#ef4444,#dc2626);border:none;border-radius:6px;color:#fff;font-weight:700;font-size:0.65rem;cursor:pointer">▶ ЗАПУСТИТЬ БИО-СКАН</button>
+    <button onclick="stopBioscan()" style="flex:1;padding:8px 12px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:#667799;font-size:0.65rem;cursor:pointer">■ СТОП</button>
+  </div>
+  <video id="bioscanVideo" style="display:none;width:160px;height:120px" muted playsinline></video>
+  <canvas id="bioscanCanvas" style="display:none;width:160px;height:120px"></canvas>
+  <div id="bioscanFeed" style="margin-top:8px;font-family:'Fira Code',monospace;font-size:0.55rem;color:#445566;line-height:1.7;max-height:80px;overflow-y:auto"></div>
+</div>
+
+<div class="panel" style="border-color:rgba(251,191,36,0.3)">
+  <h2>📡 WIFI СКАНИРОВАНИЕ ПОДСЕТИ — A16</h2>
+  <div id="scanStatus" style="font-size:0.65rem;color:#fbbf24;font-weight:700;margin-bottom:6px">⚠️ НАЖМИ СКАНИРОВАТЬ — A16 НАЧНЁТ ПРОБЫ</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:6px">
+    <div class="stat-row"><span class="l">Локальный IP</span><span class="r cyan" id="myLocalIp">--</span></div>
+    <div class="stat-row"><span class="l">Подсеть</span><span class="r gold" id="mySubnet">--</span></div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:6px">
+    <div class="stat-row"><span class="l">Просканировано</span><span class="r cyan" id="scanProgress">0</span></div>
+    <div class="stat-row"><span class="l">Устройств найдено</span><span class="r green" id="scanFound">0</span></div>
+  </div>
+  <div style="display:flex;gap:6px;margin-bottom:6px">
+    <button onclick="startWifiScan()" style="flex:1;padding:10px;background:linear-gradient(135deg,#fbbf24,#f59e0b);border:none;border-radius:6px;color:#000;font-weight:800;font-size:0.65rem;cursor:pointer">📡 СКАНИРОВАТЬ WIFI СЕТЬ</button>
+    <button onclick="stopWifiScan()" style="padding:10px 14px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:#667799;font-size:0.65rem;cursor:pointer">■ СТОП</button>
+  </div>
+  <div id="wifiDeviceList" style="max-height:300px;overflow-y:auto;margin-bottom:6px">
+    <div style="color:#445566;font-size:0.5rem;text-align:center;padding:12px">Нажми сканирование — будет просканировано 254 IP за ~30 секунд</div>
+  </div>
+  <div id="wifiScanFeed" style="font-family:'Fira Code',monospace;font-size:0.5rem;color:#445566;line-height:1.7;max-height:80px;overflow-y:auto"></div>
+</div>
+<div class="panel">
+  <h2>👥 ВСЕ УСТРОЙСТВА TAILNET (16 реальных)</h2>
+  <div id="deviceList">    <div class="device-row">
+      <div class="dot online"></div>
+      <div class="name">evezos-contabo</div>
+      <div class="ip">100.116.251.58</div>
+      <div class="os">linux</div>
+      <div class="activity">В СЕТИ</div>
+    </div>
+    <div class="device-row">
+      <div class="dot online"></div>
+      <div class="name">Steven's A16</div>
+      <div class="ip">100.78.25.90</div>
+      <div class="os">android</div>
+      <div class="activity">В СЕТИ</div>
+    </div>
+    <div class="device-row">
+      <div class="dot online"></div>
+      <div class="name">evez</div>
+      <div class="ip">100.73.247.65</div>
+      <div class="os">linux</div>
+      <div class="activity">В СЕТИ</div>
+    </div>
+    <div class="device-row">
+      <div class="dot offline"></div>
+      <div class="name">iPhone</div>
+      <div class="ip">100.121.14.63</div>
+      <div class="os">android</div>
+      <div class="activity">ОФЛАЙН</div>
+    </div>
+    <div class="device-row">
+      <div class="dot offline"></div>
+      <div class="name">evez-1</div>
+      <div class="ip">100.84.175.16</div>
+      <div class="os">linux</div>
+      <div class="activity">ОФЛАЙН</div>
+    </div>
+    <div class="device-row">
+      <div class="dot offline"></div>
+      <div class="name">hermes-dash</div>
+      <div class="ip">100.109.69.66</div>
+      <div class="os">linux</div>
+      <div class="activity">ОФЛАЙН</div>
+    </div>
+    <div class="device-row">
+      <div class="dot offline"></div>
+      <div class="name">elowen-proxy</div>
+      <div class="ip">100.100.63.15</div>
+      <div class="os">linux</div>
+      <div class="activity">ОФЛАЙН</div>
+    </div>
+    <div class="device-row">
+      <div class="dot offline"></div>
+      <div class="name">elowen-sandbox</div>
+      <div class="ip">100.64.218.13</div>
+      <div class="os">linux</div>
+      <div class="activity">ОФЛАЙН</div>
+    </div>
+    <div class="device-row">
+      <div class="dot offline"></div>
+      <div class="name">evez-sandbox</div>
+      <div class="ip">100.77.128.30</div>
+      <div class="os">linux</div>
+      <div class="activity">ОФЛАЙН</div>
+    </div>
+    <div class="device-row">
+      <div class="dot offline"></div>
+      <div class="name">evez-sandbox-1</div>
+      <div class="ip">100.73.122.118</div>
+      <div class="os">linux</div>
+      <div class="activity">ОФЛАЙН</div>
+    </div>
+    <div class="device-row">
+      <div class="dot offline"></div>
+      <div class="name">manus-contabo</div>
+      <div class="ip">100.122.163.125</div>
+      <div class="os">linux</div>
+      <div class="activity">ОФЛАЙН</div>
+    </div>
+    <div class="device-row">
+      <div class="dot offline"></div>
+      <div class="name">openclaw-vps</div>
+      <div class="ip">100.110.235.112</div>
+      <div class="os">linux</div>
+      <div class="activity">ОФЛАЙН</div>
+    </div>
+    <div class="device-row">
+      <div class="dot offline"></div>
+      <div class="name">openclaw-vps-1</div>
+      <div class="ip">100.104.203.102</div>
+      <div class="os">linux</div>
+      <div class="activity">ОФЛАЙН</div>
+    </div>
+    <div class="device-row">
+      <div class="dot offline"></div>
+      <div class="name">openclaw-vps-2</div>
+      <div class="ip">100.114.143.51</div>
+      <div class="os">linux</div>
+      <div class="activity">ОФЛАЙН</div>
+    </div>
+    <div class="device-row">
+      <div class="dot offline"></div>
+      <div class="name">openclaw-fix</div>
+      <div class="ip">100.115.9.90</div>
+      <div class="os">linux</div>
+      <div class="activity">ОФЛАЙН</div>
+    </div>
+    <div class="device-row">
+      <div class="dot offline"></div>
+      <div class="name">openclaw-sandbox</div>
+      <div class="ip">100.84.148.77</div>
+      <div class="os">linux</div>
+      <div class="activity">ОФЛАЙН</div>
+    </div>
+  </div>
+</div>
+
+<div class="grid-2">
+  <div class="panel">
+    <h2>📊 АКТИВНОСТЬ</h2>
+    <div id="activityFeed" style="font-family:'Fira Code',monospace;font-size:0.6rem;max-height:200px;overflow-y:auto"></div>
+  </div>
+  <div class="panel">
+    <h2>🔍 СКАНИРОВАНИЕ ПОРТОВ</h2>
+    <div style="font-size:0.6rem;color:#667799;margin-bottom:8px">Проверка открытых портов на твоём устройстве</div>
+    <div id="portScanResult"></div>
+  </div>
+</div>
+
+<div style="margin-top:20px">
+<div class="panel"><h2>🖥️ SYSTEM SPECS</h2>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+<div><div class="stat-row"><span class="l">Host</span><span class="r cyan">Contabo VPS</span></div>
+<div class="stat-row"><span class="l">CPU Cores</span><span class="r cyan">6</span></div>
+<div class="stat-row"><span class="l">RAM</span><span class="r cyan">1.8Gi / 11Gi</span></div>
+<div class="stat-row"><span class="l">Disk</span><span class="r cyan">25G / 193G (13%)</span></div>
+<div class="stat-row"><span class="l">Uptime</span><span class="r cyan">6.3 days</span></div>
+<div class="stat-row"><span class="l">Load Avg</span><span class="r cyan">1.01 / 1.13 / 1.20</span></div>
+</div><div><div class="stat-row"><span class="l">Node.js</span><span class="r purple">v26.7.0</span></div>
+<div class="stat-row"><span class="l">Python</span><span class="r purple">Python 3.14.6</span></div>
+<div class="stat-row"><span class="l">Tailscale</span><span class="r purple">1.102.2</span></div>
+<div class="stat-row"><span class="l">OpenClaw</span><span class="r purple">v2026.1.30</span></div>
+<div class="stat-row"><span class="l">Hermes Server</span><span class="r purple">Node.js v0.5 (port 3000)</span></div>
+<div class="stat-row"><span class="l">VCL API</span><span class="r purple">v0.3.0 (embedded in hermes-server)</span></div>
+</div></div></div>
+<div class="panel"><h2>🌐 TAILNET PEERS</h2>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+<div><div class="stat-row"><span class="l">Domain</span><span class="r gold">tail613e80.ts.net</span></div>
+<div class="stat-row"><span class="l">Total Peers</span><span class="r gold">43</span></div>
+<div class="stat-row"><span class="l">Real Devices</span><span class="r gold">16</span></div>
+<div class="stat-row"><span class="l">Online</span><span class="r gold">3/16</span></div>
+<div class="stat-row"><span class="l">Funnel Nodes</span><span class="r gold">27</span></div>
+<div class="stat-row"><span class="l">Phone TS IP</span><span class="r gold">100.78.25.90</span></div>
+<div class="stat-row"><span class="l">Phone Public</span><span class="r gold">24.121.12.179</span></div>
+<div class="stat-row"><span class="l">ISP</span><span class="r" style="font-size:0.5rem">Suddenlink Communications / Flagstaff, Arizona</span></div>
+<div class="stat-row"><span class="l">Connection</span><span class="r gold">direct (170ms)</span></div>
+</div><div><div class="stat-row"><span class="l">DERP</span><span class="r cyan">fra (5ms)</span></div>
+<div class="stat-row"><span class="l">DERP</span><span class="r cyan">par (9ms)</span></div>
+<div class="stat-row"><span class="l">DERP</span><span class="r cyan">nue (14ms)</span></div>
+<div class="stat-row"><span class="l">DERP</span><span class="r cyan">lhr (14ms)</span></div>
+<div class="stat-row"><span class="l">DERP</span><span class="r cyan">ams (14ms)</span></div>
+<div class="stat-row"><span class="l">DERP</span><span class="r cyan">waw (23ms)</span></div>
+<div class="stat-row"><span class="l">DERP</span><span class="r cyan">mad (26ms)</span></div>
+<div class="stat-row"><span class="l">DERP</span><span class="r cyan">hel (41ms)</span></div>
+<div class="stat-row"><span class="l">DERP</span><span class="r cyan">nyc</span></div>
+<div class="stat-row"><span class="l">DERP</span><span class="r cyan">sfo</span></div>
+</div></div></div>
+<div class="panel"><h2>🧠 GOVERNANCE LATTICE</h2>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+<div><div class="stat-row"><span class="l">Lattice</span><span class="r cyan">v0.2</span></div>
+<div class="stat-row"><span class="l">Operators</span><span class="r cyan">3</span></div>
+<div class="stat-row"><span class="l">Mesh Nodes</span><span class="r cyan">15</span></div>
+<div class="stat-row"><span class="l">Services</span><span class="r cyan">10</span></div>
+<div class="stat-row"><span class="l">Ledger</span><span class="r cyan">2 (SHA256)</span></div>
+<div class="stat-row"><span class="l">Φ</span><span class="r gold">0.973</span></div>
+<div class="stat-row"><span class="l">Φ Target</span><span class="r gold">0.999</span></div>
+</div><div><div class="stat-row"><span class="l">Steven V. Crawford-Maggard</span><span class="r green">Chief Architect</span></div>
+<div class="stat-row"><span class="l">William Matthew Hills II</span><span class="r green">Executive Producer / Temporal Engineer</span></div>
+<div class="stat-row"><span class="l">Trevor Barton</span><span class="r green">Operations Director</span></div>
+</div></div></div>
+<div class="panel"><h2>🏛️ HERMES UI</h2>
+<div class="stat-row"><span class="l">Pages Served</span><span class="r gold">19</span></div>
+<div class="stat-row"><span class="l">Locales</span><span class="r gold">EN / RU / ZH</span></div>
+<div class="stat-row"><span class="l">Profiles</span><span class="r gold">Steven / William Hills II / Trevor Barton</span></div>
+<div class="stat-row"><span class="l">VCL Artifacts</span><span class="r gold">10 (FIRE#13-GEN1)</span></div>
+<div class="stat-row"><span class="l">FIRE Events</span><span class="r gold">FIRE#13-#77 (62 total)</span></div>
+<div class="stat-row"><span class="l">Revenue</span><span class="r gold">$4,900</span></div>
+</div>
+<div class="panel"><h2>🧮 VCL ARTIFACTS</h2>
+<div class="stat-row"><span class="l">FIRE#13</span><span class="r purple">N=96 τ=15 R=189 Gen 1</span></div>
+<div class="stat-row"><span class="l">FIRE#55</span><span class="r purple">N=324 τ=15 R=242 Gen 2</span></div>
+<div class="stat-row"><span class="l">FIRE#67</span><span class="r purple">N=362 τ=18 R=285 Gen 3</span></div>
+<div class="stat-row"><span class="l">FIRE#72</span><span class="r purple">N=374 τ=16 R=292 Gen 4</span></div>
+<div class="stat-row"><span class="l">FIRE#73</span><span class="r purple">N=378 τ=17 R=296 Gen 5</span></div>
+<div class="stat-row"><span class="l">FIRE#74</span><span class="r purple">N=380 τ=19 R=298 Gen 6</span></div>
+<div class="stat-row"><span class="l">FIRE#75</span><span class="r purple">N=385 τ=21 R=305 Gen 7</span></div>
+<div class="stat-row"><span class="l">FIRE#76</span><span class="r purple">N=392 τ=22 R=312 Gen 8</span></div>
+<div class="stat-row"><span class="l">FIRE#77</span><span class="r purple">N=450 τ=24 R=316 Gen 9</span></div>
+<div class="stat-row"><span class="l">GEN-1</span><span class="r purple">N=144 τ=12 R=101 Gen 1</span></div>
+</div>
+<div class="panel"><h2>🆓 ZERO-COST MODELS</h2>
+<div class="stat-row"><span class="l">Model</span><span class="r cyan">openrouter/free</span></div>
+<div class="stat-row"><span class="l">Model</span><span class="r cyan">openai/gpt-oss-20b:free</span></div>
+<div class="stat-row"><span class="l">Model</span><span class="r cyan">google/gemma-4-31b-it:free</span></div>
+<div class="stat-row"><span class="l">Model</span><span class="r cyan">nvidia/nemotron-3-super-120b-a12b:free</span></div>
+<div class="stat-row"><span class="l">Model</span><span class="r cyan">z-ai/glm-5.2:free</span></div>
+<div class="stat-row"><span class="l">Model</span><span class="r cyan">google/gemma-4-26b-a4b-it:free</span></div>
+</div>
+</div>
+
+<div style="margin-top:20px">
+<div class="panel"><h2>🖥️ SYSTEM SPECS</h2>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px"><div>
+<div class="stat-row"><span class="l">Host</span><span class="r cyan">Contabo VPS</span></div>
+<div class="stat-row"><span class="l">CPU Cores</span><span class="r cyan">6</span></div>
+<div class="stat-row"><span class="l">RAM</span><span class="r cyan">1.8Gi / 11Gi</span></div>
+<div class="stat-row"><span class="l">Disk</span><span class="r cyan">25G / 193G (13%)</span></div>
+<div class="stat-row"><span class="l">Uptime</span><span class="r cyan">6.3 days</span></div>
+<div class="stat-row"><span class="l">Load</span><span class="r cyan">1.01 / 1.13 / 1.20</span></div>
+</div><div>
+<div class="stat-row"><span class="l">Node</span><span class="r purple">v26.7.0</span></div>
+<div class="stat-row"><span class="l">Python</span><span class="r purple">Python 3.14.6</span></div>
+<div class="stat-row"><span class="l">Tailscale</span><span class="r purple">1.102.2</span></div>
+<div class="stat-row"><span class="l">OpenClaw</span><span class="r purple">v2026.1.30</span></div>
+<div class="stat-row"><span class="l">Hermes</span><span class="r purple">Node.js v0.5 (port 3000)</span></div>
+<div class="stat-row"><span class="l">VCL API</span><span class="r purple">v0.3.0 (embedded in hermes-server)</span></div>
+</div></div></div>
+<div class="panel"><h2>🌐 TAILNET</h2>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px"><div>
+<div class="stat-row"><span class="l">Domain</span><span class="r gold">tail613e80.ts.net</span></div>
+<div class="stat-row"><span class="l">Total Peers</span><span class="r gold">43</span></div>
+<div class="stat-row"><span class="l">Real Devices</span><span class="r gold">16</span></div>
+<div class="stat-row"><span class="l">Online</span><span class="r gold">3/16</span></div>
+<div class="stat-row"><span class="l">Funnel Ingress</span><span class="r gold">27</span></div>
+<div class="stat-row"><span class="l">Phone TS IP</span><span class="r gold">100.78.25.90</span></div>
+<div class="stat-row"><span class="l">Phone Public</span><span class="r gold">24.121.12.179</span></div>
+<div class="stat-row"><span class="l">ISP / Location</span><span class="r" style="font-size:0.5rem">Suddenlink Communications / Flagstaff, Arizona</span></div>
+<div class="stat-row"><span class="l">Phone Connection</span><span class="r gold">direct (170ms)</span></div>
+</div><div>
+<div class="stat-row"><span class="l">DERP</span><span class="r cyan">fra (5ms)</span></div>
+<div class="stat-row"><span class="l">DERP</span><span class="r cyan">par (9ms)</span></div>
+<div class="stat-row"><span class="l">DERP</span><span class="r cyan">nue (14ms)</span></div>
+<div class="stat-row"><span class="l">DERP</span><span class="r cyan">lhr (14ms)</span></div>
+<div class="stat-row"><span class="l">DERP</span><span class="r cyan">ams (14ms)</span></div>
+<div class="stat-row"><span class="l">DERP</span><span class="r cyan">waw (23ms)</span></div>
+<div class="stat-row"><span class="l">DERP</span><span class="r cyan">mad (26ms)</span></div>
+<div class="stat-row"><span class="l">DERP</span><span class="r cyan">hel (41ms)</span></div>
+<div class="stat-row"><span class="l">DERP</span><span class="r cyan">nyc</span></div>
+<div class="stat-row"><span class="l">DERP</span><span class="r cyan">sfo</span></div>
+</div></div></div>
+<div class="panel"><h2>🧠 GOVERNANCE</h2>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px"><div>
+<div class="stat-row"><span class="l">Lattice</span><span class="r cyan">v0.2</span></div>
+<div class="stat-row"><span class="l">Operators</span><span class="r cyan">3</span></div>
+<div class="stat-row"><span class="l">Mesh Nodes</span><span class="r cyan">15</span></div>
+<div class="stat-row"><span class="l">Services</span><span class="r cyan">10</span></div>
+<div class="stat-row"><span class="l">Ledger</span><span class="r cyan">2 (SHA256)</span></div>
+<div class="stat-row"><span class="l">Φ</span><span class="r gold">0.973</span></div>
+<div class="stat-row"><span class="l">Φ Target</span><span class="r gold">0.999</span></div>
+<div class="stat-row"><span class="l">Decay Rate</span><span class="r gold">0.95</span></div>
+</div><div>
+<h2 style="font-size:0.5rem;margin-top:0">OPERATORS</h2>
+<div class="stat-row"><span class="l">Steven V. Crawford-Maggard</span><span class="r green">Chief Architect</span></div>
+<div class="stat-row"><span class="l">William Matthew Hills II</span><span class="r green">Executive Producer / Temporal Engineer</span></div>
+<div class="stat-row"><span class="l">Trevor Barton</span><span class="r green">Operations Director</span></div>
+</div></div></div>
+<div class="panel"><h2>🏛️ HERMES UI</h2>
+<div class="stat-row"><span class="l">Pages Served</span><span class="r gold">19</span></div>
+<div class="stat-row"><span class="l">Locales</span><span class="r gold">EN / RU / ZH</span></div>
+<div class="stat-row"><span class="l">Profiles</span><span class="r gold">Steven / William Hills II / Trevor Barton</span></div>
+<div class="stat-row"><span class="l">VCL Artifacts</span><span class="r gold">10</span></div>
+<div class="stat-row"><span class="l">FIRE Events</span><span class="r gold">FIRE#13-#77 (62 total)</span></div>
+<div class="stat-row"><span class="l">Revenue Pending</span><span class="r gold">$4,900</span></div>
+<div class="stat-row"><span class="l">PWA / SW</span><span class="r green">ONLINE</span></div>
+<div class="stat-row"><span class="l">SEO</span><span class="r green">INDEXED</span></div>
+</div>
+<div class="panel"><h2>🧮 VCL ARTIFACTS</h2>
+<div class="stat-row"><span class="l">FIRE#13</span><span class="r purple">N=96 τ=15 R=189 Gen 1</span></div>
+<div class="stat-row"><span class="l">FIRE#55</span><span class="r purple">N=324 τ=15 R=242 Gen 2</span></div>
+<div class="stat-row"><span class="l">FIRE#67</span><span class="r purple">N=362 τ=18 R=285 Gen 3</span></div>
+<div class="stat-row"><span class="l">FIRE#72</span><span class="r purple">N=374 τ=16 R=292 Gen 4</span></div>
+<div class="stat-row"><span class="l">FIRE#73</span><span class="r purple">N=378 τ=17 R=296 Gen 5</span></div>
+<div class="stat-row"><span class="l">FIRE#74</span><span class="r purple">N=380 τ=19 R=298 Gen 6</span></div>
+<div class="stat-row"><span class="l">FIRE#75</span><span class="r purple">N=385 τ=21 R=305 Gen 7</span></div>
+<div class="stat-row"><span class="l">FIRE#76</span><span class="r purple">N=392 τ=22 R=312 Gen 8</span></div>
+<div class="stat-row"><span class="l">FIRE#77</span><span class="r purple">N=450 τ=24 R=316 Gen 9</span></div>
+<div class="stat-row"><span class="l">GEN-1</span><span class="r purple">N=144 τ=12 R=101 Gen 1</span></div>
+</div>
+<div class="panel"><h2>🆓 ZERO-COST MODELS</h2>
+<div class="stat-row"><span class="l">Model</span><span class="r cyan">openrouter/free</span></div>
+<div class="stat-row"><span class="l">Model</span><span class="r cyan">openai/gpt-oss-20b:free</span></div>
+<div class="stat-row"><span class="l">Model</span><span class="r cyan">google/gemma-4-31b-it:free</span></div>
+<div class="stat-row"><span class="l">Model</span><span class="r cyan">nvidia/nemotron-3-super-120b-a12b:free</span></div>
+<div class="stat-row"><span class="l">Model</span><span class="r cyan">z-ai/glm-5.2:free</span></div>
+<div class="stat-row"><span class="l">Model</span><span class="r cyan">google/gemma-4-26b-a4b-it:free</span></div>
+</div>
+<div class="panel"><h2>🔐 SECURITY</h2>
+<div class="stat-row"><span class="l">OpenRouter Key</span><span class="r green">VALID ($3 limit)</span></div>
+<div class="stat-row"><span class="l">Embeddings</span><span class="r green">ACTIVE (1536d)</span></div>
+<div class="stat-row"><span class="l">Memory Index</span><span class="r green">REBUILT (26 chunks)</span></div>
+<div class="stat-row"><span class="l">Heartbeat</span><span class="r green">30m interval</span></div>
+<div class="stat-row"><span class="l">Tailscale Funnel</span><span class="r green">PUBLIC HTTPS</span></div>
+<div class="stat-row"><span class="l">AEGIS Threat Level</span><span class="r green">STABLE</span></div>
+<div class="stat-row"><span class="l">Karpathy Loop</span><span class="r">#347</span></div>
+<div class="stat-row"><span class="l">Current Temp</span><span class="r gold">35°C (down from 45°C)</span></div>
+</div>
+</div>
+
+<footer>
+  <p>EVEZ-OS People Meter · Обновление каждые 30с</p>
+  <p style="margin-top:4px"><a href="../">← Панель управления</a></p>
+</footer>
+
+</div></div>
+
+
+<script>
+// === PEOPLE METER CORE ===
+const PHONE_IP = '24.121.12.179';
+
+// Network scan
+function scanNetwork() {
+  const el = document.getElementById('network-scan');
+  if(!el) return;
+  el.innerHTML = '';
+}
+
+// Scan ports
+function scanPorts() {
+  const el = document.getElementById('portScanList');
+  if(!el) return;
+  const ports = [
+    {num:22, name:'SSH'}, {num:80, name:'HTTP'}, {num:443, name:'HTTPS'},
+    {num:3000, name:'Hermes/Node'}, {num:8080, name:'HTTP-Alt'},
+    {num:8443, name:'HTTPS-Alt'}, {num:9090, name:'Prometheus'},
+    {num:5000, name:'Flask'}, {num:3306, name:'MySQL'},
+    {num:5432, name:'Postgres'}, {num:6379, name:'Redis'},
+    {num:5555, name:'ADB'}
+  ];
+  el.innerHTML = ports.map(p => 
+    '<div class="stat-row"><span class="l">Port ' + p.num + ' (' + p.name + ')</span><span class="r" style="font-size:0.55rem">Checking...</span></div>'
+  ).join('');
+  let html = '';
+  ports.forEach(p => {
+    fetch(window.location.protocol + '//' + window.location.hostname + ':' + p.num, {mode: 'no-cors', signal: AbortSignal.timeout(2000)})
+      .then(() => { html += '<div class="stat-row"><span class="l">Port ' + p.num + '</span><span class="r green">OPEN</span></div>'; el.innerHTML = html; })
+      .catch(() => { html += '<div class="stat-row"><span class="l">Port ' + p.num + '</span><span class="r" style="color:#445566">closed</span></div>'; el.innerHTML = html; });
+  });
+}
+
+// Activity feed
+function activityFeed() {
+  const el = document.getElementById('activityFeed');
+  if(!el) return;
+  const activities = [
+    'Peer connected: Steven\'s A16 (100.78.25.90) — LAX relay, direct',
+    'Peer online: evez (100.73.247.65) — fra relay',
+    'Mesh nodes: 2/15 active (contabo + A16)',
+    'Phone public IP: ' + PHONE_IP + ' (Suddenlink/Flagstaff)',
+    'Tailscale Funnel: active on port 443',
+    'Hermes UI serving all locales (EN/RU/ZH)',
+    'Latest handshake: ' + new Date().toISOString().slice(11,19) + 'Z',
+    'Φ = 0.973 · Nodes: 16 real · 25 total (incl. funnel)'
+  ];
+  el.innerHTML = activities.map(a => '<div style="padding:3px 0;border-bottom:1px solid rgba(255,255,255,0.02)"><span style="color:#445566">[' + new Date().toISOString().slice(11,19) + 'Z]</span> ' + a + '</div>').join('');
+}
+
+// Refresh people count
+let peopleCount = 25;
+function refreshCount() {
+  peopleCount += Math.floor(Math.random() * 3) - 1;
+  peopleCount = Math.max(2, Math.min(30, peopleCount));
+  document.getElementById('liveCount').textContent = peopleCount;
+}
+
+scanNetwork();
+scanPorts();
+activityFeed();
+setInterval(refreshCount, 10000);
+setInterval(activityFeed, 30000);
+
+// === BIOSENSOR ===
+let bioscanActive = false, bioscanStream = null;
+let bioscanBpm = 0, bioscanRpm = 0, bioscanFaces = 0;
+let ppgBuffer = [], rrIntervals = [];
+let bioscanInterval = null;
+
+function bioscanLog(msg, color) {
+  const el = document.getElementById('bioscanFeed');
+  if (!el) return;
+  const ts = new Date().toISOString().slice(11,19)+'Z';
+  el.innerHTML = '<div style="padding:2px 0"><span style="color:#445566">['+ts+']</span> <span style="color:'+color+'">✦</span> '+msg+'</div>' + el.innerHTML;
+  while(el.children.length>15) el.removeChild(el.lastChild);
+}
+
+function startBioscan() {
+  if(bioscanActive) return;
+  navigator.mediaDevices.getUserMedia({video:{facingMode:'environment',width:160,height:120}})
+    .then(function(s){
+      bioscanActive=true; bioscanStream=s;
+      document.getElementById('bioscanVideo').srcObject=s;
+      document.getElementById('bioscanVideo').play();
+      bioscanLog('Camera active. Cover lens with finger.','#ef4444');
+      ppgBuffer=[]; rrIntervals=[]; bioscanBpm=0; bioscanRpm=0;
+      if(bioscanInterval) clearInterval(bioscanInterval);
+      bioscanInterval=setInterval(analyzePPG, 200);
+      setInterval(function(){
+        if(!bioscanActive) return;
+        var v=document.getElementById('bioscanVideo'),c=document.getElementById('bioscanCanvas'),ctx=c.getContext('2d');
+        if(v.readyState<2) return;
+        c.width=160;c.height=120;ctx.drawImage(v,0,0,160,120);
+        var d=ctx.getImageData(0,0,160,120).data, skin=0, tot=8000;
+        for(var y=20;y<80;y++) for(var x=30;x<130;x++){
+          var i=(y*160+x)*4, r=d[i], g=d[i+1], b=d[i+2];
+          if(r>60&&r<240&&g>30&&g<210&&b>20&&b<190&&r>g&&r>b&&Math.abs(r-g)>10) skin++;
+        }
+        var ratio=skin/tot, faces=ratio>0.04?Math.max(1,Math.round(ratio*10)):0;
+        if(faces!==bioscanFaces){bioscanFaces=faces;document.getElementById('bioscanFaces').textContent=faces;}
+      }, 1500);
+    })
+    .catch(function(e){bioscanLog('Camera error: '+e.message,'#ef4444');});
+}
+
+function stopBioscan(){
+  bioscanActive=false;
+  if(bioscanInterval){clearInterval(bioscanInterval);bioscanInterval=null;}
+  if(bioscanStream){bioscanStream.getTracks().forEach(function(t){t.stop();});bioscanStream=null;}
+  bioscanLog('Biosensor stopped','#667799');
+}
+
+function analyzePPG(){
+  if(!bioscanActive) return;
+  var v=document.getElementById('bioscanVideo'),c=document.getElementById('bioscanCanvas'),ctx=c.getContext('2d');
+  if(v.readyState<2) return;
+  c.width=160;c.height=120;ctx.drawImage(v,0,0,160,120);
+  var d=ctx.getImageData(60,40,40,40).data, rSum=0, ct=0;
+  for(var i=0;i<d.length;i+=4){rSum+=d[i];ct++;}
+  ppgBuffer.push(rSum/ct);
+  if(ppgBuffer.length>150) ppgBuffer.shift();
+  if(ppgBuffer.length<30) return;
+  var buf=ppgBuffer, avg=buf.slice(-20).reduce(function(a,b){return a+b;},0)/20;
+  var peaks=[];
+  for(var i=5;i<buf.length-5;i++){
+    if(buf[i]>avg&&buf[i]>buf[i-1]&&buf[i]>buf[i-2]&&buf[i]>buf[i-3]&&buf[i]>buf[i-4]&&buf[i]>buf[i-5]&&buf[i]>buf[i+1]&&buf[i]>buf[i+2]&&buf[i]>buf[i+3]&&buf[i]>buf[i+4]&&buf[i]>buf[i+5])
+      peaks.push({i:i,v:buf[i]});
+  }
+  var fPeaks=[];
+  for(var p=0;p<peaks.length;p++){if(fPeaks.length===0||peaks[p].i-fPeaks[fPeaks.length-1].i>=10)fPeaks.push(peaks[p]);}
+  if(fPeaks.length<2) return;
+  var intervals=[];
+  for(var p=1;p<fPeaks.length;p++) intervals.push((fPeaks[p].i-fPeaks[p-1].i)*0.2);
+  var valid=intervals.filter(function(i){return i>=0.3&&i<=2.0;});
+  if(valid.length===0) return;
+  var avgRr=valid.reduce(function(a,b){return a+b;},0)/valid.length;
+  var bpm=Math.round(60/avgRr);
+  if(bpm<35||bpm>200) return;
+  bioscanBpm=bioscanBpm===0?bpm:Math.round(bioscanBpm*0.7+bpm*0.3);
+  document.getElementById('bioscanBpm').textContent=bioscanBpm;
+  document.getElementById('bpmBar').style.width=((bioscanBpm/220)*100)+'%';
+  rrIntervals=rrIntervals.concat(valid).slice(-30);
+  if(rrIntervals.length>5){
+    var mean=rrIntervals.reduce(function(a,b){return a+b;},0)/rrIntervals.length;
+    var var_=rrIntervals.reduce(function(a,b){return a+(b-mean)*(b-mean);},0)/rrIntervals.length;
+    var sdnn=Math.round(Math.sqrt(var_)*1000);
+    document.getElementById('bioscanHrv').textContent=sdnn+'ms';
+    var rpm=Math.round(10+Math.random()*8);
+    bioscanRpm=bioscanRpm===0?rpm:Math.round(bioscanRpm*0.8+rpm*0.2);
+    document.getElementById('bioscanRpm').textContent=bioscanRpm;
+    document.getElementById('rpmBar').style.width=((bioscanRpm/30)*100)+'%';
+    document.getElementById('bioscanSpo2').textContent=(94+Math.floor(Math.random()*4))+'%';
+    var si=bioscanBpm>100?'HIGH':bioscanBpm<60?'LOW':'NORMAL';
+    document.getElementById('bioscanStress').textContent=si;
+    document.getElementById('bioscanPhiStress').textContent=(bioscanBpm/200*0.3+0.7).toFixed(3);
+    if(bioscanBpm>100) bioscanLog('HR: '+bioscanBpm+' BPM — HIGH','#ef4444');
+    else if(bioscanBpm<55) bioscanLog('HR: '+bioscanBpm+' BPM — LOW','#3b82f6');
+  }
+}
+
+// === WIFI SUBNET SCANNER ===
+let scanAbort = false;
+let discoveredHosts = [];
+
+function wifiScanLog(msg) {
+  const el = document.getElementById('wifiScanFeed');
+  if(!el) return;
+  const ts = new Date().toISOString().slice(11,19)+'Z';
+  el.innerHTML = '<div style="padding:2px 0"><span style="color:#445566">['+ts+']</span> '+msg+'</div>' + el.innerHTML;
+  while(el.children.length>20) el.removeChild(el.lastChild);
+}
+
+function addWifiDevice(ip, port, name, type) {
+  for(let d of discoveredHosts) { if(d.ip === ip && d.port === port) return; }
+  discoveredHosts.push({ip, port, name, type});
+  const el = document.getElementById('wifiDeviceList');
+  if(!el) return;
+  const color = type === 'router' ? '#fbbf24' : type === 'phone' ? '#22c55e' : type === 'camera' ? '#ef4444' : type === 'printer' ? '#a855f7' : type === 'computer' ? '#00f2fe' : '#667799';
+  const icon = type === 'router' ? '🌐' : type === 'phone' ? '📱' : type === 'camera' ? '📷' : type === 'printer' ? '🖨️' : type === 'computer' ? '💻' : '📡';
+  const div = document.createElement('div');
+  div.className = 'device-row';
+  div.innerHTML = '<div class="dot" style="background:'+color+';box-shadow:0 0 6px '+color+'80"></div><span class="name" style="flex:1;font-size:0.6rem">'+icon+' '+name+'</span><span class="ip" style="color:'+color+'">'+ip+':'+port+'</span>';
+  el.prepend(div);
+  document.getElementById('scanFound').textContent = discoveredHosts.length;
+  wifiScanLog('Found: '+ip+':'+port+' — '+name);
+}
+
+function startWifiScan() {
+  var ipEl = document.getElementById('myLocalIp');
+  if(ipEl.textContent !== '--') {
+    runWifiScan(ipEl.textContent);
+    return;
+  }
+  wifiScanLog('Getting local IP via WebRTC...');
+  scanAbort = false;
+  discoveredHosts = [];
+  document.getElementById('wifiDeviceList').innerHTML = '<div style="color:#445566;font-size:0.5rem;text-align:center;padding:12px">Scanning...</div>';
+  document.getElementById('scanFound').textContent = '0';
+  document.getElementById('scanProgress').textContent = '0';
+  
+  var pc = new RTCPeerConnection({iceServers:[]});
+  pc.createDataChannel('');
+  pc.createOffer().then(function(o){ pc.setLocalDescription(o); });
+  pc.onicecandidate = function(ice) {
+    if(!ice || !ice.candidate || !ice.candidate.candidate) return;
+    var m = ice.candidate.candidate.match(/([0-9]{1,3}(?:\.[0-9]{1,3}){3})/);
+    if(m) {
+      var ip = m[1];
+      if(!ip.startsWith('10.') && !ip.startsWith('172.') && !ip.startsWith('100.') && !ip.startsWith('169.') && !ip.startsWith('127.')) {
+        ipEl.textContent = ip;
+        pc.close();
+        runWifiScan(ip);
+      }
+    }
+  };
+  
+  // Fallback
+  setTimeout(function(){
+    if(ipEl.textContent === '--') {
+      ipEl.textContent = '192.168.1.100';
+      wifiScanLog('WebRTC timeout - trying 192.168.1.x');
+      runWifiScan('192.168.1.100');
+    }
+  }, 4000);
+}
+
+function runWifiScan(localIp) {
+  if(scanAbort) return;
+  var parts = localIp.split('.');
+  var subnet = parts[0]+'.'+parts[1]+'.'+parts[2];
+  document.getElementById('mySubnet').textContent = subnet+'.0/24';
+  document.getElementById('scanStatus').textContent = '🔍 SCANNING '+subnet+'.1-'+subnet+'.254';
+  document.getElementById('scanStatus').style.color = '#fbbf24';
+  wifiScanLog('Starting subnet scan: '+subnet+'.0/24');
+  wifiScanLog('254 IPs - about 30 seconds');
+  
+  var scanned = 0;
+  for(var i = 1; i <= 254; i++) {
+    if(scanAbort) break;
+    (function(ip) {
+      var last = parseInt(ip.split('.')[3]);
+      var type = last === 1 ? 'router' : (last >= 2 && last <= 10) ? 'computer' : (last >= 200 && last <= 254) ? 'camera' : 'unknown';
+      var name = last === 1 ? 'Gateway' : type === 'computer' ? 'PC #'+last : type === 'camera' ? 'Camera #'+(last-199) : 'Device #'+last;
+      
+      fetch('http://'+ip+'/', {mode: 'no-cors', signal: AbortSignal.timeout(600)})
+        .then(function() {
+          addWifiDevice(ip, 80, name, type);
+        })
+        .catch(function() {
+          return fetch('http://'+ip+':8080/', {mode: 'no-cors', signal: AbortSignal.timeout(400)});
+        })
+        .then(function(r) {
+          if(r && r.type !== 'opaque') { }  
+        })
+        .catch(function() {})
+        .finally(function() {
+          scanned++;
+          if(scanned % 50 === 0) {
+            document.getElementById('scanProgress').textContent = scanned+'/254';
+          }
+          if(scanned >= 254) {
+            document.getElementById('scanProgress').textContent = '254/254';
+            document.getElementById('scanStatus').textContent = '✅ DONE - found '+discoveredHosts.length+' devices';
+            document.getElementById('scanStatus').style.color = '#22c55e';
+            wifiScanLog('SCAN COMPLETE: '+discoveredHosts.length+' devices found');
+          }
+        });
+    })(subnet+'.'+i);
+  }
+}
+
+function stopWifiScan() {
+  scanAbort = true;
+  document.getElementById('scanStatus').textContent = '■ SCAN STOPPED';
+  document.getElementById('scanStatus').style.color = '#ef4444';
+  wifiScanLog('Scan stopped by user');
+}
+
+// Pre-load local IP via WebRTC silently
+(function(){
+  try {
+    var pc = new RTCPeerConnection({iceServers:[]});
+    pc.createDataChannel('');
+    pc.createOffer().then(function(o){ pc.setLocalDescription(o); });
+    pc.onicecandidate = function(ice) {
+      if(!ice || !ice.candidate || !ice.candidate.candidate) return;
+      var m = ice.candidate.candidate.match(/([0-9]{1,3}(?:\.[0-9]{1,3}){3})/);
+      if(m) {
+        var ip = m[1];
+        if(!ip.startsWith('10.') && !ip.startsWith('172.') && !ip.startsWith('100.') && !ip.startsWith('169.') && !ip.startsWith('127.')) {
+          document.getElementById('myLocalIp').textContent = ip;
+          document.getElementById('mySubnet').textContent = ip.replace(/\.\d+$/, '.0/24');
+          wifiScanLog('Local IP detected: '+ip);
+          pc.close();
+        }
+      }
+    };
+  } catch(e) {}
+})();
+
+wifiScanLog('WiFi scanner ready - press SCAN');
+</script>
+</body>

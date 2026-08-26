@@ -1,0 +1,66 @@
+{
+  "name": "EVEZ-OS Hermes Dashboard",
+  "short_name": "Hermes",
+  "description": "EVEZ-OS Governance Lattice — Hermes Clone Pro Operations Dashboard",
+  "start_url": "/hermes-ui/",
+  "scope": "/hermes-ui/",
+  "display": "standalone",
+  "background_color": "#080814",
+  "theme_color": "#080814",
+  "orientation": "any",
+  "categories": ["productivity", "utilities", "developer-tools"],
+  "lang": "en-US",
+  "icons": [
+    {
+      "src": "/hermes-ui/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/hermes-ui/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/hermes-ui/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/hermes-ui/icons/screenshot-dashboard.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Hermes Dashboard showing φ telemetry and FIRE events"
+    }
+  ],
+  "display_override": ["window-controls-overlay", "standalone", "browser"],
+  "launch_handler": {
+    "client_mode": "focus-existing"
+  },
+  "edge_side_panel": {},
+  "prefer_related_applications": false,
+  "related_applications": [
+    {
+      "platform": "github",
+      "url": "https://github.com/EvezArt"
+    }
+  ],
+  "handle_links": "preferred",
+  "url_handlers": [],
+  "share_target": {
+    "action": "/hermes-ui/",
+    "method": "GET",
+    "enctype": "application/x-www-form-urlencoded",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url"
+    }
+  }
+}
