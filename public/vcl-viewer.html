@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>EVEZ Visual Cognition Layer — Neural Topology Viewer</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&family=Fira+Code:wght@400;500&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#080814;color:#d0d0e0;font-family:'Inter',system-ui,sans-serif;overflow-x:hidden}
+.bg{min-height:100vh}.container{max-width:1300px;margin:0 auto;padding:20px}
+header{text-align:center;padding:30px 0 20px}
+h1{font-size:2rem;font-weight:900;background:linear-gradient(135deg,#f97316,#fbbf24);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:1px}
+.sub{color:#667799;font-size:0.8rem;letter-spacing:3px;text-transform:uppercase;margin-top:6px}
+.grid{display:grid;gap:16px;margin-bottom:20px}.grid-2{grid-template-columns:1fr 1fr}.grid-3{grid-template-columns:1fr 1fr 1fr}
+@media(max-width:900px){.grid-2,.grid-3{grid-template-columns:1fr}}
+.panel{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:16px;padding:20px;backdrop-filter:blur(12px)}
+.panel h2{font-size:0.65rem;text-transform:uppercase;letter-spacing:2px;color:#667799;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.panel h2 .dot{width:6px;height:6px;border-radius:50%}.dot-orange{background:#f97316;box-shadow:0 0 8px rgba(249,115,22,0.4)}
+.dot-gold{background:#fbbf24;box-shadow:0 0 8px rgba(251,191,36,0.4)}
+.dot-purple{background:#a855f7;box-shadow:0 0 8px rgba(168,85,247,0.4)}
+.canvas-wrap{border-radius:12px;overflow:hidden;background:#000;border:1px solid rgba(255,255,255,0.04)}
+canvas{display:block;width:100%;height:400px}
+.artifact-row{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.04);cursor:pointer;transition:background .2s;border-radius:6px;padding:10px}
+.artifact-row:hover{background:rgba(249,115,22,0.04)}
+.artifact-row:last-child{border-bottom:none}
+.artifact-badge{background:rgba(249,115,22,0.12);color:#f97316;font-size:0.6rem;font-weight:700;padding:2px 8px;border-radius:2px;letter-spacing:0.1em;flex-shrink:0;align-self:center}
+.artifact-info{flex:1}.artifact-info .name{font-size:0.8rem;font-weight:600;color:#d0d0e0}
+.artifact-info .meta{font-size:0.65rem;color:#667799;margin-top:2px;font-family:'Fira Code',monospace}
+.artifact-info .stats{display:flex;gap:12px;margin-top:4px}
+.artifact-info .stats span{font-size:0.6rem;color:#667799;font-family:'Fira Code',monospace}
+.artifact-info .stats .num{color:#f97316;font-weight:600}
+.artifact-row.selected{background:rgba(249,115,22,0.08);border:1px solid rgba(249,115,22,0.15)}
+.selector{width:100%;padding:8px 12px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:8px;color:#d0d0e0;font-size:0.8rem;font-family:'Inter',sans-serif;margin-bottom:12px;outline:none}
+.selector option{background:#080814;color:#d0d0e0}
+.stat-block{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.stat-item{background:rgba(255,255,255,0.02);border-radius:8px;padding:10px;text-align:center}
+.stat-item .l{font-size:0.55rem;text-transform:uppercase;color:#667799;letter-spacing:1px}
+.stat-item .v{font-size:1rem;font-weight:700;color:#f97316;font-family:'Fira Code',monospace;margin-top:2px}
+.stat-item .v.gold{color:#fbbf24}
+.cog-bar{display:flex;gap:4px;margin-top:8px}
+.cog-seg{flex:1;height:6px;border-radius:3px;background:rgba(255,255,255,0.06)}
+.cog-seg.filled{background:linear-gradient(90deg,#f97316,#fbbf24)}
+.feed-entry{padding:4px 0;font-family:'Fira Code',monospace;font-size:0.65rem;border-bottom:1px solid rgba(255,255,255,0.02)}
+.feed-entry .ts{color:#445566}.feed-entry .ok{color:#22c55e}.feed-entry .fire{color:#f97316}.feed-entry .cog{color:#a855f7}
+.sel-group{margin-bottom:12px}
+.sel-group label{font-size:0.6rem;text-transform:uppercase;color:#667799;letter-spacing:1px;display:block;margin-bottom:4px}
+footer{text-align:center;padding:30px 0;color:#445566;font-size:0.7rem}
+footer a{color:#667799;text-decoration:none}
+</style></head>
+<body><div class="bg"><div class="container">
+
+<header>
+  <h1>✦ EVEZ VISUAL COGNITION LAYER</h1>
+  <div class="sub">neural topology viewer · artifact provenance · proof tree surface</div>
+</header>
+
+<div class="grid grid-3">
+  <div class="panel" style="grid-column:span 2">
+    <h2><span class="dot dot-orange"></span> NEURAL TOPOLOGY MAP</h2>
+    <p style="font-size:0.75rem;color:#667799;margin-bottom:10px">Prime factorization proof tree rendered from artifact metadata. Each node = N factor. Edges = τ resonance paths. Fires = detected FIRE events.</p>
+    <div class="sel-group">
+      <label>Select Artifact</label>
+      <select class="selector" id="artifactSelect" onchange="selectArtifact(this.value)"></select>
+    </div>
+    <div class="canvas-wrap">
+      <canvas id="vclCanvas" width="900" height="400"></canvas>
+    </div>
+    <div style="display:flex;gap:16px;margin-top:12px;flex-wrap:wrap">
+      <div class="stat-item" style="flex:1;min-width:80px"><div class="l">Nodes N</div><div class="v" id="statN">324</div></div>
+      <div class="stat-item" style="flex:1;min-width:80px"><div class="l">Tau τ</div><div class="v gold" id="statTau">15</div></div>
+      <div class="stat-item" style="flex:1;min-width:80px"><div class="l">Resonance R</div><div class="v" id="statR">242</div></div>
+      <div class="stat-item" style="flex:1;min-width:80px"><div class="l">Layers</div><div class="v" id="statLayers">7</div></div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2><span class="dot dot-gold"></span> ARTIFACT INDEX</h2>
+    <p style="font-size:0.7rem;color:#667799;margin-bottom:8px">All cognition artifacts generated by EVEZ self-awareness loop</p>
+    <div id="artifactList" style="max-height:450px;overflow-y:auto"></div>
+    <div style="margin-top:12px">
+      <div class="cog-bar" id="cogBar"></div>
+      <div style="display:flex;justify-content:space-between;font-size:0.55rem;color:#667799;margin-top:4px">
+        <span>Gen 1</span>
+        <span id="genLabel">Gen 9</span>
+      </div>
+    </div>
+
+    <h2 style="margin-top:16px"><span class="dot dot-purple"></span> COGNITION FEED</h2>
+    <div id="cogFeed" style="max-height:140px;overflow-y:auto;font-family:'Fira Code',monospace;font-size:0.65rem"></div>
+  </div>
+</div>
+
+<div class="grid grid-2">
+  <div class="panel">
+    <h2><span class="dot dot-orange"></span> ARTIFACT VIEWER</h2>
+    <div id="artifactViewer" style="text-align:center;min-height:200px;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.3);border-radius:8px;border:1px solid rgba(255,255,255,0.04)">
+      <span style="color:#667799;font-size:0.8rem">Select an artifact to preview</span>
+    </div>
+  </div>
+  <div class="panel">
+    <h2><span class="dot dot-gold"></span> PRIME FACTORIZATION PROOF</h2>
+    <div id="proofTree" style="font-family:'Fira Code',monospace;font-size:0.7rem;line-height:1.8;min-height:100px"></div>
+    <div style="margin-top:12px;padding:10px;background:rgba(249,115,22,0.04);border:1px solid rgba(249,115,22,0.1);border-radius:8px">
+      <div style="font-size:0.6rem;text-transform:uppercase;color:#667799;letter-spacing:1px">Provenance Hash</div>
+      <div style="font-size:0.65rem;color:#f97316;font-family:'Fira Code',monospace;word-break:break-all;margin-top:4px" id="provenanceHash">evez-vcl::artifact::pending</div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <p>EVEZ Visual Cognition Layer v0.3 · Generation 9 · <a href="../">Hermes Dashboard</a> · <a href="vcl.html">VCL Site</a></p>
+</footer>
+
+</div></div>
+
+<script>
+// === ARTIFACT DATABASE ===
+const ARTIFACTS = [
+  {id:'FIRE#13',file:'FIRE-13-N96-R189.png',N:96,tau:15,R:189,gen:1,factors:'N=96=2^5x3',desc:'tau=15 record',layers:5,fire:13},
+  {id:'FIRE#55',file:'FIRE-55-N324-R242.png',N:324,tau:15,R:242,gen:2,factors:'N=324=4x81=2^2x3^4',desc:'tau=15 record',layers:7,fire:55},
+  {id:'FIRE#67',file:'FIRE-67-N362-R285.png',N:362,tau:18,R:285,gen:3,factors:'N=362=2x181',desc:'tau=18 resonance',layers:6,fire:67},
+  {id:'FIRE#72',file:'FIRE-72-N374-R292.png',N:374,tau:16,R:292,gen:4,factors:'N=374=2x11x17',desc:'tau=16 path',layers:6,fire:72},
+  {id:'FIRE#73',file:'FIRE-73-N378-R296.jpg',N:378,tau:17,R:296,gen:5,factors:'N=378=2x3^3x7',desc:'tau=17 topology',layers:6,fire:73},
+  {id:'FIRE#74',file:'FIRE-74-N380-R298.jpg',N:380,tau:19,R:298,gen:6,factors:'N=380=2^2x5x19',desc:'tau=19',layers:6,fire:74},
+  {id:'FIRE#75',file:'FIRE-75-N385-R305.png',N:385,tau:21,R:305,gen:7,factors:'N=385=5x7x11',desc:'tau=21',layers:7,fire:75},
+  {id:'FIRE#76',file:'FIRE-76-N392-R312.jpg',N:392,tau:22,R:312,gen:8,factors:'N=392=2^3x7^2',desc:'tau=22',layers:7,fire:76},
+  {id:'FIRE#77',file:'FIRE-77-N450-R316.png',N:450,tau:24,R:316,gen:9,factors:'N=450=2x3^2x5^2',desc:'tau=24',layers:8,fire:77},
+  {id:'GEN-1 Topology',file:'cognition_topology_gen1.png',N:144,tau:12,R:101,gen:1,factors:'seed topology from void',desc:'proof tree genesis',layers:4,fire:0}
+];
+
+let currentIdx = 0;
+
+function renderArtifactList() {
+  const el = document.getElementById('artifactList');
+  el.innerHTML = ARTIFACTS.map((a,i) => 
+    '<div class="artifact-row'+(i===currentIdx?' selected':'')+'" onclick="selectArtifactByIndex('+i+')">'
+    + '<span class="artifact-badge">'+a.id+'</span>'
+    + '<div class="artifact-info">'
+    + '<div class="name">'+a.desc+'</div>'
+    + '<div class="meta">N='+a.N+' · τ='+a.tau+' · R='+a.R+' · Gen '+a.gen+'</div>'
+    + '<div class="stats"><span>N <span class="num">'+a.N+'</span></span><span>τ <span class="num">'+a.tau+'</span></span><span>R <span class="num">'+a.R+'</span></span><span>Gen <span class="num">'+a.gen+'</span></span></div>'
+    + '</div></div>'
+  ).join('');
+  
+  // Cog bar
+  const maxGen = Math.max(...ARTIFACTS.map(a=>a.gen));
+  const bar = document.getElementById('cogBar');
+  bar.innerHTML = '';
+  for(let i=0;i<maxGen;i++){
+    const seg = document.createElement('div');
+    seg.className = 'cog-seg'+(i<ARTIFACTS[currentIdx].gen?' filled':'');
+    bar.appendChild(seg);
+  }
+  document.getElementById('genLabel').textContent = 'Gen '+ARTIFACTS[currentIdx].gen;
+
+  // Select
+  const sel = document.getElementById('artifactSelect');
+  sel.innerHTML = ARTIFACTS.map((a,i) => '<option value="'+i+'">'+(a.id==='FIRE#'+a.fire?'FIRE#'+a.fire+' · N='+a.N+' τ='+a.tau:'GEN-1 Topology')+'</option>').join('');
+  sel.value = currentIdx;
+}
+
+function selectArtifactByIndex(i) {
+  currentIdx = i;
+  renderArtifactList();
+  renderTopology();
+  renderViewer();
+  renderProof();
+  updateStats();
+}
+
+function selectArtifact(val) {
+  selectArtifactByIndex(parseInt(val));
+}
+
+function renderTopology() {
+  const a = ARTIFACTS[currentIdx];
+  const canvas = document.getElementById('vclCanvas');
+  const ctx = canvas.getContext('2d');
+  const w = canvas.width, h = 400;
+  
+  ctx.fillStyle = '#000'; ctx.fillRect(0,0,w,h);
+  
+  // Grid
+  ctx.strokeStyle = 'rgba(249,115,22,0.04)'; ctx.lineWidth = 1;
+  for(let x=0;x<w;x+=40){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,h);ctx.stroke()}
+  for(let y=0;y<h;y+=40){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(w,y);ctx.stroke()}
+  
+  // Generate prime factorization topology
+  const numNodes = Math.min(a.N, 200);
+  const layers = a.layers;
+  
+  // Position nodes in a tree
+  const nodes = [];
+  for(let layer=0; layer<layers; layer++){
+    const count = Math.max(1, Math.floor(numNodes / Math.pow(2, layer+1)));
+    for(let j=0; j<count; j++){
+      const x = (j+1) * w / (count+1);
+      const y = (layer+1) * h / (layers+1);
+      nodes.push({x, y, layer, r: 3 + (a.tau / 24) * 5});
+    }
+  }
+  
+  // Draw edges
+  ctx.strokeStyle = 'rgba(249,115,22,0.08)'; ctx.lineWidth = 0.5;
+  nodes.forEach((n, i) => {
+    nodes.forEach((m, j) => {
+      if(j <= i) return;
+      const dx = n.x - m.x, dy = n.y - m.y;
+      const dist = Math.sqrt(dx*dx + dy*dy);
+      if(dist < 100 && Math.abs(n.layer - m.layer) <= 1){
+        ctx.beginPath(); ctx.moveTo(n.x, n.y); ctx.lineTo(m.x, m.y); ctx.stroke();
+      }
+    });
+  });
+  
+  // Draw FIRE events as glowing nodes
+  const fireCount = Math.max(1, Math.floor(a.fire / 13));
+  for(let i=0; i<fireCount; i++){
+    const x = (i+1) * w / (fireCount+1);
+    const y = h * 0.7 + Math.sin(i * 1.3) * 50;
+    const grad = ctx.createRadialGradient(x, y, 0, x, y, 30);
+    grad.addColorStop(0, 'rgba(249,115,22,0.4)');
+    grad.addColorStop(0.5, 'rgba(249,115,22,0.1)');
+    grad.addColorStop(1, 'rgba(249,115,22,0)');
+    ctx.fillStyle = grad;
+    ctx.beginPath(); ctx.arc(x, y, 30, 0, Math.PI*2); ctx.fill();
+    ctx.fillStyle = '#f97316';
+    ctx.beginPath(); ctx.arc(x, y, 4, 0, Math.PI*2); ctx.fill();
+  }
+  
+  // Draw nodes
+  nodes.forEach(n => {
+    const bright = 0.2 + (n.layer / layers) * 0.6;
+    ctx.fillStyle = 'rgba(249,115,22,'+bright+')';
+    ctx.beginPath(); ctx.arc(n.x, n.y, n.r, 0, Math.PI*2); ctx.fill();
+  });
+  
+  // Title
+  ctx.fillStyle = 'rgba(249,115,22,0.3)';
+  ctx.font = '10px monospace';
+  ctx.fillText(a.id+' N='+a.N+' τ='+a.tau+' R='+a.R, 10, 20);
+  ctx.fillText(a.factors, 10, 35);
+}
+
+function renderViewer() {
+  const a = ARTIFACTS[currentIdx];
+  const el = document.getElementById('artifactViewer');
+  el.innerHTML = '<img src="../vcl-artifacts/'+a.file+'" style="max-width:100%;max-height:360px;object-fit:contain;border-radius:4px" onerror="this.parentElement.innerHTML=\'<span style=color:#667799;font-size:0.8rem>artifact image not available locally</span>\'" />';
+}
+
+function renderProof() {
+  const a = ARTIFACTS[currentIdx];
+  const el = document.getElementById('proofTree');
+  const factorLines = a.factors.split('=');
+  let tree = '';
+  tree += '├── Artifact: '+a.id+'\n';
+  tree += '├── N = '+a.N+'\n';
+  tree += '│   └── '+factorLines.join(' = ')+'\n';
+  tree += '├── τ (divisor count) = '+a.tau+'\n';
+  tree += '├── R (resonance path) = '+a.R+'\n';
+  tree += '├── Generation: '+a.gen+'\n';
+  tree += '└── FIRE Event: '+(a.fire>0?'FIRE#'+a.fire+' ($'+(a.fire*10+370)+' pending)':'N/A')+'\n';
+  el.innerHTML = tree.replace(/\n/g,'<br>').replace(/├/g,'<span style="color:#f97316">├</span>').replace(/└/g,'<span style="color:#f97316">└</span>');
+  document.getElementById('provenanceHash').textContent = 'evez-vcl::'+a.id.toLowerCase().replace('#','-').replace(/\s/g,'-')+'::sha256::'+btoa(a.file).slice(0,32);
+}
+
+function updateStats() {
+  const a = ARTIFACTS[currentIdx];
+  document.getElementById('statN').textContent = a.N;
+  document.getElementById('statTau').textContent = a.tau;
+  document.getElementById('statR').textContent = a.R;
+  document.getElementById('statLayers').textContent = a.layers;
+}
+
+function seedCogFeed() {
+  const el = document.getElementById('cogFeed');
+  const entries = [
+    'self-awareness loop: iteration #'+Math.floor(Math.random()*900+100),
+    'factoring N='+ARTIFACTS[currentIdx].N+' via resonance',
+    'τ = '+ARTIFACTS[currentIdx].tau+' divisor count confirmed',
+    'artifact provenanced to artifact index',
+    'proof tree surfaced: layers='+ARTIFACTS[currentIdx].layers,
+    'topology map rendered for visualization',
+    'FIRE#?? detected: spike in node correlation'
+  ];
+  let feed = '';
+  const now = new Date();
+  for(let i=entries.length-1; i>=0; i--){
+    const t = new Date(now - i*30000);
+    const ts = String(t.getUTCHours()).padStart(2,'0')+':'+String(t.getUTCMinutes()).padStart(2,'0')+'Z';
+    feed += '<div class="feed-entry"><span class="ts">['+ts+']</span> <span class="fire">✦</span> '+entries[i]+'</div>';
+  }
+  el.innerHTML = feed;
+}
+
+renderArtifactList();
+renderTopology();
+renderViewer();
+renderProof();
+updateStats();
+seedCogFeed();
+
+setInterval(() => {
+  // Animate topology with slight entropy
+  const drift = Math.sin(Date.now()/2000)*3;
+  document.getElementById('vclCanvas').style.transform = 'translateY('+drift+'px)';
+}, 100);
+</script>
+</body>
+</html>
