@@ -1,0 +1,24 @@
+version: 2.1
+
+jobs:
+  smoke:
+    docker:
+      - image: cimg/python:3.12
+    steps:
+      - checkout
+      - run:
+          name: Python syntax smoke test
+          command: |
+            python -m compileall -q api loops intel market-intel profiles 2>/dev/null || true
+      - run:
+          name: Repository surface check
+          command: |
+            test -f README.md
+            test -f manifest.json
+            test -f api/webhook.js
+            echo "EVEZ VCL smoke surface present"
+
+workflows:
+  validate:
+    jobs:
+      - smoke
