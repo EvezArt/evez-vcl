@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#07090d">
+<title>EVEZ ChatGPT Runtime</title>
+<style>
+:root{--bg:#07090d;--panel:#0c1018;--line:#202938;--text:#edf3ff;--muted:#8e9aae;--cyan:#67e8f9;--violet:#a78bfa;--good:#70e1a0;--warn:#fbbf70}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 20% 0%,#132238 0,#07090d 38%),#07090d;color:var(--text);font:14px/1.5 system-ui,-apple-system,Segoe UI,sans-serif;height:100vh;overflow:hidden}
+.app{display:grid;grid-template-columns:250px 1fr 300px;height:100vh}.side,.inspector{background:rgba(10,14,22,.92);border-color:var(--line);padding:16px;overflow:auto}.side{border-right:1px solid var(--line)}.inspector{border-left:1px solid var(--line)}
+.brand{font-weight:800;letter-spacing:.08em;font-size:16px}.sigil{color:var(--cyan);font-size:22px;margin-right:8px}.sub{color:var(--muted);font-size:11px;margin:3px 0 18px}
+button,select,input{font:inherit}button{border:1px solid var(--line);background:#101621;color:var(--text);border-radius:10px;padding:9px 11px;cursor:pointer}button:hover{border-color:#3b82f6}button.primary{background:linear-gradient(135deg,#123342,#28214a);border-color:#31566d}
+.new{width:100%;margin-bottom:12px}.history{display:grid;gap:6px}.history button{text-align:left;color:#cbd5e1}.nav{margin-top:18px;display:grid;gap:5px}.nav div{padding:7px 9px;color:var(--muted)}
+.main{display:flex;flex-direction:column;min-width:0}.top{height:58px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 18px}.status{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:12px}.dot{width:8px;height:8px;border-radius:50%;background:var(--good);box-shadow:0 0 14px var(--good)}
+.chat{flex:1;overflow:auto;padding:24px max(18px,calc((100vw - 820px)/2));display:flex;flex-direction:column;gap:16px}.msg{max-width:820px;width:100%;margin:auto}.bubble{border:1px solid var(--line);background:rgba(12,16,24,.84);border-radius:16px;padding:15px 17px;white-space:pre-wrap;box-shadow:0 8px 28px rgba(0,0,0,.16)}.user .bubble{background:#111a27}.who{font-size:11px;color:var(--muted);margin:0 0 6px 3px;text-transform:uppercase;letter-spacing:.08em}.composer{border-top:1px solid var(--line);padding:12px max(18px,calc((100vw - 820px)/2));background:rgba(7,9,13,.95)}.row{display:flex;gap:8px}.input{flex:1;min-height:48px;max-height:130px;resize:none;background:#0d131d;color:var(--text);border:1px solid var(--line);border-radius:14px;padding:13px;outline:none}.input:focus{border-color:#3b82f6}.hint{font-size:10px;color:#687487;margin-top:7px}
+.card{border:1px solid var(--line);background:#0b1018;border-radius:12px;padding:11px;margin-bottom:10px}.card h3{font-size:11px;margin:0 0 8px;text-transform:uppercase;letter-spacing:.08em;color:#aab7c9}.kv{display:flex;justify-content:space-between;gap:10px;margin:5px 0;color:var(--muted)}.kv b{color:var(--text);font-weight:600}.stage{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid #161d29}.stage:last-child{border:0}.stage i{width:7px;height:7px;border-radius:50%;background:#334155}.stage.done i{background:var(--good);box-shadow:0 0 9px #70e1a0}.stage.active i{background:var(--cyan);box-shadow:0 0 9px var(--cyan)}
+.chain{font:10px ui-monospace,SFMono-Regular,monospace;color:#7dd3fc;word-break:break-all}.empty{color:var(--muted);text-align:center;margin:auto;max-width:520px}.empty h1{font-size:30px;margin:0 0 7px}.empty p{margin:0 0 18px}
+@media(max-width:900px){.app{grid-template-columns:1fr}.side,.inspector{display:none}.chat{padding:18px 12px}.composer{padding:10px 12px}.top{padding:0 12px}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="side">
+  <div class="brand"><span class="sigil">⧢</span>EVEZ RUNTIME</div>
+  <div class="sub">Chat surface · local evidence engine</div>
+  <button class="primary new" id="new">＋ New session</button>
+  <div class="history" id="history"></div>
+  <div class="nav"><div>SPINE / events</div><div>WITNESS / provenance</div><div>CAIN / contradictions</div><div>VCL / cognition view</div></div>
+</aside>
+<main class="main">
+  <header class="top"><div><b>ChatGPT Runtime</b> <span class="sub">derived from EVEZ-OS + VCL + AgentNet + Atlas + Codex</span></div><div class="status"><span class="dot"></span>LOCAL RUNTIME</div></header>
+  <section class="chat" id="chat"><div class="empty"><h1>Make the runtime prove itself.</h1><p>Ask something. The local engine records the request, runs a nine-stage cognition trace, and chains every event with SHA-256 provenance.</p><button class="primary" id="demo">Run a demonstration</button></div></section>
+  <section class="composer"><div class="row"><textarea id="input" class="input" placeholder="Message the runtime…"></textarea><button class="primary" id="send">Send</button></div><div class="hint">No API key required. Local responses are deterministic and explicitly labeled. External model connections are not claimed unless configured.</div></section>
+</main>
+<aside class="inspector">
+  <div class="card"><h3>Runtime</h3><div class="kv"><span>Mode</span><b>offline</b></div><div class="kv"><span>Evidence</span><b>append-only</b></div><div class="kv"><span>Hash</span><b>SHA-256</b></div></div>
+  <div class="card"><h3>Cognition pipeline</h3><div id="stages"></div></div>
+  <div class="card"><h3>Last event</h3><div id="event" class="chain">waiting</div></div>
+</aside>
+</div>
+<script>
+const STAGES=["SENSE","DESIRE","THINK","PLAN","ACT","LEARN","MODIFY","REFLECT","WITNESS"];
+const state={events:JSON.parse(localStorage.getItem("evez-events")||"[]"),sessions:JSON.parse(localStorage.getItem("evez-sessions")||"[]")};
+const $=id=>document.getElementById(id);
+function renderStages(active=-1){$("stages").innerHTML=STAGES.map((s,i)=>'<div class="stage '+(i<active?'done ':'')+(i===active?'active':'')+'"><i></i><span>'+s+'</span></div>').join("")}
+renderStages(-1);
+async function sha(s){const b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(s));return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join("")}
+async function event(type,data){const prev=state.events.at(-1)?.hash||"GENESIS";const body={id:state.events.length+1,ts:new Date().toISOString(),type,data,prev};const hash=await sha(JSON.stringify(body));const e={...body,hash};state.events.push(e);localStorage.setItem("evez-events",JSON.stringify(state.events));$("event").textContent=hash+" ← "+prev;return e}
+function add(who,text){const wrap=document.createElement("div");wrap.className="msg "+(who==="USER"?"user":"");wrap.innerHTML='<div class="who">'+who+'</div><div class="bubble"></div>';wrap.querySelector(".bubble").textContent=text;$("chat").appendChild(wrap);$("chat").scrollTop=$("chat").scrollHeight}
+async function run(text){if(!text.trim())return;$("chat").querySelector(".empty")?.remove();add("YOU",text);await event("message.received",{text});let answer="";for(let i=0;i<STAGES.length;i++){renderStages(i);await event("cognition.stage",{stage:STAGES[i],input:text});await new Promise(r=>setTimeout(r,90))}
+const t=text.toLowerCase();if(t.includes("who")||t.includes("what is evez"))answer="EVEZ Runtime is a local evidence-first chat surface assembled from the documented EVEZ architecture. It is not pretending to be a remote model: this response was generated by the local rule engine.";
+else if(t.includes("code")||t.includes("build"))answer="The runtime can record a build intent, expose its cognition stages, and preserve the resulting event chain. Atlas contributes the tokenless-code-generator concept; Codex contributes the observation → hypothesis → test → outcome discipline.";
+else answer="Recorded. I treated your message as an observation, passed it through the nine-stage local cognition trace, and chained the resulting events. The important distinction is boring but useful: the interface is real, the local event ledger is real, and no external model call is being implied.";
+renderStages(STAGES.length);add("EVEZ",answer);await event("response.emitted",{text:answer});}
+$("send").onclick=()=>{const v=$("input").value;$("input").value="";run(v)};$("input").addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();$("send").click()}});
+$("demo").onclick=()=>run("Explain what this runtime can actually prove.");
+$("new").onclick=()=>{$("chat").innerHTML='<div class="empty"><h1>New session</h1><p>The ledger persists locally. Start another trace.</p></div>';renderStages(-1)};
+</script>
+</body></html>
