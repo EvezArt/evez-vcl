@@ -64,8 +64,8 @@ footer a{color:#667799;text-decoration:none}
   <div class="panel">
     <h2>📍 ТВОЁ УСТРОЙСТВО</h2>
     <div class="stat-row"><span class="l">Имя</span><span class="r cyan">Steven's A16</span></div>
-    <div class="stat-row"><span class="l">Tailscale IP</span><span class="r">100.78.25.90</span></div>
-    <div class="stat-row"><span class="l">Публичный IP</span><span class="r gold">24.121.12.179</span></div>
+    <div class="stat-row"><span class="l">Tailscale IP</span><span class="r">[TAILNET-IP-REDACTED]</span></div>
+    <div class="stat-row"><span class="l">Публичный IP</span><span class="r gold">[PUBLIC-IP-REDACTED]</span></div>
     <div class="stat-row"><span class="l">ОС</span><span class="r purple">android</span></div>
     <div class="stat-row"><span class="l">Реле</span><span class="r">lax</span></div>
     <div class="stat-row"><span class="l">Отправлено</span><span class="r gold">10.1 MB</span></div>
@@ -87,20 +87,20 @@ footer a{color:#667799;text-decoration:none}
     </div>
     <div style="text-align:center;padding:14px;background:rgba(59,130,246,0.05);border:1px solid rgba(59,130,246,0.12);border-radius:10px">
       <div style="font-size:0.5rem;color:#667799;text-transform:uppercase;letter-spacing:1px">ДЫХАНИЕ (RPM)</div>
-      <div style="font-size:2rem;font-weight:900;font-family:'Fira Code',monospace;color:#3b82f6;margin:4px 0" id="bioscanRpm">--</div>
+      <div style="font-size:2rem;font-weight:900;font-family:'Fira Code',monospace;color:#3b82f6;margin:4px 0" id="bioscanRpm">NOT MEASURED</div>
       <div style="height:3px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden;margin-top:4px">
         <div style="height:100%;width:0%;background:#3b82f6;border-radius:2px;transition:width 0.3s" id="rpmBar"></div>
       </div>
     </div>
   </div>
   <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:8px">
-    <div class="stat-row"><span class="l">Лица</span><span class="r cyan" id="bioscanFaces">0</span></div>
-    <div class="stat-row"><span class="l">HRV</span><span class="r gold" id="bioscanHrv">-- ms</span></div>
-    <div class="stat-row"><span class="l">SpO₂</span><span class="r purple" id="bioscanSpo2">--%</span></div>
+    <div class="stat-row"><span class="l">Лица</span><span class="r cyan" id="bioscanFaces">NOT MEASURED</span></div>
+    <div class="stat-row"><span class="l">HRV</span><span class="r gold" id="bioscanHrv">NOT MEASURED</span></div>
+    <div class="stat-row"><span class="l">SpO₂</span><span class="r purple" id="bioscanSpo2">NOT MEASURED</span></div>
   </div>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-    <div class="stat-row"><span class="l">Стресс</span><span class="r gold" id="bioscanStress">--</span></div>
-    <div class="stat-row"><span class="l">φ-стресс</span><span class="r purple" id="bioscanPhiStress">--</span></div>
+    <div class="stat-row"><span class="l">Стресс</span><span class="r gold" id="bioscanStress">NOT MEASURED</span></div>
+    <div class="stat-row"><span class="l">φ-стресс</span><span class="r purple" id="bioscanPhiStress">NOT DEFINED</span></div>
   </div>
   <div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap">
     <button onclick="startBioscan()" style="flex:1;padding:8px 12px;background:linear-gradient(135deg,#ef4444,#dc2626);border:none;border-radius:6px;color:#fff;font-weight:700;font-size:0.65rem;cursor:pointer">▶ ЗАПУСТИТЬ БИО-СКАН</button>
@@ -109,6 +109,7 @@ footer a{color:#667799;text-decoration:none}
   <video id="bioscanVideo" style="display:none;width:160px;height:120px" muted playsinline></video>
   <canvas id="bioscanCanvas" style="display:none;width:160px;height:120px"></canvas>
   <div id="bioscanFeed" style="margin-top:8px;font-family:'Fira Code',monospace;font-size:0.55rem;color:#445566;line-height:1.7;max-height:80px;overflow-y:auto"></div>
+<div class="stat-row"><span class="l">Signal quality</span><span class="r gold" id="bioscanQuality">NOT STARTED</span></div><div class="stat-row"><span class="l">Observed sample rate</span><span class="r cyan" id="bioscanSampleRate">-- Hz</span></div><div class="stat-row"><span class="l">Sensor / calibration</span><span class="r" id="bioscanSensor">--</span></div><div class="stat-row"><span class="l">Last reading (UTC)</span><span class="r" id="bioscanTimestamp">--</span></div>
 </div>
 
 <div class="panel" style="border-color:rgba(251,191,36,0.3)">
@@ -136,112 +137,112 @@ footer a{color:#667799;text-decoration:none}
   <div id="deviceList">    <div class="device-row">
       <div class="dot online"></div>
       <div class="name">evezos-contabo</div>
-      <div class="ip">100.116.251.58</div>
+      <div class="ip">[TAILNET-IP-REDACTED]</div>
       <div class="os">linux</div>
       <div class="activity">В СЕТИ</div>
     </div>
     <div class="device-row">
       <div class="dot online"></div>
       <div class="name">Steven's A16</div>
-      <div class="ip">100.78.25.90</div>
+      <div class="ip">[TAILNET-IP-REDACTED]</div>
       <div class="os">android</div>
       <div class="activity">В СЕТИ</div>
     </div>
     <div class="device-row">
       <div class="dot online"></div>
       <div class="name">evez</div>
-      <div class="ip">100.73.247.65</div>
+      <div class="ip">[TAILNET-IP-REDACTED]</div>
       <div class="os">linux</div>
       <div class="activity">В СЕТИ</div>
     </div>
     <div class="device-row">
       <div class="dot offline"></div>
       <div class="name">iPhone</div>
-      <div class="ip">100.121.14.63</div>
+      <div class="ip">[TAILNET-IP-REDACTED]</div>
       <div class="os">android</div>
       <div class="activity">ОФЛАЙН</div>
     </div>
     <div class="device-row">
       <div class="dot offline"></div>
       <div class="name">evez-1</div>
-      <div class="ip">100.84.175.16</div>
+      <div class="ip">[TAILNET-IP-REDACTED]</div>
       <div class="os">linux</div>
       <div class="activity">ОФЛАЙН</div>
     </div>
     <div class="device-row">
       <div class="dot offline"></div>
       <div class="name">hermes-dash</div>
-      <div class="ip">100.109.69.66</div>
+      <div class="ip">[TAILNET-IP-REDACTED]</div>
       <div class="os">linux</div>
       <div class="activity">ОФЛАЙН</div>
     </div>
     <div class="device-row">
       <div class="dot offline"></div>
       <div class="name">elowen-proxy</div>
-      <div class="ip">100.100.63.15</div>
+      <div class="ip">[TAILNET-IP-REDACTED]</div>
       <div class="os">linux</div>
       <div class="activity">ОФЛАЙН</div>
     </div>
     <div class="device-row">
       <div class="dot offline"></div>
       <div class="name">elowen-sandbox</div>
-      <div class="ip">100.64.218.13</div>
+      <div class="ip">[TAILNET-IP-REDACTED]</div>
       <div class="os">linux</div>
       <div class="activity">ОФЛАЙН</div>
     </div>
     <div class="device-row">
       <div class="dot offline"></div>
       <div class="name">evez-sandbox</div>
-      <div class="ip">100.77.128.30</div>
+      <div class="ip">[TAILNET-IP-REDACTED]</div>
       <div class="os">linux</div>
       <div class="activity">ОФЛАЙН</div>
     </div>
     <div class="device-row">
       <div class="dot offline"></div>
       <div class="name">evez-sandbox-1</div>
-      <div class="ip">100.73.122.118</div>
+      <div class="ip">[TAILNET-IP-REDACTED]</div>
       <div class="os">linux</div>
       <div class="activity">ОФЛАЙН</div>
     </div>
     <div class="device-row">
       <div class="dot offline"></div>
       <div class="name">manus-contabo</div>
-      <div class="ip">100.122.163.125</div>
+      <div class="ip">[TAILNET-IP-REDACTED]</div>
       <div class="os">linux</div>
       <div class="activity">ОФЛАЙН</div>
     </div>
     <div class="device-row">
       <div class="dot offline"></div>
       <div class="name">openclaw-vps</div>
-      <div class="ip">100.110.235.112</div>
+      <div class="ip">[TAILNET-IP-REDACTED]</div>
       <div class="os">linux</div>
       <div class="activity">ОФЛАЙН</div>
     </div>
     <div class="device-row">
       <div class="dot offline"></div>
       <div class="name">openclaw-vps-1</div>
-      <div class="ip">100.104.203.102</div>
+      <div class="ip">[TAILNET-IP-REDACTED]</div>
       <div class="os">linux</div>
       <div class="activity">ОФЛАЙН</div>
     </div>
     <div class="device-row">
       <div class="dot offline"></div>
       <div class="name">openclaw-vps-2</div>
-      <div class="ip">100.114.143.51</div>
+      <div class="ip">[TAILNET-IP-REDACTED]</div>
       <div class="os">linux</div>
       <div class="activity">ОФЛАЙН</div>
     </div>
     <div class="device-row">
       <div class="dot offline"></div>
       <div class="name">openclaw-fix</div>
-      <div class="ip">100.115.9.90</div>
+      <div class="ip">[TAILNET-IP-REDACTED]</div>
       <div class="os">linux</div>
       <div class="activity">ОФЛАЙН</div>
     </div>
     <div class="device-row">
       <div class="dot offline"></div>
       <div class="name">openclaw-sandbox</div>
-      <div class="ip">100.84.148.77</div>
+      <div class="ip">[TAILNET-IP-REDACTED]</div>
       <div class="os">linux</div>
       <div class="activity">ОФЛАЙН</div>
     </div>
@@ -278,13 +279,13 @@ footer a{color:#667799;text-decoration:none}
 </div></div></div>
 <div class="panel"><h2>🌐 TAILNET PEERS</h2>
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-<div><div class="stat-row"><span class="l">Domain</span><span class="r gold">tail613e80.ts.net</span></div>
+<div><div class="stat-row"><span class="l">Domain</span><span class="r gold">[TAILNET-DOMAIN-REDACTED]</span></div>
 <div class="stat-row"><span class="l">Total Peers</span><span class="r gold">43</span></div>
 <div class="stat-row"><span class="l">Real Devices</span><span class="r gold">16</span></div>
 <div class="stat-row"><span class="l">Online</span><span class="r gold">3/16</span></div>
 <div class="stat-row"><span class="l">Funnel Nodes</span><span class="r gold">27</span></div>
-<div class="stat-row"><span class="l">Phone TS IP</span><span class="r gold">100.78.25.90</span></div>
-<div class="stat-row"><span class="l">Phone Public</span><span class="r gold">24.121.12.179</span></div>
+<div class="stat-row"><span class="l">Phone TS IP</span><span class="r gold">[TAILNET-IP-REDACTED]</span></div>
+<div class="stat-row"><span class="l">Phone Public</span><span class="r gold">[PUBLIC-IP-REDACTED]</span></div>
 <div class="stat-row"><span class="l">ISP</span><span class="r" style="font-size:0.5rem">Suddenlink Communications / Flagstaff, Arizona</span></div>
 <div class="stat-row"><span class="l">Connection</span><span class="r gold">direct (170ms)</span></div>
 </div><div><div class="stat-row"><span class="l">DERP</span><span class="r cyan">fra (5ms)</span></div>
@@ -360,13 +361,13 @@ footer a{color:#667799;text-decoration:none}
 </div></div></div>
 <div class="panel"><h2>🌐 TAILNET</h2>
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px"><div>
-<div class="stat-row"><span class="l">Domain</span><span class="r gold">tail613e80.ts.net</span></div>
+<div class="stat-row"><span class="l">Domain</span><span class="r gold">[TAILNET-DOMAIN-REDACTED]</span></div>
 <div class="stat-row"><span class="l">Total Peers</span><span class="r gold">43</span></div>
 <div class="stat-row"><span class="l">Real Devices</span><span class="r gold">16</span></div>
 <div class="stat-row"><span class="l">Online</span><span class="r gold">3/16</span></div>
 <div class="stat-row"><span class="l">Funnel Ingress</span><span class="r gold">27</span></div>
-<div class="stat-row"><span class="l">Phone TS IP</span><span class="r gold">100.78.25.90</span></div>
-<div class="stat-row"><span class="l">Phone Public</span><span class="r gold">24.121.12.179</span></div>
+<div class="stat-row"><span class="l">Phone TS IP</span><span class="r gold">[TAILNET-IP-REDACTED]</span></div>
+<div class="stat-row"><span class="l">Phone Public</span><span class="r gold">[PUBLIC-IP-REDACTED]</span></div>
 <div class="stat-row"><span class="l">ISP / Location</span><span class="r" style="font-size:0.5rem">Suddenlink Communications / Flagstaff, Arizona</span></div>
 <div class="stat-row"><span class="l">Phone Connection</span><span class="r gold">direct (170ms)</span></div>
 </div><div>
@@ -449,7 +450,7 @@ footer a{color:#667799;text-decoration:none}
 
 <script>
 // === PEOPLE METER CORE ===
-const PHONE_IP = '24.121.12.179';
+const PHONE_IP = '[PUBLIC-IP-REDACTED]';
 
 // Network scan
 function scanNetwork() {
@@ -486,8 +487,8 @@ function activityFeed() {
   const el = document.getElementById('activityFeed');
   if(!el) return;
   const activities = [
-    'Peer connected: Steven\'s A16 (100.78.25.90) — LAX relay, direct',
-    'Peer online: evez (100.73.247.65) — fra relay',
+    'Peer connected: Steven\'s A16 ([TAILNET-IP-REDACTED]) — LAX relay, direct',
+    'Peer online: evez ([TAILNET-IP-REDACTED]) — fra relay',
     'Mesh nodes: 2/15 active (contabo + A16)',
     'Phone public IP: ' + PHONE_IP + ' (Suddenlink/Flagstaff)',
     'Tailscale Funnel: active on port 443',
@@ -512,103 +513,39 @@ activityFeed();
 setInterval(refreshCount, 10000);
 setInterval(activityFeed, 30000);
 
-// === BIOSENSOR ===
-let bioscanActive = false, bioscanStream = null;
-let bioscanBpm = 0, bioscanRpm = 0, bioscanFaces = 0;
-let ppgBuffer = [], rrIntervals = [];
-let bioscanInterval = null;
-
-function bioscanLog(msg, color) {
-  const el = document.getElementById('bioscanFeed');
-  if (!el) return;
-  const ts = new Date().toISOString().slice(11,19)+'Z';
-  el.innerHTML = '<div style="padding:2px 0"><span style="color:#445566">['+ts+']</span> <span style="color:'+color+'">✦</span> '+msg+'</div>' + el.innerHTML;
-  while(el.children.length>15) el.removeChild(el.lastChild);
+// === CAMERA PPG: EXPERIMENTAL PULSE ESTIMATE ONLY ===
+let bioscanActive=false, bioscanStream=null, bioscanInterval=null, bioscanBpm=0;
+let ppgBuffer=[], ppgLastAt=0;
+const PPG_SENSOR_ID='browser-rear-camera';
+function bioText(id,value){const el=document.getElementById(id);if(el)el.textContent=value;}
+function bioscanLog(msg){const el=document.getElementById('bioscanFeed');if(!el)return;el.textContent='['+new Date().toISOString()+'] '+msg+'\n'+el.textContent;}
+function startBioscan(){
+ if(bioscanActive)return;
+ if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){bioscanLog('Camera API unavailable; use HTTPS or localhost.');return;}
+ navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'},width:{ideal:320},height:{ideal:240}},audio:false})
+ .then(function(stream){bioscanActive=true;bioscanStream=stream;const video=document.getElementById('bioscanVideo');video.srcObject=stream;video.play();
+  ppgBuffer=[];ppgLastAt=0;bioscanBpm=0;bioText('bioscanBpm','--');bioText('bioscanQuality','COLLECTING');
+  bioText('bioscanHrv','NOT MEASURED');bioText('bioscanRpm','NOT MEASURED');bioText('bioscanSpo2','NOT MEASURED');bioText('bioscanStress','NOT MEASURED');bioText('bioscanPhiStress','NOT DEFINED');bioText('bioscanFaces','NOT MEASURED');
+  bioscanLog('Camera PPG started. Experimental pulse estimate only; hold fingertip steady over camera and flash.');bioscanInterval=setInterval(analyzePPG,33);
+ }).catch(function(e){bioscanLog('Camera permission/error: '+e.message);});
 }
-
-function startBioscan() {
-  if(bioscanActive) return;
-  navigator.mediaDevices.getUserMedia({video:{facingMode:'environment',width:160,height:120}})
-    .then(function(s){
-      bioscanActive=true; bioscanStream=s;
-      document.getElementById('bioscanVideo').srcObject=s;
-      document.getElementById('bioscanVideo').play();
-      bioscanLog('Camera active. Cover lens with finger.','#ef4444');
-      ppgBuffer=[]; rrIntervals=[]; bioscanBpm=0; bioscanRpm=0;
-      if(bioscanInterval) clearInterval(bioscanInterval);
-      bioscanInterval=setInterval(analyzePPG, 200);
-      setInterval(function(){
-        if(!bioscanActive) return;
-        var v=document.getElementById('bioscanVideo'),c=document.getElementById('bioscanCanvas'),ctx=c.getContext('2d');
-        if(v.readyState<2) return;
-        c.width=160;c.height=120;ctx.drawImage(v,0,0,160,120);
-        var d=ctx.getImageData(0,0,160,120).data, skin=0, tot=8000;
-        for(var y=20;y<80;y++) for(var x=30;x<130;x++){
-          var i=(y*160+x)*4, r=d[i], g=d[i+1], b=d[i+2];
-          if(r>60&&r<240&&g>30&&g<210&&b>20&&b<190&&r>g&&r>b&&Math.abs(r-g)>10) skin++;
-        }
-        var ratio=skin/tot, faces=ratio>0.04?Math.max(1,Math.round(ratio*10)):0;
-        if(faces!==bioscanFaces){bioscanFaces=faces;document.getElementById('bioscanFaces').textContent=faces;}
-      }, 1500);
-    })
-    .catch(function(e){bioscanLog('Camera error: '+e.message,'#ef4444');});
-}
-
-function stopBioscan(){
-  bioscanActive=false;
-  if(bioscanInterval){clearInterval(bioscanInterval);bioscanInterval=null;}
-  if(bioscanStream){bioscanStream.getTracks().forEach(function(t){t.stop();});bioscanStream=null;}
-  bioscanLog('Biosensor stopped','#667799');
-}
-
+function stopBioscan(){bioscanActive=false;if(bioscanInterval)clearInterval(bioscanInterval);bioscanInterval=null;if(bioscanStream)bioscanStream.getTracks().forEach(t=>t.stop());bioscanStream=null;ppgBuffer=[];bioText('bioscanQuality','STOPPED');bioscanLog('Camera stopped; no biometric upload performed.');}
 function analyzePPG(){
-  if(!bioscanActive) return;
-  var v=document.getElementById('bioscanVideo'),c=document.getElementById('bioscanCanvas'),ctx=c.getContext('2d');
-  if(v.readyState<2) return;
-  c.width=160;c.height=120;ctx.drawImage(v,0,0,160,120);
-  var d=ctx.getImageData(60,40,40,40).data, rSum=0, ct=0;
-  for(var i=0;i<d.length;i+=4){rSum+=d[i];ct++;}
-  ppgBuffer.push(rSum/ct);
-  if(ppgBuffer.length>150) ppgBuffer.shift();
-  if(ppgBuffer.length<30) return;
-  var buf=ppgBuffer, avg=buf.slice(-20).reduce(function(a,b){return a+b;},0)/20;
-  var peaks=[];
-  for(var i=5;i<buf.length-5;i++){
-    if(buf[i]>avg&&buf[i]>buf[i-1]&&buf[i]>buf[i-2]&&buf[i]>buf[i-3]&&buf[i]>buf[i-4]&&buf[i]>buf[i-5]&&buf[i]>buf[i+1]&&buf[i]>buf[i+2]&&buf[i]>buf[i+3]&&buf[i]>buf[i+4]&&buf[i]>buf[i+5])
-      peaks.push({i:i,v:buf[i]});
-  }
-  var fPeaks=[];
-  for(var p=0;p<peaks.length;p++){if(fPeaks.length===0||peaks[p].i-fPeaks[fPeaks.length-1].i>=10)fPeaks.push(peaks[p]);}
-  if(fPeaks.length<2) return;
-  var intervals=[];
-  for(var p=1;p<fPeaks.length;p++) intervals.push((fPeaks[p].i-fPeaks[p-1].i)*0.2);
-  var valid=intervals.filter(function(i){return i>=0.3&&i<=2.0;});
-  if(valid.length===0) return;
-  var avgRr=valid.reduce(function(a,b){return a+b;},0)/valid.length;
-  var bpm=Math.round(60/avgRr);
-  if(bpm<35||bpm>200) return;
-  bioscanBpm=bioscanBpm===0?bpm:Math.round(bioscanBpm*0.7+bpm*0.3);
-  document.getElementById('bioscanBpm').textContent=bioscanBpm;
-  document.getElementById('bpmBar').style.width=((bioscanBpm/220)*100)+'%';
-  rrIntervals=rrIntervals.concat(valid).slice(-30);
-  if(rrIntervals.length>5){
-    var mean=rrIntervals.reduce(function(a,b){return a+b;},0)/rrIntervals.length;
-    var var_=rrIntervals.reduce(function(a,b){return a+(b-mean)*(b-mean);},0)/rrIntervals.length;
-    var sdnn=Math.round(Math.sqrt(var_)*1000);
-    document.getElementById('bioscanHrv').textContent=sdnn+'ms';
-    var rpm=Math.round(10+Math.random()*8);
-    bioscanRpm=bioscanRpm===0?rpm:Math.round(bioscanRpm*0.8+rpm*0.2);
-    document.getElementById('bioscanRpm').textContent=bioscanRpm;
-    document.getElementById('rpmBar').style.width=((bioscanRpm/30)*100)+'%';
-    document.getElementById('bioscanSpo2').textContent=(94+Math.floor(Math.random()*4))+'%';
-    var si=bioscanBpm>100?'HIGH':bioscanBpm<60?'LOW':'NORMAL';
-    document.getElementById('bioscanStress').textContent=si;
-    document.getElementById('bioscanPhiStress').textContent=(bioscanBpm/200*0.3+0.7).toFixed(3);
-    if(bioscanBpm>100) bioscanLog('HR: '+bioscanBpm+' BPM — HIGH','#ef4444');
-    else if(bioscanBpm<55) bioscanLog('HR: '+bioscanBpm+' BPM — LOW','#3b82f6');
-  }
+ if(!bioscanActive)return;const video=document.getElementById('bioscanVideo');const canvas=document.getElementById('bioscanCanvas');if(!video||video.readyState<2)return;
+ const now=performance.now();if(ppgLastAt&&now-ppgLastAt<20)return;ppgLastAt=now;
+ const ctx=canvas.getContext('2d',{willReadFrequently:true});canvas.width=160;canvas.height=120;ctx.drawImage(video,0,0,160,120);
+ const d=ctx.getImageData(55,35,50,50).data;let red=0,n=0;for(let i=0;i<d.length;i+=4){red+=d[i];n++;}
+ ppgBuffer.push({t:now,v:red/n});while(ppgBuffer.length&&now-ppgBuffer[0].t>12000)ppgBuffer.shift();
+ if(ppgBuffer.length<90){bioText('bioscanQuality','COLLECTING '+ppgBuffer.length+'/90');return;}
+ const elapsed=(ppgBuffer[ppgBuffer.length-1].t-ppgBuffer[0].t)/1000;const hz=elapsed>0?(ppgBuffer.length-1)/elapsed:0;
+ const vals=ppgBuffer.map(x=>x.v);const mean=vals.reduce((x,y)=>x+y,0)/vals.length;const sd=Math.sqrt(vals.reduce((x,y)=>x+(y-mean)*(y-mean),0)/vals.length);
+ const peaks=[];for(let i=3;i<ppgBuffer.length-3;i++){const p=ppgBuffer[i];if(p.v>mean+0.35*sd&&p.v>ppgBuffer[i-1].v&&p.v>ppgBuffer[i-2].v&&p.v>ppgBuffer[i-3].v&&p.v>=ppgBuffer[i+1].v&&p.v>=ppgBuffer[i+2].v&&p.v>=ppgBuffer[i+3].v&&(!peaks.length||p.t-peaks[peaks.length-1].t>=300))peaks.push(p);}
+ const rr=[];for(let i=1;i<peaks.length;i++){const dt=(peaks[i].t-peaks[i-1].t)/1000;if(dt>=0.33&&dt<=1.5)rr.push(dt);}
+ const valid=rr.length>=3&&sd>=1.5&&hz>=10;bioText('bioscanQuality',valid?'EXPERIMENTAL SIGNAL · NOT CALIBRATED':'LOW QUALITY · HOLD');bioText('bioscanSampleRate',hz.toFixed(1)+' Hz');
+ if(!valid)return;const sorted=rr.slice().sort((x,y)=>x-y);const bpm=Math.round(60/sorted[Math.floor(sorted.length/2)]);if(bpm<40||bpm>180)return;
+ bioscanBpm=bpm;bioText('bioscanBpm',String(bpm));bioText('bioscanSensor',PPG_SENSOR_ID+' · NOT CALIBRATED');bioText('bioscanTimestamp',new Date().toISOString());
+ const bar=document.getElementById('bpmBar');if(bar)bar.style.width=Math.min(100,bpm/200*100)+'%';
 }
-
 // === WIFI SUBNET SCANNER ===
 let scanAbort = false;
 let discoveredHosts = [];
